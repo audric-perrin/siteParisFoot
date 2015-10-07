@@ -15,6 +15,10 @@
     $score = array();
     foreach ($data as $row) {
       if (strpos($row,'AA') === 0) {
+        $canceled = parseLine($row, 'AM');
+        if ($canceled) {
+          continue;
+        } 
         $score[] = array(
         'journee' => extratNumber(parseLine($row, 'ER')),
         'domicile' => parseLine($row, 'WU'),
@@ -30,32 +34,33 @@
     }
   }
   // Extraction numéro journée
-  function extratNumber($chaine){
+  function extratNumber($chaine) {
     preg_match_all('#[0-9]+#',$chaine,$extract);
     $nombre = $extract[0][0];
     return $nombre;
   }
   // Mise à jour base de donnée
-  function insertScore($row){
-    $selectAll = 'SELECT * FROM result 
-    WHERE round = ' . $row['journee'] . ' 
-    AND teamDomicile = "' . $row['domicile'] . '" 
-    AND teamExterieur = "' . $row['exterieur'] . '"
-    AND saison = "' . $row['saison'] . '"';
-    $result = runQuery($selectAll);
-    $found = false;
-    foreach ($result as $row){
-      $found = true;
+  function insertScore($row) {
+    $selectId = 'SELECT id 
+      FROM result 
+      WHERE round = ' . $row['journee'] . ' 
+      AND teamDomicile = "' . $row['domicile'] . '" 
+      AND teamExterieur = "' . $row['exterieur'] . '" 
+      AND saison = "' . $row['saison'] . '"';
+    $result = runQuery($selectId);
+    $id = null;
+    foreach ($result as $resultRow) {
+      $id = $resultRow['id'];
     }
-    if (!$found){
-      $insertLine = 'INSERT INTO result(round, teamDomicile, scoreDomicile, teamExterieur, scoreExterieur, saison)
-      VALUES (' . $row['journee'] . ',"' . $row['domicile'] . '",' . $row['scoreDomicile'] . ',"' . $row['exterieur'] . '",' . $row['scoreExterieur'] . ',"' . $row['saison'] . '")';
-      runQuery($insertLine);
-    }
+    $updateScore = 'UPDATE `result` SET `scoreDomicile`=' . $row['scoreDomicile'] . ',`scoreExterieur`=' . $row['scoreExterieur'] . ' WHERE id =' . $id;
+    runQuery($updateScore);
   }
   //Parse chaque ligne correspondant à un match
-  function parseLine($row, $code){
+  function parseLine($row, $code) {
     preg_match('/' . $code . '÷([^¬]+)¬/', $row, $value);
+    if (count($value) < 2) {
+      return null;
+    }
     $value = $value[1];
     return $value;
   }

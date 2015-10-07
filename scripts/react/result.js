@@ -123,7 +123,6 @@ var TeamExterieur = React.createClass({
     if (data.match[this.props.n].scoreExterieur > data.match[this.props.n].scoreDomicile) {
       element = React.createElement(WinBox, {pos: 'right'})
     }
-    console.log(element)
     return d.div({
       style:{
         display: 'inline-block',
@@ -219,7 +218,7 @@ var Result = React.createClass({
   render: function(){
     return d.div({
       style:{
-        margin: '50px',
+        margin: '15px',
         textAlign: 'center',
         display: 'inline-block',
         backgroundColor: COLOR.gray1,

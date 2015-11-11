@@ -1,0 +1,70 @@
+.chosen-container .chosen-single, .chosen-container-active.chosen-with-drop .chosen-single {
+  background: #3386DB; /*COLOR.BLUE*/
+  transition: background 0.7s;
+  border: none;
+  box-shadow: none;
+  color: white;
+  font-family: 'Helvetica';
+  outline: 'none';
+  border: 'none';
+  cursor: 'pointer';
+  text-align: left;
+}
+
+.chosen-container .chosen-single:hover, .chosen-container-active.chosen-with-drop .chosen-single {
+  background: #2C74BE; /*COLOR.BLUE*/
+}
+
+.chosen-container-single .chosen-single {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  padding: 0;
+  padding-left: 10px;
+}
+
+.chosen-container-single .chosen-single div {
+
+}
+
+.chosen-container-single .chosen-single-active {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+}
+
+.chosen-container-single .chosen-single span {
+  margin: 0;
+}
+
+.chosen-container-single .chosen-single div b {
+  display: none;
+}
+
+.chosen-container-single .chosen-single span:after {
+  content: '▾';
+  position: absolute;
+  right: 10px;
+}
+
+.active-result {
+  padding: 0px;
+  font-size: 16px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  text-align: left;
+}
+
+.chosen-container .chosen-results li.highlighted {
+  background-image: none;
+  background-color: #3386DB; 
+  color: #ffffff;
+  margin: 0;
+}
+
+.chosen-container .chosen-results {
+  max-height: 200px;
+  margin: 0;
+  padding: 4px 0;
+}

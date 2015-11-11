@@ -1,78 +1,12 @@
 'use strict'
 var d = React.DOM
-//Tableau de valeur
-var data = {
-  journee: 8,
-  match: [
-  {
-    teamDomicile: 'Olympique Lyonnais',
-    teamExterieur: 'Stade de Reims',
-    scoreDomicile: 3,
-    scoreExterieur: 0
-  },
-  {
-    teamDomicile: 'Olympique Marseillais',
-    teamExterieur: 'Paris Saint-Germain',
-    scoreDomicile: 1,
-    scoreExterieur: 3
-  },
-  {
-    teamDomicile: 'Angers SCO',
-    teamExterieur: 'Girondins de Bordeaux',
-    scoreDomicile: 2,
-    scoreExterieur: 2
-  },
-  {
-    teamDomicile: 'FC Lorient',
-    teamExterieur: 'OGC Nice',
-    scoreDomicile: 1,
-    scoreExterieur: 0
-  },
-  {
-    teamDomicile: 'ESTAC Troyes',
-    teamExterieur: 'AS Monaco',
-    scoreDomicile: 0,
-    scoreExterieur: 0
-  },
-  {
-    teamDomicile: 'SC Bastia',
-    teamExterieur: 'SM Caen',
-    scoreDomicile: 2,
-    scoreExterieur: 0
-  },
-  {
-    teamDomicile: 'Montpellier Hérault SC',
-    teamExterieur: 'AS Saint-Etienne',
-    scoreDomicile: 1,
-    scoreExterieur: 2
-  },
-  {
-    teamDomicile: 'Toulouse FC',
-    teamExterieur: 'LOSC',
-    scoreDomicile: 1,
-    scoreExterieur: 1
-  },
-  {
-    teamDomicile: 'Stade Rennais FC',
-    teamExterieur: 'GFC Ajaccio',
-    scoreDomicile: 1,
-    scoreExterieur: 0
-  },
-  {
-    teamDomicile: 'EA Guingamp',
-    teamExterieur: 'FC Nantes',
-    scoreDomicile: 1,
-    scoreExterieur: 3
-  }
-  ]
-}
 //Barre bleu victoire
 var WinBox = React.createClass({
-  render: function (){
+  render: function () {
     return d.div({
       style:{
         display: 'inline-block',
-        height: '50px',
+        height: '30px',
         width: '6px',
         backgroundColor: COLOR.blue,
         verticalAlign: 'middle',
@@ -83,150 +17,270 @@ var WinBox = React.createClass({
 })
 //Equipe domicile
 var TeamDomicile = React.createClass({
-  render: function(){
+  render: function() {
     var element = null
-    if (data.match[this.props.n].scoreDomicile > data.match[this.props.n].scoreExterieur) {
+    if (this.props.match.scoreDomicile > this.props.match.scoreExterieur) {
       element = React.createElement(WinBox, {pos: 'left'})
     }
-    console.log(element)
     return d.div({
       style:{
         display: 'inline-block',
-        width: '270px',
+        width: '200px',
         textAlign: 'right',
         color: COLOR.black,
-        fontSize: '18px',
+        fontSize: '16px',
         float: 'left',
         fontFamily: 'Helvetica'
       }
-    }, element, data.match[this.props.n].teamDomicile)
+    }, element, TeamInfo.get(this.props.match.teamDomicile).trueName)
   } 
 })
 //Score
 var Score = React.createClass({
-  render: function(){
+  render: function() {
+    var element = []
+    var fontType = 'normal'
+    if (DateFormat.getTime(this.props.match.date) == 'aN:aN' && this.props.match.scoreDomicile < 0) {
+      element.push('-')
+    }
+    else if (this.props.match.scoreDomicile < 0) {
+      element.push(DateFormat.getTime(this.props.match.date))
+    }
+    else {
+      element.push(this.props.match.scoreDomicile, ' - ', this.props.match.scoreExterieur)
+      fontType = 'bold'
+    }
     return d.div({
       style:{
         display: 'inline',
-        color: COLOR.blue,
-        fontSize: '18px',
-        fontWeight: 'Bold',
+        color: COLOR.blue2,
+        fontSize: '16px',
+        fontWeight: fontType,
         fontFamily: 'Helvetica'
       }
-    }, data.match[this.props.n].scoreDomicile, ' - ', data.match[this.props.n].scoreExterieur)
+    }, element)
   } 
 })
 //Equipe exterieur
 var TeamExterieur = React.createClass({
-  render: function(){
+  render: function() {
     var element = null
-    if (data.match[this.props.n].scoreExterieur > data.match[this.props.n].scoreDomicile) {
+    if (this.props.match.scoreExterieur > this.props.match.scoreDomicile) {
       element = React.createElement(WinBox, {pos: 'right'})
     }
     return d.div({
       style:{
         display: 'inline-block',
-        width: '270px',
+        width: '200px',
         textAlign: 'left',
         color: COLOR.black,
-        fontSize: '18px',
+        fontSize: '16px',
         float: 'right',
         fontFamily: 'Helvetica'
       }
-    }, element, data.match[this.props.n].teamExterieur)
+    }, element, TeamInfo.get(this.props.match.teamExterieur).trueName)
   } 
 })
 //ligne match
 var Match = React.createClass({
-  render: function(){
+  render: function() {
     return d.div({
       style:{
         backgroundColor: COLOR.white,
-        display: 'inline-block',
-        height: '50px',
-        width: '700px',
+        // display: 'inline-block',
+        height: '30px',
+        // width: '600px',
         marginTop: '10px',
         textAlign: 'center',
-        lineHeight: '50px'
+        lineHeight: '30px'
       }
-    }, React.createElement(TeamDomicile, {n: this.props.n}),
-       React.createElement(Score, {n: this.props.n}),
-       React.createElement(TeamExterieur, {n: this.props.n}))  
+    }, React.createElement(TeamDomicile, {match: this.props.match}),
+       React.createElement(Score, {match: this.props.match}),
+       React.createElement(TeamExterieur, {match: this.props.match}))  
   } 
 })
-//Fonction tous les matchs
-var results = []
-for (var i = 0; i < data.match.length; i++){
-  results.push (React.createElement(Match, {n: i}))
-}
-//Box journee
-var Box_journee = React.createClass({
-  getInitialState: function () {
-  return {hover: false};
+//ligne date
+var LineDate = React.createClass({
+  render: function() {
+  var dateScreen = DateFormat.getDate(this.props.match.date) 
+  if (dateScreen == 'undefined NaN undefined') {
+    dateScreen = 'Date inconnue'
+  }
+    return d.div({
+      style:{
+        backgroundColor: COLOR.blue,
+        height: '30px',
+        marginTop: '10px',
+        textAlign: 'left',
+        color: COLOR.white,
+        fontSize: '16px',
+        fontFamily: 'Helvetica',
+        paddingLeft: '10px',
+        lineHeight: '30px'
+      }
+    }, dateScreen)
+  } 
+})
+//Input round
+var RoundInput = React.createClass({
+  componentDidMount: function() {
+    $(this.refs.container.getDOMNode()).chosen({
+      disable_search: true,
+      width: '120px'
+    }).change(this.onChange)
   },
-  
-  mouseOver: function () {
-    this.setState({hover: true});
+  componentWillReceiveProps: function(newProps) {
+    var select = $(this.refs.container.getDOMNode())
+    select.val(newProps.round)
+    select.trigger('chosen:updated')
   },
-  
-  mouseOut: function () {
-    this.setState({hover: false});
+  onChange: function(e, data) {
+    this.props.onRoundChanged(parseFloat(data.selected))
   },
-  render: function(){
-    var color = COLOR.blue
-    if (this.state.hover) {
-        color = COLOR.blue2
+  render: function() {
+    var options = []
+    for (i = 1; i < 22; i++) {
+      if (i == this.props.round){
+        options[i] = d.option({value: i, selected: 'selected'}, "Journée " + i)
+      }
+      else {
+        options[i] = d.option({value: i}, "Journée " + i)
+      }
     }
     return d.div({
-      onMouseOver: this.mouseOver,
-      onMouseOut: this.mouseOut,
-      style:{
+      style: {
+        paddingBottom: '5px',
         display: 'inline-block',
-        width: '160px',
-        height: '40px',
-        lineHeight: '40px',
-        backgroundColor: color,
-        borderRadius: '5px',
-        marginBottom: '5px',
-        color: COLOR.white,
-        fontSize: '18px',
-        outline: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        transition: 'background-color 700ms',
-        fontFamily: 'Helvetica'
+        margin: '0px 15px',
+        fontSize: '16px'
       }
-    }, 'Journée 8', React.createElement(Icone_journee))
+    }, d.select({
+      ref: 'container'
+    }, options))
   }
 })
-//iconeJournee
-var Icone_journee = React.createClass({
-  render: function(){
+
+var LoadingBox = React.createClass({
+  render: function() {
     return d.div({
       style:{
-        display: 'inline-block',
-        fontSize: '20px',
-        paddingRight: '15px',
-        color: COLOR.white,
-        float: 'right'
+        fontSize: '16px',
+        marginTop: '10px',
+        padding: '15px 0',
+        transition: 'all 0.7s',
+        color: COLOR.black,
+        backgroundColor: COLOR.white,
+        transition: 'all 0.3s',
       }
-    }, d.i({className: "fa fa-caret-down"}))
+    }, d.i({
+      style: {
+        display: 'block',
+        fontSize: '40px',
+        marginBottom: '5px',
+        color: COLOR.primary
+      },
+      className: "fa fa-spinner fa-pulse"
+    }), "Chargement journée " + this.props.round)
   }
 })
 //Resultat
 var Result = React.createClass({
-  render: function(){
+  getInitialState: function() {
+    return {matchs: null, round: null}
+  },
+  changeRound: function (round) {
+    this.setState({matchs: null, round: round})
+    var options = {
+      url: './api/match.php?round=' + round,
+      method: 'GET',
+    }
+    $.ajax(options).done(this.handleMatches)
+  },
+  handleMatches: function(data) {
+    this.setState({matchs: data.match})
+  },
+  componentWillMount: function() {
+    this.changeRound(this.props.initialRound)
+  },
+  onArrowHoverChange: function(left, hover) {
+    var arrow = left ? 'arrowLeft' : 'arrowRight'
+    var newState = {}
+    newState[arrow] = hover
+    this.setState(newState)
+  },
+  renderArrow: function(left, onClick) { 
+    var isHover = this.state[left ? 'arrowLeft' : 'arrowRight']
+    var padding = left ? '5px 0 5px 20px' : '5px 20px 5px 0'
     return d.div({
       style:{
-        margin: '15px',
+        fontSize: '30px',
+        padding: padding,
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        color: isHover ? COLOR.blue2 : COLOR.blue,
+        transition: 'color 0.7s',
+        cursor: 'pointer',
+        userSelect: 'none'
+      },
+      onClick: onClick,
+      onMouseOver: this.onArrowHoverChange.bind(this, left, true),
+      onMouseOut: this.onArrowHoverChange.bind(this, left, false)
+    }, left ? d.i({className: "fa fa-angle-left"}) : d.i({className: "fa fa-angle-right"}))
+  },
+  nextRound: function() {
+    this.changeRound(this.state.round + 1)
+  },
+  previousRound: function() {
+    this.changeRound(this.state.round - 1)
+  },
+  render: function() {
+    var elements = [
+      this.state.round == 1 ? 
+        d.div({
+          style:{
+            display: 'inline-block',
+            padding: '5px 0px 5px 34.2969px'}
+          }) : this.renderArrow(true, this.previousRound),
+      React.createElement(RoundInput, {
+        onRoundChanged: this.changeRound,
+        round: this.state.round
+      }),
+      this.state.round == 21 ? 
+        d.div({
+          style:{
+            display: 'inline-block',
+            padding: '5px 34.2969px 5px 0px'}
+          }) : this.renderArrow(false, this.nextRound)
+    ]
+    if (this.state.matchs) {
+      //Fonction tous les matchs
+      var results = []
+      var actualDate = 0
+      for (var i = 0; i < this.state.matchs.length; i++) {
+        if (actualDate == DateFormat.getDate(this.state.matchs[i].date)) {
+          results.push (React.createElement(Match, {match: this.state.matchs[i]}))
+        }
+        else {  
+          results.push (
+            React.createElement(LineDate, {match: this.state.matchs[i]}),
+            React.createElement(Match, {match: this.state.matchs[i]}))
+          actualDate = DateFormat.getDate(this.state.matchs[i].date)
+        }
+      }
+      elements.push(results)
+    }
+    else {
+      elements.push(React.createElement(LoadingBox, {round: this.state.round}))
+    }
+    return d.div({
+      style:{
         textAlign: 'center',
         display: 'inline-block',
         backgroundColor: COLOR.gray1,
-        paddingTop: '15px',
-        paddingBottom: '15px',
-        width: '730px',
+        padding: '15px',
+        width: '530px',
         borderRadius: '5px'
       }
-    }, React.createElement(Box_journee), results)
+    }, elements)
   }
 })

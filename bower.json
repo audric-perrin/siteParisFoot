@@ -1,0 +1,24 @@
+{
+  "name": "parions-ligue-1",
+  "description": "",
+  "main": "index.html",
+  "authors": [
+    "castors"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/audric-perrin/siteParisFoot",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.14.2",
+    "jquery": "~2.1.4",
+    "chosen": "~1.4.2"
+  }
+}

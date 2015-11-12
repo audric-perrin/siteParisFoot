@@ -258,7 +258,6 @@ var RenderBlocMatch = React.createClass({
     this.setState({validate: true})
   },
   render: function() {
-    console.log(this.state)
     var height = this.state.selectedCoteResult.result > -1 ? '122px' : '40px'
     height = this.state.validate ? '40px' : height
     return d.div({

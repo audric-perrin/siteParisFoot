@@ -2,6 +2,11 @@
 var d = React.DOM
 //Création boîte de connection
 var Box_login = React.createClass({
+  onConnectionClick: function() {
+    if (this.props.onConnect) {
+      this.props.onConnect()
+    }
+  },
 	render: function() {
 		return d.div({
       style:{
@@ -13,7 +18,7 @@ var Box_login = React.createClass({
       }
     }, React.createElement(Master_box_input, {text: 'Pseudo', type: 'text', nameIcone: 'fa fa-user'}),
        React.createElement(Master_box_input, {text: 'Password', type: 'password', nameIcone: 'fa fa-lock'}),
-       React.createElement(Button_login, {text: 'Connection'}))
+       React.createElement(Button_login, {text: 'Connection', onClick: this.onConnectionClick}))
 	}
 })
 //Création boîte d'inscription
@@ -127,6 +132,7 @@ var Button_login = React.createClass({
     return d.button({
       onMouseOver: this.mouseOver,
       onMouseOut: this.mouseOut,
+      onClick: this.props.onClick,
       style:{
         display: 'inline-block',
         width: '330px',

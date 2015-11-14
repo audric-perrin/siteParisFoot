@@ -22,3 +22,28 @@ var Main = React.createClass({
 Initializer.initialize(function () {
   React.render(React.createElement(Main), document.body)
 })
+var options = {url: './api/userInfo.php', method: 'GET'}
+var userInfoCallback = function(data) {
+  if (data.result == 'not connected') {
+    var options = {
+      url: './api/login.php',
+      method: 'POST',
+      data: {
+        username: 'Castor',
+        password: 'castor'
+      }
+    }
+    var loginCallback = function(data) {
+      console.log(data)
+    }
+    $.ajax(options).done(loginCallback)
+  }
+  else {
+    console.log('Déjà connecté')
+  }
+}
+$.ajax(options).done(userInfoCallback)
+
+//CREATE COMPONENT loadingApp
+
+//list importation donnee/a quel moment?

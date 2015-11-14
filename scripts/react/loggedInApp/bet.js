@@ -70,7 +70,13 @@ var RenderBlocMatch = React.createClass({
   },
   renderLineMatch: function() {
     var time = DateFormat.getTime(this.props.bet.match.date)
-    var matchUpName = TeamInfo.get(this.props.bet.match.teamDomicile).trueName + ' - ' + TeamInfo.get(this.props.bet.match.teamExterieur).trueName
+    var matchUpName = [
+      TeamInfo.get(this.props.bet.match.teamDomicile).trueName,
+      React.createElement(Logo, {name: this.props.bet.match.teamDomicile, float: 'left', margin: '8px 10px'}),
+      ' - ',
+      React.createElement(Logo, {name: this.props.bet.match.teamExterieur, float: 'right', margin: '8px 10px'}),
+      TeamInfo.get(this.props.bet.match.teamExterieur).trueName
+    ]
     var cotes = [
       this.props.bet.coteResult.coteDomicile,
       this.props.bet.coteResult.coteEgalite,
@@ -95,14 +101,14 @@ var RenderBlocMatch = React.createClass({
     if (this.state.validate) {
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '376px', textAlign: 'left', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: '400px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {width: '181px', textAlign: 'center', lineHeight: '35px'}, elementsMyBet)
       ]
     }
     else {
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '376px', textAlign: 'left', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: '400px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsCoteResult),
         React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonStats)
       ]

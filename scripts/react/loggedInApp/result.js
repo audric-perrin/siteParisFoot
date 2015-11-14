@@ -87,16 +87,16 @@ var Match = React.createClass({
     return d.div({
       style:{
         backgroundColor: COLOR.white,
-        // display: 'inline-block',
         height: '30px',
-        // width: '600px',
         marginTop: '10px',
         textAlign: 'center',
         lineHeight: '30px'
       }
     }, React.createElement(TeamDomicile, {match: this.props.match}),
+       React.createElement(Logo, {name: this.props.match.teamDomicile, float: 'left', margin: '5px 10px'}),
        React.createElement(Score, {match: this.props.match}),
-       React.createElement(TeamExterieur, {match: this.props.match}))  
+       React.createElement(TeamExterieur, {match: this.props.match}),
+       React.createElement(Logo, {name: this.props.match.teamExterieur, float: 'right', margin: '5px 10px'}))
   } 
 })
 //ligne date
@@ -278,7 +278,7 @@ var Result = React.createClass({
         display: 'inline-block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
-        width: '530px',
+        width: '560px',
         borderRadius: '5px'
       }
     }, elements)

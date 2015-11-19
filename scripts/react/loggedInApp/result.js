@@ -177,7 +177,7 @@ var LoadingBox = React.createClass({
         display: 'block',
         fontSize: '40px',
         marginBottom: '5px',
-        color: COLOR.primary
+        color: COLOR.gray3
       },
       className: "fa fa-spinner fa-pulse"
     }), "Chargement journée " + this.props.round)
@@ -220,6 +220,11 @@ var Result = React.createClass({
         color: isHover ? COLOR.blue2 : COLOR.blue,
         transition: 'color 0.7s',
         cursor: 'pointer',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        KhtmlUserSelect: 'none',
+        MozUserSelect: 'none',
+        MsUserSelect: 'none',
         userSelect: 'none'
       },
       onClick: onClick,

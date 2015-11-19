@@ -9,7 +9,7 @@ var MyButton = React.createClass({
     this.setState({buttonHover: hover})
   },
   buttonClick: function() {
-    if (this.props.onClick) {
+    if (this.props.onClick && !this.props.disabled) {
       this.props.onClick()
     }
   },
@@ -19,14 +19,18 @@ var MyButton = React.createClass({
     //Variable props
     var normalColor = this.props.color ? this.props.color : COLOR.white
     var hoverColor = this.props.hoverColor ? this.props.hoverColor : normalColor
+    var disabledBackgroundColor = this.props.disabledBackgroundColor ? this.props.disabledBackgroundColor : COLOR.gray2
     var normalBackgroundColor = this.props.backgroundColor ? this.props.backgroundColor : COLOR.primary
     var hoverBackgroundColor = this.props.hoverBackgroundColor ? this.props.hoverBackgroundColor : COLOR.dark
     var normalBorderColor = this.props.borderColor ? this.props.borderColor : normalBackgroundColor
     var hoverBorderColor = this.props.hoverBorderColor ? this.props.hoverBorderColor : hoverBackgroundColor
+    var disabledBorderColor = this.props.disabledBorderColor ? this.props.disabledBorderColor : disabledBackgroundColor
     //Variable dépendante d'état
     var color = isHover ? hoverColor : normalColor
     var backgroundColor = isHover ? hoverBackgroundColor : normalBackgroundColor
+    backgroundColor = this.props.disabled ? disabledBackgroundColor : backgroundColor
     var borderColor = isHover ? hoverBorderColor : normalBorderColor
+    borderColor = this.props.disabled ? disabledBorderColor : borderColor
     //Variable style
     var style = {
       color: color,
@@ -36,7 +40,13 @@ var MyButton = React.createClass({
       textAlign: 'center',
       fontSize: '16px',
       padding: '6px',
-      cursor: 'pointer',
+      cursor: this.props.disabled ? 'default' : 'pointer',
+      WebkitTouchCallout: 'none',
+      WebkitUserSelect: 'none',
+      KhtmlUserSelect: 'none',
+      MozUserSelect: 'none',
+      MsUserSelect: 'none',
+      userSelect: 'none',
       borderStyle: 'solid',
       borderWidth: '1px',
       borderColor: borderColor,

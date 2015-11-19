@@ -1,49 +1,102 @@
 'use strict'
 var d = React.DOM
 $('body').css({backgroundColor: COLOR.gray1, fontFamily: 'Helvetica'})
+var LoggedState = {
+  loading: 0,
+  loggedIn: 1,
+  loggedOut: 2
+}
 var Main = React.createClass({
   getInitialState: function(){
-    return {isLoggedIn: false}
+    return {loggedState: LoggedState.loading}
   },
   onConnect: function() {
-    this.setState({isLoggedIn: true})
+    this.setState({loggedState: LoggedState.loggedIn})
   },
-  render: function(){
+  componentWillMount: function() {
+    var options = {url: './api/userInfo.php', method: 'GET'}
+    var that = this
+    var userInfoCallback = function(data) {
+      if (data.result == 'not connected') {
+        that.setState({loggedState: LoggedState.loggedOut})
+      }
+      else {
+        that.setState({loggedState: LoggedState.loggedIn})
+      }
+    }
+    $.ajax(options).done(userInfoCallback)
+  },
+  render: function() {
     var element = null
-    if (this.state.isLoggedIn) {
+    var style = null
+    if (this.state.loggedState == LoggedState.loggedIn) {
       element = React.createElement(LoggedInApp)
+      style = {
+        width: '80%',
+        margin: 'auto',
+        backgroundColor: COLOR.white
+      }
+    }
+    else if (this.state.loggedState == LoggedState.loggedOut) {
+      element = React.createElement(LoggedOutApp, {onConnect: this.onConnect})
+      style = {
+        position: 'absolute',
+        backgroundColor: COLOR.white,
+        height: '100%',
+        right: '10%',
+        left: '10%'
+      }
     }
     else {
-      element = React.createElement(LoggedOutApp, {onConnect: this.onConnect})
+      element = React.createElement(LoadingApp)
+      style = {
+        position: 'absolute',
+        backgroundColor: COLOR.white,
+        height: '100%',
+        right: '10%',
+        left: '10%'
+      }
     }
-    return d.div({}, element)
+    return d.div({style: style}, element)
   }
 })
 Initializer.initialize(function () {
   React.render(React.createElement(Main), document.body)
 })
-var options = {url: './api/userInfo.php', method: 'GET'}
-var userInfoCallback = function(data) {
-  if (data.result == 'not connected') {
-    var options = {
-      url: './api/login.php',
-      method: 'POST',
-      data: {
-        username: 'Castor',
-        password: 'castor'
+//LoadingApp
+var LoadingApp = React.createClass({
+  logo: function() {
+    return d.div({
+      style: { 
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundImage: 'url(./images/bannerParionsLigue1.png)',
+        backgroundPosition: 'center center',
+        height: '50%',
+        width: '50%'
       }
-    }
-    var loginCallback = function(data) {
-      console.log(data)
-    }
-    $.ajax(options).done(loginCallback)
+    })
+  },
+  struct: function() {
+    return d.div({
+      style: {
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        height: '100%'
+      }
+    })
+  },
+  render: function() {
+    return d.div({
+      style: {
+        height: '100%',
+        textAlign: 'center'
+      }
+    }, this.struct(), this.logo())
   }
-  else {
-    console.log('Déjà connecté')
-  }
-}
-$.ajax(options).done(userInfoCallback)
-
-//CREATE COMPONENT loadingApp
+})
+// d.i({className: "fa fa-refresh fa-spin"})
 
 //list importation donnee/a quel moment?

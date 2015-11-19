@@ -47,6 +47,20 @@ var LoggedInApp = React.createClass({
         onClick: this.onSelectChange
       }),
       React.createElement(ButtonToolbar, {
+        icone: "fa fa-trophy",
+        name: 'Trophés',
+        selected: this.state.isClick == 'Trophés',
+        onClick: this.onSelectChange,
+        notification: 2
+      }),
+      React.createElement(ButtonToolbar, {
+        icone: "fa fa-star-o",
+        name: 'Records',
+        selected: this.state.isClick == 'Records',
+        onClick: this.onSelectChange,
+        notification: 1
+      }),
+      React.createElement(ButtonToolbar, {
         icone: "fa fa-balance-scale",
         name: 'Règles',
         selected: this.state.isClick == 'Règles',
@@ -82,12 +96,16 @@ var LoggedInApp = React.createClass({
     if (isClick == 'Règles') {
       element = 'React.createElement(Rules)'
     }
+    if (isClick == 'Records') {
+      element = 'React.createElement(Records)'
+    }
+    if (isClick == 'Trophés') {
+      element = 'React.createElement(Trophy)'
+    }
     return d.div({
       style: {
         backgroundColor: COLOR.white,
-        margin: 'auto',
         textAlign: 'center',
-        width: '1000px',
         padding: '15px 0'
       }
     }, this.banner(), this.toolbar(), element)

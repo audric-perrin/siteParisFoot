@@ -1,5 +1,6 @@
 <?php
   require_once('../php/sql.php');
+  sleep(1);
   function teamInfo() {
     $selectName = 'SELECT * FROM teamInfo';
     $result = runQuery($selectName);

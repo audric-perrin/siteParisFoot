@@ -14,20 +14,51 @@ var BetTable = React.createClass({
     $.ajax(options).done(this.handleMatches)
   },
   handleMatches: function(data) {
-    this.setState({isLoading: false, matchs: data.matchs})
+    var matchs = []
+    for (var matchId in data) {
+      var match = data[matchId]
+      match.id = matchId
+      matchs.push(match)
+    }
+    matchs.sort(function(m1, m2) {
+      var date1 = new Date(m1.date)
+      var date2 = new Date(m2.date)
+      return date1.getTime() - date2.getTime()
+    })
+    console.log(matchs)
+    this.setState({isLoading: false, matchs: matchs})
   },
   componentWillMount: function() {
     this.dataBet()
   },
   render: function () {
+    console.log(this.state)
     if (this.state.isLoading) {
-      return d.div({}, 'loading')
+        return d.div({
+        style:{
+          fontSize: '16px',
+          marginTop: '10px',
+          padding: '15px 0',
+          transition: 'all 0.7s',
+          color: COLOR.black,
+          backgroundColor: COLOR.white,
+          transition: 'all 0.3s',
+        }
+      }, d.i({
+        style: {
+          display: 'block',
+          fontSize: '40px',
+          marginBottom: '5px',
+          color: COLOR.gray3
+        },
+        className: "fa fa-spinner fa-pulse"
+      }), "Chargement des Paris")
     }
     else {
       var elements = []
       for (var i = 0; i < this.state.matchs.length; i++) {
         var renderDate = true
-        if (i > 0 && DateFormat.getDate(this.state.matchs[i].match.date) == DateFormat.getDate(this.state.matchs[i - 1].match.date)) {
+        if (i > 0 && DateFormat.getDate(this.state.matchs[i].date) == DateFormat.getDate(this.state.matchs[i - 1].date)) {
           renderDate = false
         }
           renderDate ? elements.push(React.createElement(RenderDate, {bet: this.state.matchs[i]})) : null
@@ -48,7 +79,7 @@ var BetTable = React.createClass({
 // Composant ligne date
 var RenderDate = React.createClass({
   render: function() {
-    var dateValue = DateFormat.getDate(this.props.bet.match.date) 
+    var dateValue = DateFormat.getDate(this.props.bet.date) 
     return d.div({
       style:{
         backgroundColor: COLOR.blue,
@@ -69,36 +100,46 @@ var RenderBlocMatch = React.createClass({
     return {selectedCoteResult: {}, selectedCoteScore: {}, validate: false}
   },
   renderLineMatch: function() {
-    var time = DateFormat.getTime(this.props.bet.match.date)
+    var time = DateFormat.getTime(this.props.bet.date)
     var matchUpName = [
-      TeamInfo.get(this.props.bet.match.teamDomicile).trueName,
-      React.createElement(Logo, {name: this.props.bet.match.teamDomicile, float: 'left', margin: '8px 10px'}),
+      TeamInfo.get(this.props.bet.teamDomicile).trueName,
+      React.createElement(Logo, {name: this.props.bet.teamDomicile, float: 'left', margin: '8px 10px'}),
       ' - ',
-      React.createElement(Logo, {name: this.props.bet.match.teamExterieur, float: 'right', margin: '8px 10px'}),
-      TeamInfo.get(this.props.bet.match.teamExterieur).trueName
+      React.createElement(Logo, {name: this.props.bet.teamExterieur, float: 'right', margin: '8px 10px'}),
+      TeamInfo.get(this.props.bet.teamExterieur).trueName
     ]
-    var cotes = [
-      this.props.bet.coteResult.coteDomicile,
-      this.props.bet.coteResult.coteEgalite,
-      this.props.bet.coteResult.coteExterieur
-    ]
-    var names = [
-      TeamInfo.get(this.props.bet.match.teamDomicile).littleName,
-      'Nul',
-      TeamInfo.get(this.props.bet.match.teamExterieur).littleName,
-    ]
-    var elementsCoteResult = React.createElement(CoteGroupResult, {cotes: cotes, onChange: this.onCoteResultChange, choose: names, realCote: cotes})
-    var elementsButtonStats = React.createElement(MyButton, {fontSize: 15, style: {marginTop: '2px'}}, d.i({className: "fa fa-bar-chart"}))
-    var elementsMyBet = 
-      this.state.selectedCoteResult.names
-      + ' (' +
-      this.state.selectedCoteResult.cote 
-      + ') ' +
-      this.state.selectedCoteScore.names
-      + ' (' +
-      this.state.selectedCoteScore.cote 
-      + ')'
-    if (this.state.validate) {
+    if (this.props.bet.bet) {
+      var scoreDomicile = parseFloat(this.props.bet.bet.scoreDomicile)
+      var scoreExterieur = parseFloat(this.props.bet.bet.scoreExterieur)
+      var coteResult = parseFloat(this.props.bet.bet.coteResult)
+      var coteScore = parseFloat(this.props.bet.bet.coteScore)
+      var domicileWin = scoreDomicile > scoreExterieur
+      var matchNul = scoreDomicile == scoreExterieur
+      var nameScore = scoreDomicile + ' - ' + scoreExterieur
+      if (matchNul) {
+        var elementsMyBet = React.createElement(MyBet, {      
+          nameResult: 'Nul',
+          coteResult: coteResult,
+          nameScore: nameScore,
+          coteScore: coteScore
+        })
+      }
+      else if (domicileWin) {
+        var elementsMyBet = React.createElement(MyBet, {
+          nameResult: this.props.bet.teamDomicile,
+          coteResult: coteResult,
+          nameScore: nameScore,
+          coteScore: coteScore
+        })
+      }
+      else {
+        var elementsMyBet = React.createElement(MyBet, {      
+          nameResult: this.props.bet.teamExterieur,
+          coteResult: coteResult,
+          nameScore: nameScore,
+          coteScore: coteScore
+        })
+      }
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
         React.createElement(Bloc, {width: '400px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
@@ -106,6 +147,18 @@ var RenderBlocMatch = React.createClass({
       ]
     }
     else {
+      var names = [
+        this.props.bet.teamDomicile,
+        'Nul',
+        this.props.bet.teamExterieur,
+      ]
+      var cotes = [
+        this.props.bet.coteResult.domicile,
+        this.props.bet.coteResult.egalite,
+        this.props.bet.coteResult.exterieur
+      ]
+      var elementsCoteResult = React.createElement(CoteGroupResult, {cotes: cotes, onChange: this.onCoteResultChange, choose: names, realCote: cotes})
+      var elementsButtonStats = React.createElement(MyButton, {fontSize: 15, style: {marginTop: '2px'}}, d.i({className: "fa fa-bar-chart"}))
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
         React.createElement(Bloc, {width: '400px', textAlign: 'center', lineHeight: '35px'}, matchUpName),

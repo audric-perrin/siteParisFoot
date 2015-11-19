@@ -1,73 +1,63 @@
 <?php
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  getId();
-  function getId() {
-   $betId = array();
-   $futurMatchId = array();
-   $matchs = array();
-   $result = runQuery(
+  sleep(1);
+  $matchInfo = array();
+  $ids = getMatchIds();
+  getMatchInfo($ids);
+  getCoteResult($ids);
+  getCoteScore($ids);
+  getBet($ids, 1);
+  echo json_encode($matchInfo);
+  function getMatchIds() {
+    $result = runQuery(
     'SELECT DISTINCT(result.id) 
-    FROM result INNER JOIN coteScore 
-    ON result.id = coteScore.id 
+    FROM result 
+    INNER JOIN coteScore ON result.id = coteScore.id 
+    INNER JOIN coteResult ON result.id = coteResult.id 
     WHERE result.scoreDomicile = "-1"
     ORDER BY date');
-   foreach ($result as $row) {
-    $matchs[] = bet($row['id']);
-   }
-   echo json_encode(array('matchs' => $matchs));
+    $matchIds = array();
+    foreach ($result as $row) {
+      $matchIds[] = $row['id'];
+    }
+    return $matchIds;
   }
-  function bet($id) {
-    $data = array();
-    $match = array();
-    $coteResult = array();
-    $coteScore = array();
-    $coteScores = array();
-    //Data match
-    $matchQuery = 'SELECT * FROM result WHERE id = ' . $id;
-    $result = runQuery($matchQuery);
+  function getMatchInfo($ids) {
+    global $matchInfo;
+    $result = runQuery('SELECT * FROM result WHERE id IN (' . implode(',', $ids) . ')');
     foreach ($result as $row) {
-      $match['date'] = $row['date'];
-      $match['teamDomicile'] = $row['teamDomicile'];
-      $match['teamExterieur'] = $row['teamExterieur'];
-      $match['id'] = $row['id'];
-      $data['match'] = $match;
+      $id = $row['id'];
+      unset($row['id']);
+      $matchInfo[$id] = $row;
+      $matchInfo[$id]['coteScore'] = array();
     }
-    //Data cote result
-    $coteResultQuery = 'SELECT * FROM coteResult WHERE id = ' . $id;
-    $result = runQuery($coteResultQuery);
+  }
+  function getCoteResult($ids) {
+    global $matchInfo;
+    $result = runQuery('SELECT * FROM coteResult WHERE id IN (' . implode(',', $ids) . ')');
     foreach ($result as $row) {
-      $decimal = 2;
-      strlen($row['domicile']) > 4 ? $decimal = 1 : $decimal = 2; 
-      $coteResult['coteDomicile'] = number_format(($row['domicile']), $decimal);
-      strlen($row['egalite']) > 4 ? $decimal = 1 : $decimal = 2; 
-      $coteResult['coteEgalite'] = number_format(($row['egalite']), $decimal);
-      strlen($row['exterieur']) > 4 ? $decimal = 1 : $decimal = 2; 
-      $coteResult['coteExterieur'] = number_format(($row['exterieur']), $decimal);
-      $data['coteResult'] = $coteResult;
+      $id = $row['id'];
+      unset($row['id']);
+      $matchInfo[$id]['coteResult'] = $row;
     }
-    //Data cote score
-    $coteScoreQuery = 'SELECT * FROM coteScore WHERE id = ' . $id;
-    $result = runQuery($coteScoreQuery);
+  }
+  function getCoteScore($ids) {
+    global $matchInfo;
+    $result = runQuery('SELECT * FROM coteScore WHERE id IN (' . implode(',', $ids) . ')');
     foreach ($result as $row) {
-      if (strlen($row['cote']) > 5) {
-        $cote = number_format(($row['cote']), 0);
-      }
-      elseif (strlen($row['cote']) > 4) {
-        $cote = number_format(($row['cote']), 1);
-      }
-      else {
-        $cote = number_format(($row['cote']), 2);
-      }
-      if ($row['cote'] != 0) {   
-        $coteScore = [
-          'scoreDomicile' => number_format(($row['scoreDomicile']), 0),
-          'scoreExterieur' => number_format(($row['scoreExterieur']), 0),
-          'cote' => $cote
-        ];
-        $coteScores[] = $coteScore;
-        $data['coteScore'] = $coteScores;
-      }
+      $id = $row['id'];
+      unset($row['id']);
+      $matchInfo[$id]['coteScore'][] = $row;
     }
-    return $data;
+  }
+  function getBet($ids, $userId) {
+    global $matchInfo;
+    $result = runQuery('SELECT * FROM bet WHERE matchId IN (' . implode(',', $ids) . ') AND userId = ' . $userId);
+    foreach ($result as $row) {
+      $id = $row['matchId'];
+      unset($row['matchId']);
+      unset($row['userId']);
+      $matchInfo[$id]['bet'] = $row;
+    }
   }

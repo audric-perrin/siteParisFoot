@@ -2,23 +2,100 @@
 var d = React.DOM
 //Création boîte de connection
 var Box_login = React.createClass({
+  getInitialState: function(){
+    return {error: null, username: '', password: '', loading: false}
+  },
   onConnectionClick: function() {
-    if (this.props.onConnect) {
-      this.props.onConnect()
+    this.setState({loading: true})
+    var pseudo = this.state.username
+    var password = this.state.password
+    var options = {
+      url: './api/login.php',
+      method: 'POST',
+      data: {
+        username: pseudo,
+        password: password
+      }
     }
+    var that = this
+    var loginCallback = function(data) {
+      if (data.result == 'ok') {
+        if (that.props.onConnect) {
+          that.props.onConnect()
+        }
+      }
+      else {
+        that.setState({error: data.result})
+      }
+      that.setState({loading: false})
+    }
+    $.ajax(options).done(loginCallback)
+  },
+  renderError: function() {
+    return d.div({
+      style: {        
+        color: COLOR.accent,
+        paddingBottom: '15px',
+        fontSize: '15px'
+      }
+    }, this.state.error)
+  },
+  canSubmit: function() {
+    var pseudo = this.state.username
+    var password = this.state.password
+    return pseudo != '' && password != '' && !this.state.loading
+  },
+  onPseudoChange: function(pseudo) {
+    this.setState({username: pseudo})
+  },
+  onPasswordChange: function(password) {
+    this.setState({password: password})
+  },
+  renderSubmit: function() {
+    var element = this.state.loading ? d.i({className: "fa fa-spinner fa-pulse"}) : 'Connexion'
+    return d.div({}, element)
   },
 	render: function() {
+    var element = [
+      React.createElement(Master_box_input,
+        {
+          text: 'Pseudo',
+          type: 'text',
+          nameIcone: 'fa fa-user',
+          onChange: this.onPseudoChange
+        }),
+      React.createElement(Master_box_input,
+        {
+          text: 'Mot de passe',
+          type: 'password',
+          nameIcone: 'fa fa-lock',
+          onChange: this.onPasswordChange
+        }),
+      React.createElement(MyButton, {
+        style:{
+          width: '330px',
+          padding: '15px',
+          margin: '0px 0px 15px 0px',
+          boxSizing: 'border-box',
+          fontSize: '18px'
+        }, 
+        onClick: this.onConnectionClick,
+        disabled: !this.canSubmit()
+      }, this.renderSubmit())
+    ]
+    if (this.state.error) {
+      element.splice(2, 0, this.renderError())
+    }
 		return d.div({
       style:{
         display: 'inline-block',
         width: '330px',
         backgroundColor: COLOR.gray1,
         borderRadius: '5px',
-        padding: '15px 15px 0px 15px'
+        padding: '15px 15px 0px 15px',
+        verticalAlign: 'middle'
       }
-    }, React.createElement(Master_box_input, {text: 'Pseudo', type: 'text', nameIcone: 'fa fa-user'}),
-       React.createElement(Master_box_input, {text: 'Password', type: 'password', nameIcone: 'fa fa-lock'}),
-       React.createElement(Button_login, {text: 'Connection', onClick: this.onConnectionClick}))
+    }, element)
 	}
 })
 //Création boîte d'inscription
@@ -34,25 +111,25 @@ var Box_signup = React.createClass({
       }
     },  React.createElement(Master_box_input, {text: 'Mail', type: 'text', nameIcone: 'fa fa-envelope'}), 
         React.createElement(Master_box_input, {text: 'Pseudo', type: 'text', nameIcone: 'fa fa-user'}),
-        React.createElement(Master_box_input, {text: 'Password', type: 'password', nameIcone: 'fa fa-lock'}),
+        React.createElement(Master_box_input, {text: 'Mot de passe', type: 'password', nameIcone: 'fa fa-lock'}),
         React.createElement(Button_login, {text: 'Inscription'}))
   }
 })
 //Création d'une ligne de saisie
 var Master_box_input = React.createClass({
-  getInitialState: function(){
+  getInitialState: function() {
     return {focus: false}
   },
-  onFocus: function(){
+  onFocus: function() {
     this.setState({focus: true})
   },
-  onBlur: function(){
+  onBlur: function() {
     this.setState({focus: false})
   },
   render: function() {
     var color = COLOR.gray1
     if (this.state.focus){
-      color = COLOR.blue
+      color = COLOR.primary
     }
     return d.div({
       onFocus: this.onFocus,
@@ -65,6 +142,9 @@ var Master_box_input = React.createClass({
       }
     },
       React.createElement(Box_input_text, {
+        color: color,
+        ref: 'boxInput',
+        onChange: this.props.onChange,
         text: this.props.text,
         type: this.props.type,
         nameIcone: this.props.nameIcone
@@ -73,10 +153,17 @@ var Master_box_input = React.createClass({
 })
 //Création de l'input
 var Box_input_text = React.createClass({
+  onValueChange: function() {
+    if (this.props.onChange){
+      this.props.onChange(this.refs.input.getDOMNode().value)
+    }
+  },
   render: function() {
     return d.input({
+      ref: 'input',
       type: this.props.type,
       placeholder: this.props.text,
+      onChange: this.onValueChange,
       style:{
         display: 'inline-block',
         width: '250px',
@@ -88,7 +175,7 @@ var Box_input_text = React.createClass({
         border: 'none',
         outline: 'none',
       }
-    }, React.createElement(Icone, {nameIcone: this.props.nameIcone}))
+    }, React.createElement(Icone, {nameIcone: this.props.nameIcone, color: this.props.color}))
   }
 })
 //Création de l'icone
@@ -104,50 +191,9 @@ var Icone = React.createClass({
         backgroundColor: COLOR.white,
         borderRadius: '0px 5px 5px 0px',
         paddingTop: '16.5px',
-        color: COLOR.gray3,
+        color: this.props.color == COLOR.gray1 ? COLOR.gray3 : COLOR.dark,
         textAlign: 'right'
       }
     }, d.i({className: this.props.nameIcone}))   
-  }
-})
-// Création du bouton
-var Button_login = React.createClass({
-  getInitialState: function () {
-    return {hover: false};
-  },
-  
-  mouseOver: function () {
-    this.setState({hover: true});
-  },
-  
-  mouseOut: function () {
-    this.setState({hover: false});
-  },
-  
-  render: function() {
-    var color = COLOR.blue
-    if (this.state.hover) {
-        color = COLOR.blue2
-    }
-    return d.button({
-      onMouseOver: this.mouseOver,
-      onMouseOut: this.mouseOut,
-      onClick: this.props.onClick,
-      style:{
-        display: 'inline-block',
-        width: '330px',
-        backgroundColor: color,
-        borderRadius: '5px',
-        padding: '15px',
-        margin: '0px 0px 15px 0px',
-        color: COLOR.white,
-        fontSize: '18px',
-        textAlign: 'center',
-        outline: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        transition: 'background-color 700ms'
-      }
-    }, this.props.text)
   }
 })

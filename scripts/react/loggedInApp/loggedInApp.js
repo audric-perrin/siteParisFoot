@@ -3,7 +3,29 @@ var d = React.DOM
 //Composant application
 var LoggedInApp = React.createClass({
   getInitialState: function() {
-    return {isClick: 'Pariez'}
+    return {isClick: 'Pariez', notificationBet: null, bet: false}
+  },
+  componentWillMount: function() {
+    this.dataNotification()
+  },
+  dataNotification: function() {
+    var options = {
+      url: './api/notification.php',
+      method: 'GET',
+    }
+    $.ajax(options).done(this.handleNotication)
+  },
+  handleNotication: function(data) {
+    this.setState({notificationBet: data.notificationBet, bet: false})
+  },
+  onSelectChange: function(name) {
+    this.setState({isClick: name})
+    this.dataNotification()
+  },
+  onBet: function() {
+    console.log('onbet')
+    this.setState({bet: true})
+    this.dataNotification()
   },
   banner: function() {
     return d.div({
@@ -16,9 +38,6 @@ var LoggedInApp = React.createClass({
       }
     })
   },
-  onSelectChange: function(name) {
-    this.setState({isClick: name})
-  },
   toolbar: function() {
     var elements = [
       React.createElement(ButtonToolbar, {
@@ -26,7 +45,7 @@ var LoggedInApp = React.createClass({
         name: 'Pariez',
         selected: this.state.isClick == 'Pariez',
         onClick: this.onSelectChange,
-        notification: 10
+        notification: this.state.notificationBet
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-calendar-check-o",
@@ -82,7 +101,7 @@ var LoggedInApp = React.createClass({
     var element = null
     var isClick = this.state.isClick
     if (isClick == 'Pariez') {
-      element = React.createElement(BetTable)
+      element = React.createElement(BetTable, {onBet: this.onBet})
     }
     if (isClick == 'Résultats') {
       element = React.createElement(Result)
@@ -109,78 +128,5 @@ var LoggedInApp = React.createClass({
         padding: '15px 0'
       }
     }, this.banner(), this.toolbar(), element)
-  }
-})
-// Composant button toolbar
-var ButtonToolbar = React.createClass({
-  getInitialState: function() {
-    return {buttonHover: false}
-  },
-  buttonHover: function(hover) {
-    this.setState({buttonHover: hover})
-  },
-  buttonClick: function() {
-    if (this.props.onClick) {
-      this.props.onClick(this.props.name)
-    }
-  },
-  icone: function(color, icone, number) {
-    var element = number > 0 ? this.notification(number) : null
-    return d.div({}, element, d.i({
-      style: {
-        display: 'block',
-        color: color,
-        fontSize: '28px',
-        marginBottom: '5px',
-        marginTop: '-10px',
-        transition: 'color 0.3s'
-      },
-      className: icone
-    }))
-  },
-  name: function(color, name) {
-    return d.div({
-      style: {
-        fontSize: '14px',
-        color: color,
-        transition: 'color 0.3s'
-      }
-    }, name)
-  },
-  notification: function(number) {
-    return d.div({
-      style: {
-        backgroundColor: COLOR.accent,
-        color: COLOR.white,
-        lineHeight: '16px',
-        minWidth: '16px',
-        borderRadius: '8px',
-        display: 'inline-block',
-        fontSize: '12px',
-        position: 'relative',
-        left: '10px',
-        padding: '0 3px',
-        boxSizing: 'border-box'
-      }
-    }, number)
-  },
-  render: function() {
-    var color = COLOR.gray3
-    if (this.props.selected) {
-      color = COLOR.dark
-    }
-    if (this.state.buttonHover) {
-      color = COLOR.dark
-    }
-    return d.div({
-      style: {
-        width: '120px',
-        display: 'inline-block',
-        cursor: 'pointer'
-      },
-      onClick: this.buttonClick,
-      onMouseOver: this.buttonHover.bind(this, true),
-      onMouseOut: this.buttonHover.bind(this, false)
-    }, this.icone(color, this.props.icone, this.props.notification), this.name(color, this.props.name))
   }
 })

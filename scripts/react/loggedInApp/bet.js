@@ -3,6 +3,7 @@ var d = React.DOM
 //Composant table paris
 var BetTable = React.createClass({
   getInitialState: function() {
+    console.log(this.props)
     return {isLoading: true, matchs: null}
   },
   dataBet: function () {
@@ -26,6 +27,9 @@ var BetTable = React.createClass({
       return date1.getTime() - date2.getTime()
     })
     this.setState({isLoading: false, matchs: matchs})
+    if (this.props.onBet) {
+      this.props.onBet()
+    }
   },
   componentWillMount: function() {
     this.dataBet()

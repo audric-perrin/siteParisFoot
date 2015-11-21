@@ -25,14 +25,12 @@ var BetTable = React.createClass({
       var date2 = new Date(m2.date)
       return date1.getTime() - date2.getTime()
     })
-    console.log(matchs)
     this.setState({isLoading: false, matchs: matchs})
   },
   componentWillMount: function() {
     this.dataBet()
   },
   render: function () {
-    console.log(this.state)
     if (this.state.isLoading) {
         return d.div({
         style:{
@@ -62,7 +60,7 @@ var BetTable = React.createClass({
           renderDate = false
         }
           renderDate ? elements.push(React.createElement(RenderDate, {bet: this.state.matchs[i]})) : null
-          elements.push(React.createElement(RenderBlocMatch, {bet: this.state.matchs[i]}))
+          elements.push(React.createElement(RenderBlocMatch, {bet: this.state.matchs[i], onRefreshRequired: this.handleMatches}))
       }
       return d.div({
         style: {
@@ -97,16 +95,16 @@ var RenderDate = React.createClass({
 //Composant ligne match
 var RenderBlocMatch = React.createClass({
   getInitialState: function() {
-    return {selectedCoteResult: {}, selectedCoteScore: {}, validate: false}
+    return {selectedCoteResult: {}, selectedCoteScore: {}, validate: false, isLoading: false}
   },
   renderLineMatch: function() {
     var time = DateFormat.getTime(this.props.bet.date)
     var matchUpName = [
-      TeamInfo.get(this.props.bet.teamDomicile).trueName,
+      TeamInfo.get(this.props.bet.teamDomicile).countryName,
       React.createElement(Logo, {name: this.props.bet.teamDomicile, float: 'left', margin: '8px 10px'}),
       ' - ',
       React.createElement(Logo, {name: this.props.bet.teamExterieur, float: 'right', margin: '8px 10px'}),
-      TeamInfo.get(this.props.bet.teamExterieur).trueName
+      TeamInfo.get(this.props.bet.teamExterieur).countryName
     ]
     if (this.props.bet.bet) {
       var scoreDomicile = parseFloat(this.props.bet.bet.scoreDomicile)
@@ -142,8 +140,8 @@ var RenderBlocMatch = React.createClass({
       }
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '400px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
-        React.createElement(Bloc, {width: '181px', textAlign: 'center', lineHeight: '35px'}, elementsMyBet)
+        React.createElement(Bloc, {width: '345px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: '210px', textAlign: 'center', lineHeight: '35px'}, elementsMyBet)
       ]
     }
     else {
@@ -153,15 +151,29 @@ var RenderBlocMatch = React.createClass({
         this.props.bet.teamExterieur,
       ]
       var cotes = [
-        this.props.bet.coteResult.domicile,
-        this.props.bet.coteResult.egalite,
-        this.props.bet.coteResult.exterieur
+        CoteNumber.format(this.props.bet.coteResult.domicile),
+        CoteNumber.format(this.props.bet.coteResult.egalite),
+        CoteNumber.format(this.props.bet.coteResult.exterieur)
       ]
-      var elementsCoteResult = React.createElement(CoteGroupResult, {cotes: cotes, onChange: this.onCoteResultChange, choose: names, realCote: cotes})
-      var elementsButtonStats = React.createElement(MyButton, {fontSize: 15, style: {marginTop: '2px'}}, d.i({className: "fa fa-bar-chart"}))
+      var elementsCoteResult = React.createElement(CoteGroupResult, {
+        cotes: cotes,
+        onChange: this.onCoteResultChange,
+        choose: names,
+        realCote: cotes,
+        buttonStyle: {
+          padding: '6px 9px'
+        }
+      })
+      var elementsButtonStats = React.createElement(MyButton, {
+        fontSize: 15,
+        style: {
+          marginTop: '4px',
+          padding: '4px 11px'
+        }
+      }, d.i({className: "fa fa-bar-chart"}))
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '400px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: '345px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsCoteResult),
         React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonStats)
       ]
@@ -206,7 +218,7 @@ var RenderBlocMatch = React.createClass({
         && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur > 0
         && this.props.bet.coteScore[i].scoreDomicile < 4) {
           var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
-          var coteScore = this.props.bet.coteScore[i].cote
+          var coteScore = CoteNumber.format(this.props.bet.coteScore[i].cote)
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
@@ -214,7 +226,7 @@ var RenderBlocMatch = React.createClass({
         else if (cote.result == 1 
         && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur == 0) {
           var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
-          var coteScore = this.props.bet.coteScore[i].cote
+          var coteScore = CoteNumber.format(this.props.bet.coteScore[i].cote)
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
@@ -224,7 +236,7 @@ var RenderBlocMatch = React.createClass({
         && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur < 0
         && this.props.bet.coteScore[i].scoreExterieur < 4) {
           var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
-          var coteScore = this.props.bet.coteScore[i].cote
+          var coteScore = CoteNumber.format(this.props.bet.coteScore[i].cote)
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
@@ -236,12 +248,16 @@ var RenderBlocMatch = React.createClass({
       onChange: this.onCoteScoreChange, 
       choose: names,
       realCote: realCote,
-      ref: 'coteScore'
+      ref: 'coteScore',
+      buttonStyle: {
+        width: '80px',
+        boxSizing: 'border-box'
+      }
     })
     var elementsButtonAllCote = React.createElement(MyButton, {style: {fontSize: 15, marginTop: '3px'}}, 'Plus de cotes')
     elements = [
       React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsCoteScore),
-      React.createElement(Bloc, {width: '127px', textAlign: 'center'}, elementsButtonAllCote)
+      React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonAllCote)
     ]
     return d.div({
       style:{
@@ -270,22 +286,19 @@ var RenderBlocMatch = React.createClass({
     }})
   },
   renderButtonSend: function() {
+    var color = COLOR.black
+    var backgroundColor = COLOR.white
+    var borderColor = COLOR.gray3
+    var hoverColor = COLOR.white
+    var hoverBackgroundColor = COLOR.accent
     if (this.state.selectedCoteScore && this.state.selectedCoteScore.result > -1 && this.state.selectedCoteResult.result > -1) {
-      var color = COLOR.black
-      var backgroundColor = COLOR.white
-      var borderColor = COLOR.gray3
-      var hoverColor = COLOR.white
-      var hoverBackgroundColor = COLOR.accent
       var onClick = this.onValidateSelected
+      var disabled = false
     }
     else {
-      var color = COLOR.gray1
-      var backgroundColor = COLOR.white
-      var borderColor = COLOR.gray2
-      var hoverColor = COLOR.gray1
-      var hoverBackgroundColor = COLOR.white
-      var hoverBorderColor = COLOR.gray2
+      var color = COLOR.white
       var onClick = null
+      var disabled = true
     }
     return React.createElement(MyButton, {
       color: color,
@@ -293,12 +306,12 @@ var RenderBlocMatch = React.createClass({
       backgroundColor: backgroundColor,
       hoverBackgroundColor: hoverBackgroundColor,
       borderColor: borderColor,
-      hoverBorderColor: hoverBorderColor,
       onClick: onClick,
+      disabled: this.state.isLoading || disabled,
       style: {
         padding: '4px 21px',
       }
-    }, 'Valider')
+    }, this.state.isLoading ? d.i({className: "fa fa-spinner fa-pulse"}) : 'Valider')
   },
   renderLineButtonValidate: function() {
     var elements = this.renderButtonSend()
@@ -313,8 +326,24 @@ var RenderBlocMatch = React.createClass({
       }
     }, elements)
   },
-  onValidateSelected: function() {
+  handlePostBet: function(data) {
     this.setState({validate: true})
+    if (this.props.onRefreshRequired) {
+      this.props.onRefreshRequired(data)
+    }
+  },
+  onValidateSelected: function() {
+    var matchId = this.props.bet.id
+    var scoreSplit = this.state.selectedCoteScore.names.split('-')
+    var scoreDomicile = scoreSplit[0]
+    var scoreExterieur = scoreSplit[1]
+    var options = {
+      url: './api/bet.php',
+      method: 'POST',
+      data: {'matchId': matchId, 'scoreDomicile': scoreDomicile, 'scoreExterieur': scoreExterieur}
+    }
+    this.setState({isLoading: true})
+    $.ajax(options).done(this.handlePostBet)
   },
   render: function() {
     var height = this.state.selectedCoteResult.result > -1 ? '122px' : '40px'
@@ -370,13 +399,18 @@ var CoteGroupResult = React.createClass({
       var backgroundColor = COLOR.white
       var borderColor = COLOR.gray3
     }
+    var buttonStyle = {
+      fontSize: '14px',
+      marginTop: '3px'
+    }
+    var styles = $.extend(true, this.props.buttonStyle, buttonStyle)
     return React.createElement(MyButton, {
       color: color,
       hoverColor: COLOR.white,
       backgroundColor: backgroundColor,
       hoverBackgroundColor: COLOR.accent,
       borderColor: borderColor,
-      style: {fontSize: '14px', marginTop: '3px'},
+      style: styles,
       onClick: this.onCoteClick.bind(this, index)
     }, cote)
   },
@@ -386,6 +420,7 @@ var CoteGroupResult = React.createClass({
     if (this.props.onChange) {
       this.props.onChange(this.props.cotes[index], index, this.props.choose[index], this.props.realCote[index])
     }
+    console.log(this.props)
   },
   render: function() {
     var elements = []

@@ -85,7 +85,7 @@ var LoggedInApp = React.createClass({
       element = React.createElement(BetTable)
     }
     if (isClick == 'Résultats') {
-      element = React.createElement(Result, {initialRound: 13})
+      element = React.createElement(Result)
     }
     if (isClick == 'Classement') {
       element = 'React.createElement(Ladder)'
@@ -111,9 +111,6 @@ var LoggedInApp = React.createClass({
     }, this.banner(), this.toolbar(), element)
   }
 })
-//
-  // React.createElement(Result, {initialRound: 13}) 
-//
 // Composant button toolbar
 var ButtonToolbar = React.createClass({
   getInitialState: function() {

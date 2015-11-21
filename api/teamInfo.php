@@ -6,7 +6,7 @@
     $result = runQuery($selectName);
     $teamInfo = array();
     foreach ($result as $row) {
-      $teamInfo[$row['name']] = array('trueName' => $row['trueName'], 'littleName' => $row['littleName']);
+      $teamInfo[$row['name']] = array('trueName' => $row['trueName'], 'littleName' => $row['littleName'], 'countryName' => $row['countryName']);
     }
     return $teamInfo;
   }

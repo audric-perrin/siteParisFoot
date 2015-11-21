@@ -32,7 +32,7 @@ var TeamDomicile = React.createClass({
         float: 'left',
         fontFamily: 'Helvetica'
       }
-    }, element, TeamInfo.get(this.props.match.teamDomicile).trueName)
+    }, element, TeamInfo.get(this.props.match.teamDomicile).countryName)
   } 
 })
 //Score
@@ -78,7 +78,7 @@ var TeamExterieur = React.createClass({
         float: 'right',
         fontFamily: 'Helvetica'
       }
-    }, element, TeamInfo.get(this.props.match.teamExterieur).trueName)
+    }, element, TeamInfo.get(this.props.match.teamExterieur).countryName)
   } 
 })
 //ligne match
@@ -126,7 +126,8 @@ var RoundInput = React.createClass({
   componentDidMount: function() {
     $(this.refs.container.getDOMNode()).chosen({
       disable_search: true,
-      width: '120px'
+      width: '120px',
+      placeholder_text_single: 'Loading...'
     }).change(this.onChange)
   },
   componentWillReceiveProps: function(newProps) {
@@ -139,7 +140,7 @@ var RoundInput = React.createClass({
   },
   render: function() {
     var options = []
-    for (i = 1; i < 22; i++) {
+    for (i = 1; i <= this.props.maxRound; i++) {
       if (i == this.props.round){
         options[i] = d.option({value: i, selected: 'selected'}, "Journée " + i)
       }
@@ -186,7 +187,7 @@ var LoadingBox = React.createClass({
 //Resultat
 var Result = React.createClass({
   getInitialState: function() {
-    return {matchs: null, round: null}
+    return {matchs: null, round: null, maxRound: null}
   },
   changeRound: function (round) {
     this.setState({matchs: null, round: round})
@@ -199,8 +200,16 @@ var Result = React.createClass({
   handleMatches: function(data) {
     this.setState({matchs: data.match})
   },
+  handleCurrentRound: function(data) {
+    this.changeRound(data.currentRound)
+    this.setState({maxRound: data.maxRound})
+  },
   componentWillMount: function() {
-    this.changeRound(this.props.initialRound)
+    var options = {
+      url: './api/currentRound.php',
+      method: 'GET',
+    }
+    $.ajax(options).done(this.handleCurrentRound)
   },
   onArrowHoverChange: function(left, hover) {
     var arrow = left ? 'arrowLeft' : 'arrowRight'
@@ -248,7 +257,8 @@ var Result = React.createClass({
           }) : this.renderArrow(true, this.previousRound),
       React.createElement(RoundInput, {
         onRoundChanged: this.changeRound,
-        round: this.state.round
+        round: this.state.round,
+        maxRound: this.state.maxRound
       }),
       this.state.round == 21 ? 
         d.div({

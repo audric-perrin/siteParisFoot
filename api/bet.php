@@ -2,7 +2,7 @@
   require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  // sleep(1);
+  require_once('../api/lag.php');
   if (isset($_POST['matchId']) and isset($_POST['scoreDomicile']) and isset($_POST['scoreExterieur'])) {
     $matchId = intval($_POST['matchId']);
     $scoreDomicile = intval($_POST['scoreDomicile']);

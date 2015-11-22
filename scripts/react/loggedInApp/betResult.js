@@ -3,18 +3,27 @@ var d = React.DOM
 //Composant application
 var MyBetResult = React.createClass({
   getInitialState: function() {
-    return {isLoading: true, userSelect: 0, userBets: null, matchs: null}
+    return {isLoading: true, userSelect: null, userBets: null, matchs: null, round: null}
+  },
+  changeRound: function (round, userId) {
+    this.setState({matchs: null, userBets: null, round: round})
+    var options = {
+      url: './api/betUser.php?user=' + userId + '&round=' + round,
+      method: 'GET',
+    }
+    $.ajax(options).done(this.handleBet)
   },
   handleBet: function(data) {
     this.setState({userBets: data.userBets, matchs: data.matchs})
   },
+  componentWillReceiveProps: function(newProps) {
+    if (newProps.round && newProps.userSelect) {
+      this.changeRound(newProps.round, newProps.userSelect)
+    }
+  },
   componentWillMount: function() {
-    if (this.props.userSelect) {
-      var options = {
-        url: './api/betUser.php?user=' + this.props.userSelect + '&round=' + 14,
-        method: 'GET',
-      }
-      $.ajax(options).done(this.handleBet)
+    if (this.props.round && this.props.userSelect) {
+      this.changeRound(this.props.round, this.props.userSelect)
     }
   },
   renderLineDate: function() {

@@ -196,12 +196,12 @@ var Result = React.createClass({
       method: 'GET',
     }
     $.ajax(options).done(this.handleMatches)
+    if (this.props.handleRound) {
+      this.props.handleRound(round)
+    }
   },
   handleMatches: function(data) {
     this.setState({matchs: data.match})
-    if (this.props.handleRound) {
-      this.props.handleRound(data)
-    }
   },
   handleCurrentRound: function(data) {
     this.changeRound(data.currentRound)

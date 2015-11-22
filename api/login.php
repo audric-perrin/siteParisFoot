@@ -2,7 +2,7 @@
   session_start();
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  // sleep(1);
+  require_once('../api/lag.php');
   if (isset($_POST['username']) and isset($_POST['password'])) {
     $result = runQuery('
       SELECT id

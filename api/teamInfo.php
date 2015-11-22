@@ -1,6 +1,6 @@
 <?php
   require_once('../php/sql.php');
-  // sleep(1);
+  require_once('../api/lag.php');
   function teamInfo() {
     $selectName = 'SELECT * FROM teamInfo';
     $result = runQuery($selectName);

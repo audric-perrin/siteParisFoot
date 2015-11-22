@@ -1,7 +1,7 @@
 <?php
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  // sleep(1);
+  require_once('../api/lag.php');
   $round = $_GET['round'];
   $matchsRoundQuery = 'SELECT * FROM result WHERE round = ' . $round . ' ORDER BY date';
   $result = runQuery($matchsRoundQuery);

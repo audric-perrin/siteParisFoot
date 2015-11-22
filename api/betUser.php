@@ -2,14 +2,12 @@
   require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  // sleep(1);
+  require_once('../api/lag.php');
   $round = $_GET['round'];
   $userId = 0;
   $userBets = array();
   $matchs = array();
-  if ($_GET['user'] == 'me') {
-    $userId = $_SESSION['id'];
-  }
+  $userId = intval($_GET['user']);
   $matchsRoundQuery = 'SELECT * FROM result WHERE round = ' . $round . ' ORDER BY date';
   $result = runQuery($matchsRoundQuery);
   foreach ($result as $row) {

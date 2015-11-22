@@ -3,7 +3,6 @@ var d = React.DOM
 //Composant mon paris
 var MyBet = React.createClass({
   render: function() {
-    console.log(this.props)
     var nameResult = this.props.nameResult !== 'Nul' ? TeamInfo.get(this.props.nameResult).littleName : 'NUL'
     var coteResult = '(' + CoteNumber.format(this.props.coteResult) + ')'
     var nameScore = this.props.nameScore

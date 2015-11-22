@@ -25,7 +25,7 @@ var TeamDomicile = React.createClass({
     return d.div({
       style:{
         display: 'inline-block',
-        width: '200px',
+        width: '145px',
         textAlign: 'right',
         color: COLOR.black,
         fontSize: '16px',
@@ -71,7 +71,7 @@ var TeamExterieur = React.createClass({
     return d.div({
       style:{
         display: 'inline-block',
-        width: '200px',
+        width: '145px',
         textAlign: 'left',
         color: COLOR.black,
         fontSize: '16px',
@@ -140,7 +140,7 @@ var RoundInput = React.createClass({
   },
   render: function() {
     var options = []
-    for (i = 1; i <= this.props.maxRound; i++) {
+    for (var i = 1; i <= this.props.maxRound; i++) {
       if (i == this.props.round){
         options[i] = d.option({value: i, selected: 'selected'}, "Journée " + i)
       }
@@ -199,6 +199,9 @@ var Result = React.createClass({
   },
   handleMatches: function(data) {
     this.setState({matchs: data.match})
+    if (this.props.handleRound) {
+      this.props.handleRound(data)
+    }
   },
   handleCurrentRound: function(data) {
     this.changeRound(data.currentRound)
@@ -219,7 +222,7 @@ var Result = React.createClass({
   },
   renderArrow: function(left, onClick) { 
     var isHover = this.state[left ? 'arrowLeft' : 'arrowRight']
-    var padding = left ? '5px 0 5px 20px' : '5px 20px 5px 0'
+    var padding = left ? '0 0 0 20px' : '0 20px 0 0'
     return d.div({
       style:{
         fontSize: '30px',
@@ -293,8 +296,9 @@ var Result = React.createClass({
         display: 'inline-block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
-        width: '560px',
-        borderRadius: '5px'
+        width: '450px',
+        borderRadius: '5px',
+        verticalAlign: 'middle'
       }
     }, elements)
   }

@@ -1,169 +1,150 @@
 'use strict'
 var d = React.DOM
-//dataBet paris
-var dataBet = {
-  journeeBet: 8,
-  matchBet: [
-  {
-    bet: '1',
-    coteBet: 1.65,
-    score: '1 - 0',
-    coteScore: 3.56
+//Composant application
+var MyBetResult = React.createClass({
+  getInitialState: function() {
+    return {isLoading: true, userSelect: 0, userBets: null, matchs: null}
   },
-  {
-    bet: 'N',
-    coteBet: 3.23,
-    score: '2 - 2',
-    coteScore: 12.64
+  handleBet: function(data) {
+    this.setState({userBets: data.userBets, matchs: data.matchs})
   },
-  {
-    bet: '2',
-    coteBet: 2.30,
-    score: '1 - 2',
-    coteScore: 10.32
-  },
-  {
-    bet: '1',
-    coteBet: 1.42,
-    score: '1 - 0',
-    coteScore: 4.25
-  },
-  {
-    bet: '1',
-    coteBet: 1.8,
-    score: '3 - 2',
-    coteScore: 20.53
-  },
-  {
-    bet: 'N',
-    coteBet: 3.57,
-    score: '1 - 1',
-    coteScore: 6.23
-  },
-  {
-    bet: '1',
-    coteBet: 1.98,
-    score: '3 - 0',
-    coteScore: 15.43
-  },
-  {
-    bet: '1',
-    coteBet: 3.26,
-    score: '2 - 0',
-    coteScore: 5.34
-  },
-  {
-    bet: '2',
-    coteBet: 2.43,
-    score: '0 - 1',
-    coteScore: 12.64
-  },
-  {
-    bet: 'N',
-    coteBet: 2.43,
-    score: '0 - 0',
-    coteScore: 5.62
-  }
-  ]
-}
-//Paris score
-var ScoreBet = React.createClass({
-  render: function(){
-    return d.div({
-      style:{
-        display: 'inline-block',
-        textAlign: 'left',
-        color: COLOR.black,
-        fontSize: '18px',
-        float: 'right',
-        fontFamily: 'Helvetica',
-        marginRight: '15px'
+  componentWillMount: function() {
+    if (this.props.userSelect) {
+      var options = {
+        url: './api/betUser.php?user=' + this.props.userSelect + '&round=' + 14,
+        method: 'GET',
       }
-    }, dataBet.matchBet[this.props.n].coteScore + ' ( ' + dataBet.matchBet[this.props.n].score + ' ) ')
-  } 
-})
-//Paris 1N2
-var Bet1N2 = React.createClass({
-  render: function(){
+      $.ajax(options).done(this.handleBet)
+    }
+  },
+  renderLineDate: function() {
     return d.div({
       style:{
-        display: 'inline-block',
-        textAlign: 'right',
-        color: COLOR.black,
-        fontSize: '18px',
-        float: 'left',
-        fontFamily: 'Helvetica',
-        marginLeft: '15px'
-      }
-    }, dataBet.matchBet[this.props.n].coteBet + ' ( ' + dataBet.matchBet[this.props.n].bet + ' ) ')
-  } 
-})
-//ligne paris
-var Bet = React.createClass({
-  render: function(){
-    return d.div({
-      style:{
-        backgroundColor: COLOR.white,
-        display: 'inline-block',
-        height: '50px',
-        width: '270px',
-        marginTop: '10px',
-        textAlign: 'center',
-        lineHeight: '50px'
-      }
-    }, React.createElement(ScoreBet, {n: this.props.n}),
-    React.createElement(Bet1N2, {n: this.props.n}))
-  } 
-})
-//Fonction tous les matchs
-var resultsBet = []
-for (var i = 0; i < dataBet.matchBet.length; i++){
-  resultsBet.push (React.createElement(Bet, {n: i}))
-}  
-//Box titre
-var Title = React.createClass({
-  render: function(){
-    return d.div({
-      style:{
-        display: 'inline-block',
-        width: '270px',
-        height: '40px',
-        lineHeight: '40px',
         backgroundColor: COLOR.blue,
-        marginBottom: '5px',
+        height: '30px',
+        width: '213px',
+        marginTop: '10px',
+        textAlign: 'left',
         color: COLOR.white,
-        fontSize: '18px',
-        fontFamily: 'Helvetica'
+        fontSize: '16px',
+        fontFamily: 'Helvetica',
+        paddingLeft: '10px',
+        lineHeight: '30px'
       }
-    }, d.div({
-      style:{ 
-        float: 'left',
-        marginLeft: '30px'
+    })
+  },
+  renderLine: function(match, userBet) {
+    if (userBet) {
+      var coteResultWin = false
+      var endMatch = false
+      if (match.scoreDomicile != -1 && match.scoreDomicile > match.scoreExterieur && userBet.scoreDomicile > userBet.scoreExterieur) {
+        coteResultWin = true
       }
-    }, '1 N 2'), 
-       d.div({
-        style:{ 
-          float: 'right',
-          marginRight: '30px'
+      if (match.scoreDomicile != -1 && match.scoreDomicile < match.scoreExterieur && userBet.scoreDomicile < userBet.scoreExterieur) {
+        coteResultWin = true
+      }
+      if (match.scoreDomicile != -1 && match.scoreDomicile == match.scoreExterieur && userBet.scoreDomicile == userBet.scoreExterieur) {
+        coteResultWin = true
+      }
+      if (match.scoreDomicile != -1) {
+        endMatch = true
+      }
+      var coteScoreWin = false
+      if (match.scoreDomicile != -1 && match.scoreDomicile == userBet.scoreDomicile && match.scoreExterieur == userBet.scoreExterieur) {
+        coteScoreWin = true
+      }
+      var scoreDomicile = parseFloat(userBet.scoreDomicile)
+      var scoreExterieur = parseFloat(userBet.scoreExterieur)
+      var coteResult = parseFloat(userBet.coteResult)
+      var coteScore = parseFloat(userBet.coteScore)
+      var domicileWin = scoreDomicile > scoreExterieur
+      var matchNul = scoreDomicile == scoreExterieur
+      var nameScore = scoreDomicile + ' - ' + scoreExterieur
+      if (matchNul) {
+        var elementsMyBet = React.createElement(MyBet, {      
+          nameResult: 'Nul',
+          coteResult: coteResult,
+          nameScore: nameScore,
+          coteScore: coteScore,
+          height: '30px',
+          coteResultWin: coteResultWin,
+          coteScoreWin: coteScoreWin,
+          endMatch: endMatch
+        })
+      }
+      else if (domicileWin) {
+        var elementsMyBet = React.createElement(MyBet, {
+          nameResult: match.teamDomicile,
+          coteResult: coteResult,
+          nameScore: nameScore,
+          coteScore: coteScore,
+          height: '30px',
+          coteResultWin: coteResultWin,
+          coteScoreWin: coteScoreWin,
+          endMatch: endMatch
+        })
+      }
+      else {
+        var elementsMyBet = React.createElement(MyBet, {      
+          nameResult: match.teamExterieur,
+          coteResult: coteResult,
+          nameScore: nameScore,
+          coteScore: coteScore,
+          height: '30px',
+          coteResultWin: coteResultWin,
+          coteScoreWin: coteScoreWin,
+          endMatch: endMatch
+        })
+      }
+      return d.div({
+        style: {
+          display: 'inline-block',
+          backgroundColor: COLOR.white,
+          width: '213px',
+          textAlign: 'center',
+          lineHeight: '30px',
+          padding: '0 5px',
+          verticalAlign: 'middle',
+          height: '30px',
+          margin: '10px 5px 0 0'
         }
-      }, 'Score exacte'))
-  }
-})
-//Box des resultat paris
-var Box_bet_result = React.createClass({
-  render: function(){
-    return d.div({
-      style:{
-        margin: '15px',
-        textAlign: 'center',
-        display: 'inline-block',
-        backgroundColor: COLOR.gray1,
-        paddingTop: '15px',
-        paddingBottom: '15px',
-        width: '300px',
-        height: '675px',
-        borderRadius: '5px'
+      }, elementsMyBet)
+    }
+    else {
+      return d.div({
+        style: {
+          display: 'inline-block',
+          backgroundColor: COLOR.white,
+          width: '213px',
+          textAlign: 'center',
+          lineHeight: '30px',
+          padding: '0 5px',
+          verticalAlign: 'middle',
+          height: '30px',
+          margin: '10px 5px 0 0'
+        }
+      }, 'Pas de pari sur ce match')
+    }
+  },
+  render: function() {
+    if (this.state.matchs) {
+      var elements = []
+      var actualDate = 0
+      for (var i = 0; i < this.state.matchs.length; i++) {
+        var match = this.state.matchs[i]
+        if (actualDate != DateFormat.getDate(match.date)) {
+          elements.push(this.renderLineDate())
+          actualDate = DateFormat.getDate(match.date)
+        }
+        elements.push(this.renderLine(match, this.state.userBets[match.matchId]))
       }
-    }, React.createElement(Title), resultsBet)
+    }
+    return d.div({
+      style: {      
+        verticalAlign: 'middle',
+        display: 'inline-block',
+        backgroundColor: 'none'
+      }
+    }, elements)
   }
 })

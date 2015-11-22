@@ -3,7 +3,7 @@ var d = React.DOM
 //Composant application
 var LoggedInApp = React.createClass({
   getInitialState: function() {
-    return {isClick: 'Pariez', notificationBet: null, bet: false}
+    return {isClick: 'Résultats', notificationBet: null}
   },
   componentWillMount: function() {
     this.dataNotification()
@@ -16,15 +16,13 @@ var LoggedInApp = React.createClass({
     $.ajax(options).done(this.handleNotication)
   },
   handleNotication: function(data) {
-    this.setState({notificationBet: data.notificationBet, bet: false})
+    this.setState({notificationBet: data.notificationBet})
   },
   onSelectChange: function(name) {
     this.setState({isClick: name})
     this.dataNotification()
   },
   onBet: function() {
-    console.log('onbet')
-    this.setState({bet: true})
     this.dataNotification()
   },
   banner: function() {
@@ -104,7 +102,7 @@ var LoggedInApp = React.createClass({
       element = React.createElement(BetTable, {onBet: this.onBet})
     }
     if (isClick == 'Résultats') {
-      element = React.createElement(Result)
+      element = React.createElement(BlocResult)
     }
     if (isClick == 'Classement') {
       element = 'React.createElement(Ladder)'

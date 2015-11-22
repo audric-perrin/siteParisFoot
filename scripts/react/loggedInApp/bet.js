@@ -3,7 +3,6 @@ var d = React.DOM
 //Composant table paris
 var BetTable = React.createClass({
   getInitialState: function() {
-    console.log(this.props)
     return {isLoading: true, matchs: null}
   },
   dataBet: function () {
@@ -424,7 +423,6 @@ var CoteGroupResult = React.createClass({
     if (this.props.onChange) {
       this.props.onChange(this.props.cotes[index], index, this.props.choose[index], this.props.realCote[index])
     }
-    console.log(this.props)
   },
   render: function() {
     var elements = []

@@ -3,11 +3,12 @@ var d = React.DOM
 //Composant mon paris
 var MyBet = React.createClass({
   render: function() {
-  var nameResult = this.props.nameResult !== 'Nul' ? TeamInfo.get(this.props.nameResult).littleName : 'NUL'
-  var coteResult = '(' + CoteNumber.format(this.props.coteResult) + ')'
-  var nameScore = this.props.nameScore
-  var coteScore = '(' + CoteNumber.format(this.props.coteScore) + ')'
-  var elementIcone = this.props.nameResult == 'Nul' ? 
+    console.log(this.props)
+    var nameResult = this.props.nameResult !== 'Nul' ? TeamInfo.get(this.props.nameResult).littleName : 'NUL'
+    var coteResult = '(' + CoteNumber.format(this.props.coteResult) + ')'
+    var nameScore = this.props.nameScore
+    var coteScore = '(' + CoteNumber.format(this.props.coteScore) + ')'
+    var elementIcone = this.props.nameResult == 'Nul' ? 
   d.i({
     style: {
       display: 'inline-block',
@@ -19,14 +20,34 @@ var MyBet = React.createClass({
       float: 'left'
     },
     className: "fa fa-minus"}) : 
-  React.createElement(Logo, {name: this.props.nameResult, float: 'left', margin: '8px 4px'})
+  React.createElement(Logo, {name: this.props.nameResult, float: 'left', margin: this.props.height ? '5px 4px' : '8px 4px'})
+  var colorNameResult = COLOR.black
+  var colorCoteResult = COLOR.black
+  var colorCoteScore = COLOR.black
+  if (this.props.coteResultWin) {
+    colorNameResult = COLOR.green
+    colorCoteResult = COLOR.black
+  }
+  else if (this.props.endMatch) {
+    colorNameResult = COLOR.accent
+    colorCoteResult = COLOR.gray2
+  }
+  var colorNameScore = COLOR.black
+  if (this.props.coteScoreWin) {
+    colorNameScore = COLOR.green
+    colorCoteScore = COLOR.black
+  }
+  else if (this.props.endMatch) {
+    colorNameScore = COLOR.accent
+    colorCoteScore = COLOR.gray2
+  }
   var elements = [
     d.div({style: {
         display: 'inline-block',
         width: '45px',
         marginRight: '2px',
         fontSize: '14px',
-        color: COLOR.gray4,
+        color: colorCoteResult,
         float: 'left'
       }
     }, coteResult),
@@ -34,7 +55,7 @@ var MyBet = React.createClass({
     d.div({
       style: {
         display: 'inline-block',
-        color: COLOR.black,
+        color: colorNameResult,
         margin: '0 2px 0 2px',
         width: '45px',
         fontSize: '14px',
@@ -43,7 +64,7 @@ var MyBet = React.createClass({
     }, nameResult),
     d.div({style: {
         display: 'inline-block',
-        color: COLOR.dark,
+        color: colorNameScore,
         marginRight: '10px',
         fontSize: '14px'
       }
@@ -51,12 +72,20 @@ var MyBet = React.createClass({
     d.div({style: {
         display: 'inline-block',
         fontSize: '14px',
-        color: COLOR.gray4
+        color: colorCoteScore
       }
     }, coteScore) 
   ]
+  var height = '35px'
+  if (this.props.height) {
+    height = this.props.height
+  }
     return d.div({
-      style: {}
+      style: {
+        height: height,
+        lineHeight: height,
+        width: '220px'
+      }
     }, elements)
   }
 })

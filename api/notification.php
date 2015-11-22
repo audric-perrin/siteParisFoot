@@ -2,7 +2,7 @@
   require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  sleep(1);
+  // sleep(1);
   $countBet = 0;
   $ids = getMatchIds();
   countUserBet($ids);

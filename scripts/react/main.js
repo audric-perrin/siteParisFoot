@@ -97,6 +97,3 @@ var LoadingApp = React.createClass({
     }, this.struct(), this.logo())
   }
 })
-// d.i({className: "fa fa-refresh fa-spin"})
-
-//list importation donnee/a quel moment?

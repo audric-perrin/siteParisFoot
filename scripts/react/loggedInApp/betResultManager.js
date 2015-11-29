@@ -62,7 +62,6 @@ var UserInput = React.createClass({
     this.props.onUserChanged(parseFloat(data.selected))
   },
   render: function() {
-    console.log(this.state.users)
     var options = []
     for (var i = 0; i < this.state.users.length; i++) {
       var user = this.state.users[i]

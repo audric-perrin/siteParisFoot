@@ -1,5 +1,5 @@
 'use strict'
-var CoteNumber = {  
+var DecimalNumber = {  
   format: function(number) {
     var number = parseFloat(number)
     if (number >= 100) {

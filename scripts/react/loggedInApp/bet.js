@@ -37,13 +37,13 @@ var BetTable = React.createClass({
     if (this.state.isLoading) {
         return d.div({
         style:{
+          display: 'inline-block',
+          width: '260px',
+          padding: '0 40px',
           fontSize: '16px',
-          marginTop: '10px',
-          padding: '15px 0',
-          transition: 'all 0.7s',
+          margin: '10px 30px',
           color: COLOR.black,
           backgroundColor: COLOR.white,
-          transition: 'all 0.3s',
         }
       }, d.i({
         style: {
@@ -71,7 +71,8 @@ var BetTable = React.createClass({
           backgroundColor: COLOR.gray1,
           borderRadius: '5px',
           textAlign: 'center',
-          padding: '5px 10px 15px 15px'
+          padding: '5px 10px 15px 15px',
+          verticalAlign: 'top'
         }
       }, elements)
     }
@@ -143,7 +144,7 @@ var RenderBlocMatch = React.createClass({
       }
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '345px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: '283px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {width: '210px', textAlign: 'center', lineHeight: '35px'}, elementsMyBet)
       ]
     }
@@ -154,9 +155,9 @@ var RenderBlocMatch = React.createClass({
         this.props.bet.teamExterieur,
       ]
       var cotes = [
-        CoteNumber.format(this.props.bet.coteResult.domicile),
-        CoteNumber.format(this.props.bet.coteResult.egalite),
-        CoteNumber.format(this.props.bet.coteResult.exterieur)
+        DecimalNumber.format(this.props.bet.coteResult.domicile),
+        DecimalNumber.format(this.props.bet.coteResult.egalite),
+        DecimalNumber.format(this.props.bet.coteResult.exterieur)
       ]
       var elementsCoteResult = React.createElement(CoteGroupResult, {
         cotes: cotes,
@@ -176,7 +177,7 @@ var RenderBlocMatch = React.createClass({
       }, d.i({className: "fa fa-bar-chart"}))
       var elements = [
         React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '345px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: '283px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsCoteResult),
         React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonStats)
       ]
@@ -221,7 +222,7 @@ var RenderBlocMatch = React.createClass({
         && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur > 0
         && this.props.bet.coteScore[i].scoreDomicile < 4) {
           var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
-          var coteScore = CoteNumber.format(this.props.bet.coteScore[i].cote)
+          var coteScore = DecimalNumber.format(this.props.bet.coteScore[i].cote)
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
@@ -229,7 +230,7 @@ var RenderBlocMatch = React.createClass({
         else if (cote.result == 1 
         && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur == 0) {
           var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
-          var coteScore = CoteNumber.format(this.props.bet.coteScore[i].cote)
+          var coteScore = DecimalNumber.format(this.props.bet.coteScore[i].cote)
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
@@ -239,7 +240,7 @@ var RenderBlocMatch = React.createClass({
         && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur < 0
         && this.props.bet.coteScore[i].scoreExterieur < 4) {
           var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
-          var coteScore = CoteNumber.format(this.props.bet.coteScore[i].cote)
+          var coteScore = DecimalNumber.format(this.props.bet.coteScore[i].cote)
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
@@ -257,9 +258,16 @@ var RenderBlocMatch = React.createClass({
         boxSizing: 'border-box'
       }
     })
-    var elementsButtonAllCote = React.createElement(MyButton, {style: {fontSize: 15, marginTop: '3px'}}, 'Plus de cotes')
+    var elementsButtonAllCote = React.createElement(MyButton, {
+      style: {
+        fontSize: 25,
+        marginTop: '3px',
+        padding: '1px 0',
+        width:'41px'
+      }
+    }, d.i({className: "fa fa-caret-down"}))
     elements = [
-      React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsCoteScore),
+      React.createElement(Bloc, {width: '505px', textAlign: 'center'}, elementsCoteScore),
       React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonAllCote)
     ]
     return d.div({

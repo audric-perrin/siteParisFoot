@@ -3,7 +3,7 @@ var d = React.DOM
 //Composant application
 var LoggedInApp = React.createClass({
   getInitialState: function() {
-    return {isClick: 'Résultats', notificationBet: null}
+    return {isClick: 'Pariez', notificationBet: null}
   },
   componentWillMount: function() {
     this.dataNotification()
@@ -99,13 +99,13 @@ var LoggedInApp = React.createClass({
     var element = null
     var isClick = this.state.isClick
     if (isClick == 'Pariez') {
-      element = React.createElement(BetTable, {onBet: this.onBet})
+      element = React.createElement(BlocBet, {onBet: this.onBet})
     }
     if (isClick == 'Résultats') {
       element = React.createElement(BlocResult)
     }
     if (isClick == 'Classement') {
-      element = 'React.createElement(Ladder)'
+      element = React.createElement(Ranking)
     }
     if (isClick == 'Statistiques') {
       element = 'React.createElement(Stats)'

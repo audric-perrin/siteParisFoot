@@ -4,9 +4,9 @@ var d = React.DOM
 var MyBet = React.createClass({
   render: function() {
     var nameResult = this.props.nameResult !== 'Nul' ? TeamInfo.get(this.props.nameResult).littleName : 'NUL'
-    var coteResult = '(' + CoteNumber.format(this.props.coteResult) + ')'
+    var coteResult = '(' + DecimalNumber.format(this.props.coteResult) + ')'
     var nameScore = this.props.nameScore
-    var coteScore = '(' + CoteNumber.format(this.props.coteScore) + ')'
+    var coteScore = '(' + DecimalNumber.format(this.props.coteScore) + ')'
     var elementIcone = this.props.nameResult == 'Nul' ? 
   d.i({
     style: {

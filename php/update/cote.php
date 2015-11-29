@@ -106,15 +106,17 @@
       foreach ($result as $rowCoteResult) {
         $coteId = $rowCoteResult['id'];
       }
-      if ($coteId) {
-        runQuery('UPDATE `coteResult` 
-          SET `domicile`=' . $row["resultCote"]["%1%"] . ',`egalite`=' . $row["resultCote"]["Nul"] . ',`exterieur`=' . $row["resultCote"]["%2%"] . '
-          WHERE id = '. $coteId);
-      }
-      else {
-        $insertQuery = 'INSERT INTO `coteResult` 
-          VALUES (' . $id . ',' . $row["resultCote"]["%1%"] . ',' . $row["resultCote"]["Nul"] . ',' . $row["resultCote"]["%2%"] . ')';
-        runQuery($insertQuery);
+      if (isset($row['resultCote']['%1%'])) {  
+        if ($coteId) {
+          runQuery('UPDATE `coteResult` 
+            SET `domicile`=' . $row["resultCote"]["%1%"] . ',`egalite`=' . $row["resultCote"]["Nul"] . ',`exterieur`=' . $row["resultCote"]["%2%"] . '
+            WHERE id = '. $coteId);
+        }
+        else {
+          $insertQuery = 'INSERT INTO `coteResult` 
+            VALUES (' . $id . ',' . $row["resultCote"]["%1%"] . ',' . $row["resultCote"]["Nul"] . ',' . $row["resultCote"]["%2%"] . ')';
+          runQuery($insertQuery);
+        }
       }
       //Cote score
       foreach ($row['scoreCote'] as $score => $cote) {

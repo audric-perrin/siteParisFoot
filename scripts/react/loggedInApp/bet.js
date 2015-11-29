@@ -99,7 +99,7 @@ var RenderDate = React.createClass({
 //Composant ligne match
 var RenderBlocMatch = React.createClass({
   getInitialState: function() {
-    return {selectedCoteResult: {}, selectedCoteScore: {}, validate: false, isLoading: false}
+    return {selectedCoteResult: {}, selectedCoteScore: {}, validate: false, isLoading: false, allCote: false}
   },
   renderLineMatch: function() {
     var time = DateFormat.getTime(this.props.bet.date)
@@ -143,8 +143,8 @@ var RenderBlocMatch = React.createClass({
         })
       }
       var elements = [
-        React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '283px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: 'initial', textAlign: 'center', lineHeight: '35px'}, time),
+        React.createElement(Bloc, {width: '284px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {width: '210px', textAlign: 'center', lineHeight: '35px'}, elementsMyBet)
       ]
     }
@@ -161,7 +161,7 @@ var RenderBlocMatch = React.createClass({
       ]
       var elementsCoteResult = React.createElement(CoteGroupResult, {
         cotes: cotes,
-        onChange: this.onCoteResultChange,
+        onChange: this.onCoteResultChange.bind(this),
         choose: names,
         realCote: cotes,
         buttonStyle: {
@@ -176,10 +176,10 @@ var RenderBlocMatch = React.createClass({
         }
       }, d.i({className: "fa fa-bar-chart"}))
       var elements = [
-        React.createElement(Bloc, {width: 'none', textAlign: 'center', lineHeight: '35px'}, time),
-        React.createElement(Bloc, {width: '283px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
-        React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsCoteResult),
-        React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonStats)
+        React.createElement(Bloc, {width: 'initial', textAlign: 'center', lineHeight: '35px'}, time),
+        React.createElement(Bloc, {width: '284px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
+        React.createElement(Bloc, {width: 'initial', textAlign: 'center'}, elementsCoteResult),
+        React.createElement(Bloc, {width: 'initial', textAlign: 'center'}, elementsButtonStats)
       ]
     }
     return d.div({
@@ -197,10 +197,19 @@ var RenderBlocMatch = React.createClass({
     var next = sameCote ? -1 : choose
     var updateState = function() {
       this.setState({selectedCoteResult: {
-        cote: cote,
-        result: next,
-        names: names
-      }})
+          cote: cote,
+          result: next,
+          names: names
+        },
+        allCote: false
+      })
+    }
+    console.log(this.props)
+    if (this.props.refs) {
+      this.props.refs.coteScoreSimple.setSelectedIndex(-1)
+      if (this.props.refs.coteScoreFull) {
+        this.props.refs.coteScoreFull.setSelectedIndex(-1)
+      }
     }
     updateState = updateState.bind(this)
     if (sameCote) {
@@ -209,13 +218,16 @@ var RenderBlocMatch = React.createClass({
     else {
       updateState()
     }
-    this.refs.coteScore.setSelectedIndex(-1)
+  },
+  isClickAllCote: function() {
+    this.setState({allCote: this.state.allCote ? false : true})
   },
   renderLineCoteScore: function(cote) {
     var elements = null
     var cotes = []
     var names = []
     var realCote = []
+    var matchNul = false
     if (cote) {   
       for (var i = 0; i < this.props.bet.coteScore.length; i++) {
         if (cote.result == 0 
@@ -234,6 +246,7 @@ var RenderBlocMatch = React.createClass({
           cotes.push(this.renderCoteScore(score, coteScore))
           names.push(score)
           realCote.push(coteScore)
+          matchNul = true
         }
         else if (cote 
         && cote.result == 2 
@@ -249,33 +262,43 @@ var RenderBlocMatch = React.createClass({
     }
     var elementsCoteScore = React.createElement(CoteGroupResult, {
       cotes: cotes, 
-      onChange: this.onCoteScoreChange, 
+      onChange: this.onCoteScoreChange.bind(this, 'coteScoreFull'), 
       choose: names,
       realCote: realCote,
-      ref: 'coteScore',
+      ref: 'coteScoreSimple',
       buttonStyle: {
         width: '80px',
         boxSizing: 'border-box'
       }
     })
+    if (matchNul) {
+      var onButtonClick = null
+      var isDisabled = true
+    }
+    else {
+      onButtonClick = this.isClickAllCote
+      isDisabled = false
+    }
     var elementsButtonAllCote = React.createElement(MyButton, {
       style: {
         fontSize: 25,
         marginTop: '3px',
         padding: '1px 0',
         width:'41px'
-      }
-    }, d.i({className: "fa fa-caret-down"}))
+      },
+      onClick: onButtonClick,
+      disabled: isDisabled
+    }, d.i({className: this.state.allCote ? "fa fa-caret-up" : "fa fa-caret-down"}))
     elements = [
       React.createElement(Bloc, {width: '505px', textAlign: 'center'}, elementsCoteScore),
-      React.createElement(Bloc, {width: 'none', textAlign: 'center'}, elementsButtonAllCote)
+      React.createElement(Bloc, {width: 'initial', textAlign: 'center'}, elementsButtonAllCote)
     ]
     return d.div({
       style:{
         backgroundColor: COLOR.gray1,
         fontSize: '16px',
         textAlign: 'left',
-        padding: '5px 0'
+        padding: '5px 0 0 0'
       }
     }, elements)
   },
@@ -288,13 +311,74 @@ var RenderBlocMatch = React.createClass({
         style: {display: 'inline-block'}
       }, cote))
   },
-  onCoteScoreChange: function(object, choose, names, cote) {
+  onCoteScoreChange: function(otherRef, object, choose, names, cote) {
     var next = this.state.selectedCoteScore.result == choose ? -1 : choose
     this.setState({selectedCoteScore: {
       cote: cote,
       result: next,
       names: names
     }})
+    if (this.props.refs) {    
+      if (this.props.refs[otherRef]) {
+        this.props.refs[otherRef].setSelectedIndex(-1)
+      }
+    }
+  },
+  renderLineCoteAllScore: function(cote) {
+    var elements = null
+    var cotes = []
+    var names = []
+    var realCote = []
+    if (cote) {   
+      for (var i = 0; i < this.props.bet.coteScore.length; i++) {
+        if (cote.result == 0 
+        && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur > 0
+        && this.props.bet.coteScore[i].scoreDomicile >= 4
+        && this.props.bet.coteScore[i].scoreDomicile < 10
+        && this.props.bet.coteScore[i].scoreExterieur < 10) {
+          var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
+          var coteScore = DecimalNumber.format(this.props.bet.coteScore[i].cote)
+          cotes.push(this.renderCoteScore(score, coteScore))
+          names.push(score)
+          realCote.push(coteScore)
+        }
+        else if (cote 
+        && cote.result == 2 
+        && this.props.bet.coteScore[i].scoreDomicile - this.props.bet.coteScore[i].scoreExterieur < 0
+        && this.props.bet.coteScore[i].scoreExterieur >= 4
+        && this.props.bet.coteScore[i].scoreDomicile < 10
+        && this.props.bet.coteScore[i].scoreExterieur < 10) {
+          var score = this.props.bet.coteScore[i].scoreDomicile + '-' + this.props.bet.coteScore[i].scoreExterieur
+          var coteScore = DecimalNumber.format(this.props.bet.coteScore[i].cote)
+          cotes.push(this.renderCoteScore(score, coteScore))
+          names.push(score)
+          realCote.push(coteScore)
+        }
+      }
+    }
+    var elementsCoteScore = React.createElement(CoteGroupResult, {
+      width: 'initial',
+      padding: '1px 0 4px 0',
+      cotes: cotes, 
+      onChange: this.onCoteScoreChange.bind(this, 'coteScoreSimple'), 
+      choose: names,
+      realCote: realCote,
+      marginWidth: '12px',
+      ref: 'coteScoreFull',
+      buttonStyle: {
+        width: '80px',
+        boxSizing: 'border-box'
+      }
+    })
+    elements = [React.createElement(Bloc, {width: '563px', textAlign: 'center', height: 'initial'}, elementsCoteScore)]
+    return d.div({
+      style:{
+        backgroundColor: COLOR.gray1,
+        fontSize: '16px',
+        textAlign: 'left',
+        padding: '5px 0 0 0'
+      }
+    }, elements)
   },
   renderButtonSend: function() {
     var color = COLOR.black
@@ -331,7 +415,7 @@ var RenderBlocMatch = React.createClass({
         backgroundColor: COLOR.white,
         fontSize: '16px',
         textAlign: 'center',
-        marginRight: '5px',
+        margin: '5px 5px 0 0',
         padding: '5px 0',
         height: '25px'
       }
@@ -357,8 +441,14 @@ var RenderBlocMatch = React.createClass({
     $.ajax(options).done(this.handlePostBet)
   },
   render: function() {
-    var height = this.state.selectedCoteResult.result > -1 ? '122px' : '40px'
-    height = this.state.validate ? '40px' : height
+    console.log(this.props.refs)
+    var height = '40px'
+    if (this.state.selectedCoteResult.result > -1) {
+      height = this.state.allCote ? '223px' : '122px'
+    }
+    if (this.state.validate) {
+      height = '40px'
+    }
     return d.div({
       style:{
         backgroundColor: COLOR.gray1,
@@ -367,25 +457,11 @@ var RenderBlocMatch = React.createClass({
         overflowY: 'hidden',
         transition: 'all 0.7s'
       }
-    }, this.renderLineMatch(), this.renderLineCoteScore(this.state.selectedCoteResult), this.renderLineButtonValidate())
-  }
-})
-//Composant bloc
-var Bloc = React.createClass({
-  render: function() {
-    return d.div({
-      style: {      
-        display: 'inline-block',
-        backgroundColor: COLOR.white,
-        width: this.props.width,
-        textAlign: this.props.textAlign,
-        lineHeight: this.props.lineHeight,
-        padding: '0 5px',
-        verticalAlign: 'middle',
-        height: '35px',
-        margin: '0 5px 0 0'
-      }
-    }, this.props.children)
+    }, 
+    this.renderLineMatch(), 
+    this.renderLineCoteScore(this.state.selectedCoteResult), 
+    this.state.allCote ? this.renderLineCoteAllScore(this.state.selectedCoteResult) : null,
+    this.renderLineButtonValidate())
   }
 })
 //Composant cote groupe
@@ -436,11 +512,11 @@ var CoteGroupResult = React.createClass({
     var elements = []
     for (var i = 0; i < this.props.cotes.length; i ++) {
       elements.push(this.renderCote(this.props.cotes[i], i, this.state.selectedCote))
-      if (i < this.props.cotes.length - 1){
+      if (i < this.props.cotes.length - 1 && i != 5 && i != 11 && i != 17){
         elements.push(d.div({
           style: {
             display: 'inline-block',
-            width: '5px'
+            width: this.props.marginWidth ? this.props.marginWidth : '5px'
           }
         }))
       }
@@ -448,8 +524,9 @@ var CoteGroupResult = React.createClass({
     return d.div({
       style: {
         backgroundColor: 'white',
-        paddingTop: '1px',
-        fontSize: '15px'
+        padding: this.props.padding ? this.props.padding : '1px 0 0 0',
+        fontSize: '15px',
+        width: this.props.width ? this.props.width : 'initial'
       }
     }, elements)
   }

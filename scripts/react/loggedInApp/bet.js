@@ -204,12 +204,9 @@ var RenderBlocMatch = React.createClass({
         allCote: false
       })
     }
-    console.log(this.props)
-    if (this.props.refs) {
-      this.props.refs.coteScoreSimple.setSelectedIndex(-1)
-      if (this.props.refs.coteScoreFull) {
-        this.props.refs.coteScoreFull.setSelectedIndex(-1)
-      }
+    this.refs.coteScoreSimple.setSelectedIndex(-1)
+    if (this.refs.coteScoreFull) {
+      this.refs.coteScoreFull.setSelectedIndex(-1)
     }
     updateState = updateState.bind(this)
     if (sameCote) {
@@ -317,11 +314,9 @@ var RenderBlocMatch = React.createClass({
       cote: cote,
       result: next,
       names: names
-    }})
-    if (this.props.refs) {    
-      if (this.props.refs[otherRef]) {
-        this.props.refs[otherRef].setSelectedIndex(-1)
-      }
+    }})  
+    if (this.refs[otherRef]) {
+      this.refs[otherRef].setSelectedIndex(-1)
     }
   },
   renderLineCoteAllScore: function(cote) {
@@ -441,7 +436,7 @@ var RenderBlocMatch = React.createClass({
     $.ajax(options).done(this.handlePostBet)
   },
   render: function() {
-    console.log(this.props.refs)
+    console.log(this.refs)
     var height = '40px'
     if (this.state.selectedCoteResult.result > -1) {
       height = this.state.allCote ? '223px' : '122px'
@@ -470,9 +465,11 @@ var CoteGroupResult = React.createClass({
     return {selectedCote: -1}
   },
   setSelectedIndex: function(index) {
-    this.setState({selectedCote: index})
-    if (this.props.onChange) {
-      this.props.onChange(this.props.cotes[index], index)
+    if (index != this.state.selectedCote) { 
+      this.setState({selectedCote: index})
+      if (this.props.onChange) {
+        this.props.onChange(this.props.cotes[index], index)
+      }
     }
   },
   renderCote: function(cote, index, selected) {

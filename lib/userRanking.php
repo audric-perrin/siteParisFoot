@@ -1,8 +1,6 @@
 <?php
-  require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  require_once('../api/lag.php');
   require_once('../lib/general.php');
   function compareUserPoint($user1, $user2) {
     if ($user1['globalPoint'] == $user2['globalPoint']) {

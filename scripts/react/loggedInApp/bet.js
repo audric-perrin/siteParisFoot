@@ -204,9 +204,9 @@ var RenderBlocMatch = React.createClass({
         allCote: false
       })
     }
-    this.refs.coteScoreSimple.setSelectedIndex(-1)
+    this.refs.coteScoreSimple.setSelectedIndex(-1, true)
     if (this.refs.coteScoreFull) {
-      this.refs.coteScoreFull.setSelectedIndex(-1)
+      this.refs.coteScoreFull.setSelectedIndex(-1, true)
     }
     updateState = updateState.bind(this)
     if (sameCote) {
@@ -309,14 +309,16 @@ var RenderBlocMatch = React.createClass({
       }, cote))
   },
   onCoteScoreChange: function(otherRef, object, choose, names, cote) {
-    var next = this.state.selectedCoteScore.result == choose ? -1 : choose
+    console.log(otherRef, choose, this.state.selectedCoteScore.result)
+    var next = this.state.selectedCoteScore.result == choose && this.state.selectedCoteScore.otherRef == otherRef ? -1 : choose
     this.setState({selectedCoteScore: {
+      otherRef: otherRef,
       cote: cote,
       result: next,
       names: names
     }})  
     if (this.refs[otherRef]) {
-      this.refs[otherRef].setSelectedIndex(-1)
+      this.refs[otherRef].setSelectedIndex(-1, false)
     }
   },
   renderLineCoteAllScore: function(cote) {
@@ -390,6 +392,7 @@ var RenderBlocMatch = React.createClass({
       var onClick = null
       var disabled = true
     }
+    console.log(disabled)
     return React.createElement(MyButton, {
       color: color,
       hoverColor: hoverColor,
@@ -436,7 +439,6 @@ var RenderBlocMatch = React.createClass({
     $.ajax(options).done(this.handlePostBet)
   },
   render: function() {
-    console.log(this.refs)
     var height = '40px'
     if (this.state.selectedCoteResult.result > -1) {
       height = this.state.allCote ? '223px' : '122px'
@@ -464,10 +466,10 @@ var CoteGroupResult = React.createClass({
   getInitialState: function() {
     return {selectedCote: -1}
   },
-  setSelectedIndex: function(index) {
+  setSelectedIndex: function(index, update) {
     if (index != this.state.selectedCote) { 
       this.setState({selectedCote: index})
-      if (this.props.onChange) {
+      if (this.props.onChange && update) {
         this.props.onChange(this.props.cotes[index], index)
       }
     }

@@ -177,7 +177,6 @@ var RankingL1 = React.createClass({
     }, elements)
   },
   render: function () {
-    console.log(this.state)
     var elements = [
       this.renderTitle(),
       this.renderDataRanking()

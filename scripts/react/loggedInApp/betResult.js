@@ -33,7 +33,7 @@ var MyBetResult = React.createClass({
         height: '30px',
         width: '213px',
         marginTop: '10px',
-        textAlign: 'left',
+        // textAlign: 'left',
         color: COLOR.white,
         fontSize: '16px',
         fontFamily: 'Helvetica',
@@ -107,7 +107,7 @@ var MyBetResult = React.createClass({
       }
       return d.div({
         style: {
-          display: 'inline-block',
+          // display: 'inline-block',
           backgroundColor: COLOR.white,
           width: '213px',
           textAlign: 'center',
@@ -122,7 +122,7 @@ var MyBetResult = React.createClass({
     else {
       return d.div({
         style: {
-          display: 'inline-block',
+          // display: 'inline-block',
           backgroundColor: COLOR.white,
           width: '213px',
           textAlign: 'center',
@@ -151,8 +151,7 @@ var MyBetResult = React.createClass({
     return d.div({
       style: {      
         verticalAlign: 'middle',
-        display: 'inline-block',
-        backgroundColor: 'none'
+        // display: 'inline-block'
       }
     }, elements)
   }

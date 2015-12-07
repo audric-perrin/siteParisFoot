@@ -84,7 +84,7 @@ var Ranking = React.createClass({
         elements.push(this.renderLineRanking(i))
       }
     }
-    return d.table({}, elements)
+    return d.table({style:{width: '100%'}}, elements)
   },
   renderLineRanking : function(index) {
     var ranking = this.state.ranking[index]
@@ -94,7 +94,8 @@ var Ranking = React.createClass({
     }
     var styleUsername = {
       textAlign: 'left',
-      padding: '0 50px 0 10px'
+      padding: '0 0 0 10px',
+      width: '300px'
     }
     var styleGlobalPoint = {
       padding: '0 10px 0 20px',
@@ -139,7 +140,6 @@ var Ranking = React.createClass({
     }, elements)
   },
   render: function () {
-    console.log(this.state)
     var elements = [
       this.renderTitle(),
       this.renderDataRanking()
@@ -170,7 +170,7 @@ var Ranking = React.createClass({
           backgroundColor: COLOR.gray1,
           borderRadius: '5px',
           textAlign: 'center',
-          padding: '5px 15px 15px 15px'
+          width: '100%'
         }
       }, elements)
     }

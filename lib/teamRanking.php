@@ -1,8 +1,6 @@
 <?php
-  require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
-  require_once('../api/lag.php');
   require_once('../lib/general.php');
   function compareTeam($team1, $team2) {
     if ($team1['points'] == $team2['points']) {

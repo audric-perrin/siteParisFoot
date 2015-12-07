@@ -9,16 +9,23 @@ var BlocResult = React.createClass({
     this.setState({round: round})
   },
   render: function() {
-    var element = [
-      React.createElement(Result, {handleRound: this.handleRound}),
-      React.createElement(BetResultManager, {round: this.state.round}),
-      React.createElement(BetResultManager, {round: this.state.round})
-    ]
-    return d.div({
+    return d.table({
       style: {
         height: '100%',
-        textAlign: 'center'
+        margin: 'auto'
       }
-    },element)
+    },
+      d.tr({},
+        d.td({
+          style: {padding: '0 15px'}
+        }, React.createElement(Result, {handleRound: this.handleRound})),
+        d.td({
+          style: {padding: '0 15px'}
+        }, React.createElement(BetResultManager, {round: this.state.round})),
+        d.td({
+          style: {padding: '0 15px'}
+        }, React.createElement(BetResultManager, {round: this.state.round}))
+      )
+    )
   }
 })

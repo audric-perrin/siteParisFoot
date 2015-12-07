@@ -21,14 +21,12 @@ var BetResultManager = React.createClass({
   render: function() {
     return d.div({
       style: {
-        verticalAlign: 'middle',
-        display: 'inline-block',
+        verticalAlign: 'top',
+        height: '100%',
+        display: 'block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
-        marginLeft: '30px',
-        borderRadius: '5px',
-        boxSizing: 'border-box',
-        width: '253px',
+        borderRadius: '5px'
       }
     }, 
       React.createElement(UserInput, {user: this.state.user, users: this.state.users, onUserChanged: this.onUserChanged}), 

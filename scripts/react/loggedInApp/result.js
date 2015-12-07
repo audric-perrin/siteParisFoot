@@ -166,6 +166,7 @@ var LoadingBox = React.createClass({
     return d.div({
       style:{
         fontSize: '16px',
+        width: '411px',
         marginTop: '10px',
         padding: '15px 0',
         transition: 'all 0.7s',
@@ -181,7 +182,7 @@ var LoadingBox = React.createClass({
         color: COLOR.gray3
       },
       className: "fa fa-spinner fa-pulse"
-    }), "Chargement journée " + this.props.round)
+    }), this.props.round ? "Chargement journée " + this.props.round : "Chargement")
   }
 })
 //Resultat
@@ -293,10 +294,10 @@ var Result = React.createClass({
     return d.div({
       style:{
         textAlign: 'center',
-        display: 'inline-block',
+        height: '100%',
+        display: 'block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
-        width: '450px',
         borderRadius: '5px',
         verticalAlign: 'middle'
       }

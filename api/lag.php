@@ -1,4 +1,4 @@
 <?php
   // usleep(500000);
-  usleep(1000);
+  usleep(5000);
 ?>

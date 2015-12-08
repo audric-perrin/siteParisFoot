@@ -392,7 +392,6 @@ var RenderBlocMatch = React.createClass({
       var onClick = null
       var disabled = true
     }
-    console.log(disabled)
     return React.createElement(MyButton, {
       color: color,
       hoverColor: hoverColor,

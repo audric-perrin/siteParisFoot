@@ -2,39 +2,6 @@
 var d = React.DOM
 //Composant table paris
 var Ranking = React.createClass({
-  getInitialState: function() {
-    return {isLoading: true, ranking: null}
-  },
-  componentWillMount: function() {
-    this.dataRanking()
-  },
-  dataRanking: function () {
-    var options = {
-      url: './api/ranking.php',
-      method: 'GET',
-    }
-    this.setState({isLoading: true})
-    $.ajax(options).done(this.handleRanking)
-  },
-  handleRanking: function(data) {
-    this.setState({isLoading: false, ranking: data.ranking})
-  },
-  renderTitle: function() {
-    var title = this.props.title ? this.props.title : 'Classement général'
-    return d.div({
-      style:{
-        backgroundColor: COLOR.blue,
-        height: '30px',
-        margin: '10px 0',
-        textAlign: 'left',
-        color: COLOR.white,
-        fontSize: '16px',
-        fontFamily: 'Helvetica',
-        paddingLeft: '10px',
-        lineHeight: '30px'
-      }
-    }, title)
-  },
   renderCell: function(element, specificStyle) {
     var style = {
       textAlign: 'center',
@@ -45,8 +12,8 @@ var Ranking = React.createClass({
   },
   renderDataRanking: function() {
     var elements = []
-    if (this.state.ranking){    
-      for (var i = 0; i < this.state.ranking.length; i++) {
+    if (this.props.ranking){    
+      for (var i = 0; i < this.props.ranking.length; i++) {
         if (i == 0) {
           var styleRank = {
             padding: '0 15px'
@@ -87,7 +54,7 @@ var Ranking = React.createClass({
     return d.table({style:{width: '100%'}}, elements)
   },
   renderLineRanking : function(index) {
-    var ranking = this.state.ranking[index]
+    var ranking = this.props.ranking[index]
     var style = {}
     var styleRank = {
       padding: '0, 15px'
@@ -140,39 +107,15 @@ var Ranking = React.createClass({
     }, elements)
   },
   render: function () {
-    var elements = [
-      this.renderTitle(),
-      this.renderDataRanking()
-    ]
-    if (this.state.isLoading) {
-        return d.div({
-        style:{
-          fontSize: '16px',
-          marginTop: '10px',
-          padding: '15px 0',
-          color: COLOR.black,
-          backgroundColor: COLOR.white,
-        }
-      }, d.i({
-        style: {
-          display: 'block',
-          fontSize: '40px',
-          marginBottom: '5px',
-          color: COLOR.gray3
-        },
-        className: "fa fa-spinner fa-pulse"
-      }), "Chargement des Classements")
-    }
-    else {
-      return d.div({
-        style: {
-          display: 'inline-block',
-          backgroundColor: COLOR.gray1,
-          borderRadius: '5px',
-          textAlign: 'center',
-          width: '100%'
-        }
-      }, elements)
-    }
+    var elements = [this.renderDataRanking()]
+    return d.div({
+      style: {
+        display: 'inline-block',
+        backgroundColor: COLOR.gray1,
+        borderRadius: '5px',
+        textAlign: 'center',
+        width: '100%'
+      }
+    }, elements)
   }
 })

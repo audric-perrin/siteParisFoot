@@ -12,7 +12,7 @@ var Ranking = React.createClass({
   },
   renderDataRanking: function() {
     var elements = []
-    if (this.props.ranking){    
+    if (this.props.ranking) {    
       for (var i = 0; i < this.props.ranking.length; i++) {
         if (i == 0) {
           var styleRank = {

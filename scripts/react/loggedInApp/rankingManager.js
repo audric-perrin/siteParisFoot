@@ -3,7 +3,7 @@ var d = React.DOM
 //Manager de classement
 var RankingManager = React.createClass({
   getInitialState: function() {
-    return {rankSelected: 1, dropDownSelected: 0, dropDown: false}
+    return {rankSelected: 1, dropDownSelected: null, dropDown: false}
   },
   componentWillMount: function() {
     this.metaDataRanking()
@@ -30,16 +30,19 @@ var RankingManager = React.createClass({
   },
   handleRankingMetaData: function(data) {
     this.setState({rankingMetaData: data})
-    console.log(data)
+  },
+  onDropDownSelectChanged: function(newSelect) {
+    console.log(newSelect)
+    this.setState({dropDownSelected: newSelect})
   },
   onRankChanged: function(newRank, dropDown) {
-    this.setState({rankSelected: newRank, dropDownSelected: 0, dropDown: dropDown})
+    this.setState({rankSelected: newRank, dropDownSelected: null, dropDown: dropDown})
   },
   isLoading: function() {
     return d.div({
       style:{
         fontSize: '16px',
-        width: '735px',
+        width: '780px',
         marginTop: '10px',
         padding: '15px 0',
         color: COLOR.black,
@@ -56,9 +59,15 @@ var RankingManager = React.createClass({
     }), "Chargement des Classements")
   },
   render: function() {
-    console.log(this.state)
     var elements = [
-      React.createElement(SelectRanking, {onRankChanged: this.onRankChanged, rankSelected: this.state.rankSelected})
+      React.createElement(SelectRanking, {
+        onRankChanged: this.onRankChanged,
+        rankSelected: this.state.rankSelected,
+        dropDown: this.state.dropDown,
+        metaData: this.state.rankingMetaData,
+        dropDownSelected: this.state.dropDownSelected,
+        onDropDownSelectChanged: this.onDropDownSelectChanged
+      })
     ]
     if (!this.state.ranking) {
       elements.push(this.isLoading())
@@ -72,6 +81,7 @@ var RankingManager = React.createClass({
         display: 'inline-block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
+        width: '780px',
         borderRadius: '5px',
         boxSizing: 'border-box'
       }

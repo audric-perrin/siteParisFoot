@@ -24,7 +24,7 @@ var BlocResult = React.createClass({
         }, React.createElement(BetResultManager, {round: this.state.round})),
         d.td({
           style: {padding: '0 15px'}
-        }, React.createElement(BetResultManager, {round: this.state.round}))
+        }, React.createElement(ManagerComparisonBet, {round: this.state.round}))
       )
     )
   }

@@ -3,35 +3,68 @@ var d = React.DOM
 //Barre bleu victoire
 var BetResultManager = React.createClass({
   getInitialState: function() {
-    return {user: null, users: []}
+    return {user: null, users: [], isLoading: true}
   },
   handleUser: function(data) {
-    this.setState({user: data.users[0].id, users: data.users})
+    var userId = this.props.selectIndex ? data.users[this.props.selectIndex].id : data.users[0].id
+    this.setState({user: userId, users: data.users, isLoading: false})
   },
   componentWillMount: function() {
     var options = {
       url: './api/listUser.php',
       method: 'GET',
     }
+    this.setState({isLoading: true})
     $.ajax(options).done(this.handleUser)
   },
   onUserChanged: function(newUser) {
     this.setState({user: newUser})
   },
+  isLoading: function() {
+    return d.div({
+      style: {
+        display: 'block',
+        padding: '0 40px',
+        fontSize: '16px',
+        width: '230px',
+        padding: '15px',
+        margin: '10px 0px',
+        color: COLOR.black,
+        backgroundColor: COLOR.white,
+      }
+      }, d.i({
+        style: {
+          display: 'block',
+          fontSize: '40px',
+          marginBottom: '5px',
+          color: COLOR.gray3
+        },
+      className: "fa fa-spinner fa-pulse"
+    }), "Chargement des Paris")
+  },
   render: function() {
+    var elements = [
+      React.createElement(UserInput, {
+        user: this.state.user, 
+        users: this.state.users, 
+        onUserChanged: this.onUserChanged
+      }), 
+    ]
+    if (this.state.isLoading) {
+      elements.push(this.isLoading())
+    }
+    else {
+      elements.push(React.createElement(MyBetResult, {userSelect: this.state.user, round: this.props.round}))
+    }
     return d.div({
       style: {
         verticalAlign: 'top',
-        height: '100%',
         display: 'block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
         borderRadius: '5px'
       }
-    }, 
-      React.createElement(UserInput, {user: this.state.user, users: this.state.users, onUserChanged: this.onUserChanged}), 
-      React.createElement(MyBetResult, {userSelect: this.state.user, round: this.props.round})
-    )
+    }, elements)
   }
 })
 //Input user
@@ -47,7 +80,9 @@ var UserInput = React.createClass({
     }).change(this.onChange)
   },
   componentWillReceiveProps: function(newProps) {
-    this.setState({users: newProps.users}, this.refreshSelect)
+    this.setState({
+      users: newProps.users,
+    }, this.refreshSelect)
   },
   refreshSelect: function() {
     var select = $(this.refs.container.getDOMNode())

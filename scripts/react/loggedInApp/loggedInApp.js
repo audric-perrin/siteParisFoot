@@ -108,7 +108,8 @@ var LoggedInApp = React.createClass({
       element = React.createElement(RankingManager)
     }
     if (isClick == 'Statistiques') {
-      element = 'React.createElement(Stats)'
+      element = 'React.createElement(Stats)'  
+      // element = React.createElement(Bloc)
     }
     if (isClick == 'Règles') {
       element = 'React.createElement(Rules)'

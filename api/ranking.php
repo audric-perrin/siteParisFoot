@@ -9,6 +9,6 @@
   for ($i = 1; $i <= maxround(); $i++) {
     $round[] = $i;
   }
-  $generalRanking = getUserRanking([14,15,16,17]);
+  $generalRanking = getUserRanking([14,15,16,17,18]);
   echo json_encode($generalRanking);
 ?>

@@ -11,7 +11,6 @@ var SelectRanking = React.createClass({
       style:{
         borderRadius: '0px',
         padding: '10px 15px',
-        margin: '0px 0px 15px 0px',
         boxSizing: 'border-box',
         border: 'none',
         fontSize: '16px',
@@ -25,6 +24,9 @@ var SelectRanking = React.createClass({
     }, name)
     return button
   },
+  componentWillReceiveProps: function(newProps) {
+    this.setState({selectedIndex: newProps.dropDownSelected})
+  },
   render: function () {
     var elements = [
       this.customeMyButton(1, 'Générale', false),
@@ -34,12 +36,24 @@ var SelectRanking = React.createClass({
       this.customeMyButton(5, 'Mois', true),
       this.customeMyButton(6, 'Journée', true)
     ]
+    var height = '36px'
+    if (this.props.dropDown) {
+      height = '81px'
+      elements.push(React.createElement(DropDownSelectRanking, {
+        id: this.props.rankSelected,
+        metaData: this.props.metaData,
+        onChanged: this.props.onDropDownSelectChanged,
+        selectedIndex: this.state.selectedIndex
+      }))
+    }
     return d.div({
       style: {
         backgroundColor: COLOR.gray1,
-        borderRadius: '5px',
         textAlign: 'center',
-        width: '100%'
+        margin: '0px 0px 15px 0px',
+        width: '100%',
+        transition: 'all 0.3s',
+        height: height
       }
     }, elements)
   }

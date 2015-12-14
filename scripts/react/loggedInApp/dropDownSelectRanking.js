@@ -13,7 +13,7 @@ var DropDownSelectRanking = React.createClass({
   componentDidMount: function() {
     $(this.refs.container.getDOMNode()).chosen({
       disable_search: true,
-      width: '200px'
+      width: '250px'
     }).change(this.onChange)
   },
   refreshSelect: function() {

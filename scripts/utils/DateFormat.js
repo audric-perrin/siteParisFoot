@@ -33,6 +33,12 @@ var DateFormat = {
     var month = monthName[date.getMonth()] // valeur entre 0 et 11
     return day + ' ' + number + ' ' + month
   },
+  getMonth: function(date) {
+    date = new Date(date)
+    date = new Date(date.getTime() + 60 * 60 * 1000)
+    var month = monthName[date.getMonth()] // valeur entre 0 et 11
+    return month
+  },
   getTime: function(date) {
     date = new Date(date)
     date = new Date(date.getTime() + 60 * 60 * 1000)

@@ -9,6 +9,22 @@
     }
     return $currentRound;
   }
+  function currentMonth() {
+    $currentMonth = 0;
+    $result = runQuery('SELECT date FROM result WHERE scoreDomicile != -1 ORDER BY date DESC LIMIT 1');
+    foreach ($result as $row) {
+      $currentMonth = date("m",strtotime($row['date']));
+    }
+    return $currentMonth;
+  }
+  function currentSaison() {
+    $currentSaison = 0;
+    $result = runQuery('SELECT saison FROM result WHERE scoreDomicile != -1 ORDER BY date DESC LIMIT 1');
+    foreach ($result as $row) {
+      $currentSaison = $row['saison'];
+    }
+    return $currentSaison;
+  }
   function maxRound() {
     $maxRound = 1;
     $result = runQuery('SELECT round FROM result ORDER BY round DESC LIMIT 1');

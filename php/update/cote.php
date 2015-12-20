@@ -142,4 +142,5 @@
       }
     }
   }
+  runQuery('UPDATE lastUpdate SET updateDate = NOW() WHERE script = "cote"');
 ?>

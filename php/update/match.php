@@ -77,3 +77,4 @@
     $value = $value[1];
     return $value;
   }
+  runQuery('UPDATE lastUpdate SET updateDate = NOW() WHERE script = "match"');

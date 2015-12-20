@@ -55,6 +55,12 @@ var Box_login = React.createClass({
     var element = this.state.loading ? d.i({className: "fa fa-spinner fa-pulse"}) : 'Connexion'
     return d.div({}, element)
   },
+  onKeyDown: function(event) {
+    if (event.keyCode == 13 && this.canSubmit()) {
+      event.preventDefault()
+      this.onConnectionClick()
+    }
+  },
 	render: function() {
     var element = [
       React.createElement(Master_box_input,
@@ -94,7 +100,8 @@ var Box_login = React.createClass({
         borderRadius: '5px',
         padding: '15px 15px 0px 15px',
         verticalAlign: 'middle'
-      }
+      },
+      onKeyDown: this.onKeyDown.bind(this)
     }, element)
 	}
 })

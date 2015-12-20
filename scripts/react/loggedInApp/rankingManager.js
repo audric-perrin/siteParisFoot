@@ -1,20 +1,20 @@
 'use strict'
 var d = React.DOM
+var noDropDown = ['general', 'personnel']
 //Manager de classement
 var RankingManager = React.createClass({
   getInitialState: function() {
-    return {rankSelected: 1, dropDownSelected: null, dropDown: false}
+    return {rankSelected: 'general', dropDownSelected: null, dropDown: false}
   },
   componentWillMount: function() {
     this.metaDataRanking()
-    this.getRanking(1)
+    this.getRanking('general')
   },
-  getRanking: function(type, options) {
-    if (type == 1) {
-      var options = {
-        url: './api/ranking.php',
-        method: 'GET'
-      }
+  getRanking: function(type, option) {
+    this.setState({ranking: null})
+    var options = {
+      url: './api/ranking.php?type=' + type + (option ? '&option=' + option : ''),
+      method: 'GET'
     }
     $.ajax(options).done(this.handleRanking)
   },
@@ -32,11 +32,20 @@ var RankingManager = React.createClass({
     this.setState({rankingMetaData: data})
   },
   onDropDownSelectChanged: function(newSelect) {
-    console.log(newSelect)
+    var rank = this.state.rankSelected
+    var metaData = this.state.rankingMetaData
+    var dropDown = noDropDown.indexOf(rank) == -1
+    console.log(rank)
+    console.log(metaData)
+    console.log(dropDown)
     this.setState({dropDownSelected: newSelect})
+    if (metaData || !dropDown) {
+      this.getRanking(rank, dropDown ? metaData[rank][newSelect].value : null)
+    }
   },
   onRankChanged: function(newRank, dropDown) {
     this.setState({rankSelected: newRank, dropDownSelected: null, dropDown: dropDown})
+    this.getRanking(newRank)
   },
   isLoading: function() {
     return d.div({

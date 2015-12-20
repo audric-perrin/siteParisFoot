@@ -32,8 +32,7 @@ var Ranking = React.createClass({
             this.renderCell('PTSR'),
             this.renderCell('SG'),
             this.renderCell('PTSS'),
-            this.renderCell('PTS', stylePTS),
-            this.renderCell('EVL')
+            this.renderCell('PTS', stylePTS)
           ]
           elements.push(d.tr({
             style:{
@@ -68,16 +67,6 @@ var Ranking = React.createClass({
       padding: '0 10px 0 20px',
       color: COLOR.dark
     }
-    var color = COLOR.black
-    if (ranking.evolution > 0) {
-      var color = COLOR.green
-    }
-    else if (ranking.evolution < 0) {
-      var color = COLOR.accent
-    }
-    var styleEvolution = {
-      color: color
-    }
     var elements = [
       this.renderCell(ranking.rank, styleRank),
       this.renderCell(ranking.username, styleUsername),
@@ -86,8 +75,7 @@ var Ranking = React.createClass({
       this.renderCell(ranking.betPoint.toFixed(2), style),
       this.renderCell(ranking.scoreWon, style),
       this.renderCell(ranking.scorePoint.toFixed(2), style),
-      this.renderCell(ranking.globalPoint.toFixed(2), styleGlobalPoint),
-      this.renderCell(ranking.evolution > 0 ? '+' + ranking.evolution : ranking.evolution, styleEvolution)
+      this.renderCell(ranking.globalPoint.toFixed(2), styleGlobalPoint)
     ]
     var fontWeight = null
     ranking.myBet ? fontWeight = 600 : fontWeight = 'none'

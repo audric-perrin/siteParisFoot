@@ -29,12 +29,12 @@ var SelectRanking = React.createClass({
   },
   render: function () {
     var elements = [
-      this.customeMyButton(1, 'Générale', false),
-      this.customeMyButton(2, 'Personnel', false),
-      this.customeMyButton(3, 'Saison', true),
-      this.customeMyButton(4, 'Demi-Saison', true),
-      this.customeMyButton(5, 'Mois', true),
-      this.customeMyButton(6, 'Journée', true)
+      this.customeMyButton('general', 'Générale', false),
+      this.customeMyButton('personnel', 'Personnel', false),
+      this.customeMyButton('saison', 'Saison', true),
+      this.customeMyButton('demiSaison', 'Demi-Saison', true),
+      this.customeMyButton('month', 'Mois', true),
+      this.customeMyButton('round', 'Journée', true)
     ]
     var height = '36px'
     if (this.props.dropDown) {

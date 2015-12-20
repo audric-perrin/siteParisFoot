@@ -19,7 +19,7 @@
     }
     return $user1['rank'] > $user2['rank'] ? 1 : -1;
   }
-  function getUserRanking($roundSelected) {
+  function getUserRanking($idSelected) {
     $currentRound = currentRound();
     $users = getUsers();
     $oldRanking = [];
@@ -31,7 +31,7 @@
       result.scoreDomicile AS resultScoreDomicile,
       result.scoreExterieur AS resultScoreExterieur
       FROM bet 
-      INNER JOIN result WHERE round IN (' . implode(',', $roundSelected) . ') AND bet.matchId = result.id'
+      INNER JOIN result WHERE id IN (' . implode(',', $idSelected) . ') AND bet.matchId = result.id'
     );
     foreach ($result as $row) {
       //Variable sql

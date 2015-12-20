@@ -29,17 +29,17 @@
   $currentMonth = currentMonth();
   $mois = array();
   if ($currentMonth > 6) {
-    for ($i = 7; $i < $currentMonth; $i ++) {
-      $mois[] = array('label' => $monthName[$i], 'value' => $i);
+    for ($i = 8; $i <= $currentMonth; $i ++) {
+      $mois[] = array('label' => $monthName[$i - 1], 'value' => $i);
     }
   }
   else {
-    for ($i = 7; $i < 11; $i ++) {
-      $mois[] = array('label' => $monthName[$i], 'value' => $i);
+    for ($i = 8; $i <= 12; $i ++) {
+      $mois[] = array('label' => $monthName[$i - 1], 'value' => $i);
     }
     $i = 0;
-    for ($i = 0; $i <= $currentMonth; $i ++) {
-      $mois[] = array('label' => $monthName[$i], 'value' => $i);
+    for ($i = 1; $i <= $currentMonth; $i ++) {
+      $mois[] = array('label' => $monthName[$i - 1], 'value' => $i);
     }
   }
   //Selection des classements par saison
@@ -53,5 +53,5 @@
   if ($currentRound > 19) {
     $demiSaison[] = array('label' => '2em partie saison ' . $currentSaison, 'value' => $currentSaison . '_2');
   }
-  echo json_encode(array(3 => $saison, 4 => $demiSaison, 5 => $mois, 6 => $round));
+  echo json_encode(array('saison' => $saison, 'demiSaison' => $demiSaison, 'month' => $mois, 'round' => $round));
 ?>

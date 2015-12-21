@@ -37,7 +37,7 @@
     $users = array();
     $result = runQuery('SELECT * FROM user');
     foreach ($result as $row) {
-      $users[$row['id']] = $row['username'];
+      $users[$row['id']] = $row['pseudo'];
     }
     return $users;
   }

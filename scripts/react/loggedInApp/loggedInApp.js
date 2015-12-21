@@ -3,7 +3,7 @@ var d = React.DOM
 //Composant application
 var LoggedInApp = React.createClass({
   getInitialState: function() {
-    return {isClick: 'Règles', notificationBet: null}
+    return {isClick: 'Pariez', notificationBet: null}
   },
   componentWillMount: function() {
     this.dataNotification()

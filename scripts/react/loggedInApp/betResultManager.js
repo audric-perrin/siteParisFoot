@@ -99,10 +99,10 @@ var UserInput = React.createClass({
     for (var i = 0; i < this.state.users.length; i++) {
       var user = this.state.users[i]
       if (user.id == this.props.user){
-        options[i] = d.option({value: user.id, selected: 'selected'}, user.username)
+        options[i] = d.option({value: user.id, selected: 'selected'}, user.pseudo)
       }
       else {
-        options[i] = d.option({value: user.id}, user.username)
+        options[i] = d.option({value: user.id}, user.pseudo)
       }
     }
     return d.div({

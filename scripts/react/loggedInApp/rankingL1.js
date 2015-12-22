@@ -120,7 +120,7 @@ var RankingL1 = React.createClass({
         elements.push(this.renderLineRanking(i))
       }
     }
-    return d.table({}, elements)
+    return d.table({}, d.tbody(null, elements))
   },
   renderLineRanking : function(index) {
     var ranking = this.state.ranking[index]

@@ -50,7 +50,11 @@ var Ranking = React.createClass({
         elements.push(this.renderLineRanking(i))
       }
     }
-    return d.table({style:{width: '100%'}}, elements)
+    return d.table({
+      style:{
+        width: '100%'
+      }
+    }, d.tbody(null, elements))
   },
   renderLineRanking : function(index) {
     var ranking = this.props.ranking[index]

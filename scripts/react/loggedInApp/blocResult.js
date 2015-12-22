@@ -15,16 +15,18 @@ var BlocResult = React.createClass({
         margin: 'auto'
       }
     },
-      d.tr({},
-        d.td({
-          style: {padding: '0 15px'}
-        }, React.createElement(Result, {handleRound: this.handleRound})),
-        d.td({
-          style: {padding: '0 15px'}
-        }, React.createElement(BetResultManager, {round: this.state.round})),
-        d.td({
-          style: {padding: '0 15px'}
-        }, React.createElement(ManagerComparisonBet, {round: this.state.round}))
+      d.tbody(null,
+        d.tr({},
+          d.td({
+            style: {padding: '0 15px'}
+          }, React.createElement(Result, {handleRound: this.handleRound})),
+          d.td({
+            style: {padding: '0 15px'}
+          }, React.createElement(BetResultManager, {round: this.state.round})),
+          d.td({
+            style: {padding: '0 15px'}
+          }, React.createElement(ManagerComparisonBet, {round: this.state.round}))
+        )
       )
     )
   }

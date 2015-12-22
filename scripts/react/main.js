@@ -61,7 +61,7 @@ var Main = React.createClass({
   }
 })
 Initializer.initialize(function () {
-  React.render(React.createElement(Main), document.body)
+  ReactDOM.render(React.createElement(Main), $('#app')[0])
 })
 //LoadingApp
 var LoadingApp = React.createClass({

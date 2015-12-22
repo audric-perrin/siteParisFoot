@@ -5,6 +5,9 @@
   require_once('../api/lag.php');
   $countBet = 0;
   $ids = getMatchIds();
+  if ($ids == []) {
+    exit;
+  }
   countUserBet($ids);
   function getMatchIds() {
     global $countBet;

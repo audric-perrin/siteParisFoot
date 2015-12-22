@@ -43,6 +43,10 @@
   }
   $matchInfo = array();
   $ids = getMatchIds();
+  if ($ids == []) {
+    echo json_encode($matchInfo);
+    exit;
+  }
   getMatchInfo($ids);
   getCoteResult($ids);
   getCoteScore($ids);

@@ -34,6 +34,7 @@ var BetTable = React.createClass({
     this.dataBet()
   },
   render: function () {
+    console.log(this.state)
     if (this.state.isLoading) {
         return d.div({
         style:{
@@ -54,6 +55,15 @@ var BetTable = React.createClass({
         },
         className: "fa fa-spinner fa-pulse"
       }), "Chargement des Paris")
+    }
+    else if (this.state.matchs.length == 0) {
+      return d.div({
+        style: {
+          fontSize: '18px',
+          color: COLOR.black,
+          textAlign: 'center'
+        }
+      }, 'Pas de pari disponible')
     }
     else {
       var elements = []

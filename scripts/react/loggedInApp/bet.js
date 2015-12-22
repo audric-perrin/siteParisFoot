@@ -59,9 +59,12 @@ var BetTable = React.createClass({
     else if (this.state.matchs.length == 0) {
       return d.div({
         style: {
-          fontSize: '18px',
+          display: 'inline-block',
+          width: '260px',
+          padding: '0 40px',
+          fontSize: '16px',
+          margin: '10px 30px',
           color: COLOR.black,
-          textAlign: 'center'
         }
       }, 'Pas de pari disponible')
     }

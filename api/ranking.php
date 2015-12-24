@@ -44,6 +44,23 @@
       $matchIds[] = $row['id'];
     }
   }
+  if ($_GET['type'] == 'demiSaison') {
+    $demiSaison = $currentRound > 19 ? 2 : 1;
+    $saison = $currentSaison;
+    if (isset($_GET['option'])) {
+      $explode = explode('_', $_GET['option']);
+      $saison = $explode[0];
+      $demiSaison = $explode[1];
+    }
+    $result = runQuery(
+      'SELECT id 
+      FROM result 
+      WHERE saison = "' . $saison . '" 
+      AND MONTH(date)' . ($demiSaison == "2" ? ">" : "<=") . '19');
+    foreach ($result as $row) {
+      $matchIds[] = $row['id'];
+    }
+  }
   if ($_GET['type'] == 'general') {
     $result = runQuery('SELECT id FROM result');
     foreach ($result as $row) {

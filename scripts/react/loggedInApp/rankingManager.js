@@ -35,9 +35,6 @@ var RankingManager = React.createClass({
     var rank = this.state.rankSelected
     var metaData = this.state.rankingMetaData
     var dropDown = noDropDown.indexOf(rank) == -1
-    console.log(rank)
-    console.log(metaData)
-    console.log(dropDown)
     this.setState({dropDownSelected: newSelect})
     if (metaData || !dropDown) {
       this.getRanking(rank, dropDown ? metaData[rank][newSelect].value : null)
@@ -47,11 +44,21 @@ var RankingManager = React.createClass({
     this.setState({rankSelected: newRank, dropDownSelected: null, dropDown: dropDown})
     this.getRanking(newRank)
   },
+  noRanking: function() {
+    return d.div({
+      style: {
+        fontSize: '16px',
+        marginTop: '10px',
+        padding: '15px 0',
+        color: COLOR.black,
+        backgroundColor: COLOR.white
+      }
+    }, 'Pas de classement')
+  },
   isLoading: function() {
     return d.div({
-      style:{
+      style: {
         fontSize: '16px',
-        width: '780px',
         marginTop: '10px',
         padding: '15px 0',
         color: COLOR.black,
@@ -78,8 +85,12 @@ var RankingManager = React.createClass({
         onDropDownSelectChanged: this.onDropDownSelectChanged
       })
     ]
+    console.log(this.state)
     if (!this.state.ranking) {
       elements.push(this.isLoading())
+    }
+    else if (this.state.ranking.length == 0) {
+      elements.push(this.noRanking())
     }
     else {
       elements.push(React.createElement(Ranking, {ranking: this.state.ranking}))

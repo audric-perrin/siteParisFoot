@@ -19,11 +19,29 @@
     }
     return $user1['rank'] > $user2['rank'] ? 1 : -1;
   }
+  function initialRanking() {
+    $ranking = [];
+    $result = runQuery('SELECT * FROM user');
+    foreach ($result as $row) {
+      $myBet = $_SESSION['id'] == $row['id'] ? true : false;
+      $ranking[$row['id']] = [
+        'userId' => $row['id'],
+        'username' => $row['pseudo'],
+        'betCount' => 0,
+        'betWon' => 0,
+        'betPoint' => 0,
+        'scoreWon' => 0,
+        'scorePoint' => 0,
+        'globalPoint' => 0,
+        'myBet' => $myBet
+      ];
+    }
+    return $ranking;
+  }
   function getUserRanking($idSelected) {
     $currentRound = currentRound();
     $users = getUsers();
-    $oldRanking = [];
-    $newRanking = [];
+    $ranking = initialRanking();
     $result = runQuery(
       'SELECT userId, matchId, coteResult, coteScore, round,
       bet.scoreDomicile AS betScoreDomicile, 
@@ -43,10 +61,6 @@
       $betScoreExterieur = intval($row['betScoreExterieur']);
       $resultScoreDomicile = intval($row['resultScoreDomicile']);
       $resultScoreExterieur = intval($row['resultScoreExterieur']);
-      $myBet = false;
-      if ($row['userId'] == $_SESSION['id']) {
-        $myBet = true;
-      }
       if ($resultScoreDomicile >= 0) {
         //Variable de calcul
         $scorePoint = 0;
@@ -58,19 +72,6 @@
           $betScoreDomicile == $betScoreExterieur && $resultScoreDomicile == $resultScoreExterieur ||
           $betScoreDomicile < $betScoreExterieur && $resultScoreDomicile < $resultScoreExterieur) {
           $betPoint = $coteResult;
-        }
-        if (!isset($ranking[$userId])) {
-          $ranking[$userId] = [
-            'userId' => $userId,
-            'username' => $users[$userId],
-            'betCount' => 0,
-            'betWon' => 0,
-            'betPoint' => 0,
-            'scoreWon' => 0,
-            'scorePoint' => 0,
-            'globalPoint' => 0,
-            'myBet' => $myBet
-          ];
         }
         $ranking[$userId]['betCount'] ++;
         $ranking[$userId]['betWon'] += $betPoint > 0 ? 1 : 0;

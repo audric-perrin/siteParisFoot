@@ -34,7 +34,6 @@ var BetTable = React.createClass({
     this.dataBet()
   },
   render: function () {
-    console.log(this.state)
     if (this.state.isLoading) {
         return d.div({
         style:{

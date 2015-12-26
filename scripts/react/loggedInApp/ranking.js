@@ -28,10 +28,10 @@ var Ranking = React.createClass({
             this.renderCell('N°', styleRank),
             this.renderCell('Pseudo', stylePseudo),
             this.renderCell('MJ'),
-            this.renderCell('RG'),
-            this.renderCell('PTSR'),
-            this.renderCell('SG'),
-            this.renderCell('PTSS'),
+            this.renderCell('1N2'),
+            this.renderCell('PTS.1N2'),
+            this.renderCell('Score'),
+            this.renderCell('PTS.Score'),
             this.renderCell('PTS', stylePTS)
           ]
           elements.push(d.tr({
@@ -65,7 +65,7 @@ var Ranking = React.createClass({
     var styleUsername = {
       textAlign: 'left',
       padding: '0 0 0 10px',
-      width: '300px'
+      width: '250px'
     }
     var styleGlobalPoint = {
       padding: '0 10px 0 20px',

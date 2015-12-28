@@ -431,7 +431,10 @@ var RenderBlocMatch = React.createClass({
     }, elements)
   },
   handlePostBet: function(data) {
-    this.setState({validate: true})
+    this.setState({selectedCoteResult: {}, selectedCoteScore: {}, validate: true}, function() {
+      this.refs['coteScoreSimple'].setSelectedIndex(-1, false)
+    })
+    console.log(this.refs)
     if (this.props.onRefreshRequired) {
       this.props.onRefreshRequired(data)
     }

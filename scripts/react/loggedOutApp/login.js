@@ -86,7 +86,19 @@ var Box_login = React.createClass({
         }, 
         onClick: this.onConnectionClick,
         disabled: !this.canSubmit()
-      }, this.renderSubmit())
+      }, this.renderSubmit()),
+      d.a({
+        style: {
+          marginBottom: '15px',
+          display: 'inline-block',
+          color: this.state.linkHover ? COLOR.dark : COLOR.gray3,
+          cursor: 'pointer',
+          textDecoration: this.state.linkHover ? 'underline' : 'none'
+        },
+        onClick: this.props.onSwitch,
+        onMouseEnter: (function() {this.setState({linkHover: true})}).bind(this),
+        onMouseLeave: (function() {this.setState({linkHover: false})}).bind(this)
+      }, 'Inscription')
     ]
     if (this.state.error) {
       element.splice(2, 0, this.renderError())
@@ -106,6 +118,15 @@ var Box_login = React.createClass({
 })
 //Création boîte d'inscription
 var Box_signup = React.createClass({
+  getInitialState: function() {
+    return {linkHover: false}
+  },
+  onInscriptionClick: function() {
+    console.log('inscritpiontjebvejv')
+  },
+  canSubmit: function() {
+    return true
+  },
   render: function() {
     return d.div({
       style:{
@@ -113,12 +134,38 @@ var Box_signup = React.createClass({
         width: '330px',
         backgroundColor: COLOR.gray1,
         borderRadius: '5px',
-        padding: '15px 15px 0px 15px'
+        padding: '15px 15px 0px 15px',
+        verticalAlign: 'middle'
       }
-    },  React.createElement(Master_box_input, {text: 'Mail', type: 'text', nameIcone: 'fa fa-envelope'}), 
-        React.createElement(Master_box_input, {text: 'Pseudo', type: 'text', nameIcone: 'fa fa-user'}),
+    },
+        React.createElement(Master_box_input, {text: 'Pseudo', type: 'text', nameIcone: 'fa fa-tag'}),
+        React.createElement(Master_box_input, {text: 'Mail', type: 'text', nameIcone: 'fa fa-envelope'}), 
+        React.createElement(Master_box_input, {text: 'Identifiant', type: 'text', nameIcone: 'fa fa-user'}),
         React.createElement(Master_box_input, {text: 'Mot de passe', type: 'password', nameIcone: 'fa fa-lock'}),
-        React.createElement(Button_login, {text: 'Inscription'}))
+        React.createElement(MyButton, {
+          style:{
+            width: '330px',
+            padding: '15px',
+            margin: '0px 0px 15px 0px',
+            boxSizing: 'border-box',
+            fontSize: '18px'
+          }, 
+          onClick: this.onInscriptionClick,
+          disabled: !this.canSubmit()
+        }, 'Inscription'),
+        d.a({
+          style: {
+            marginBottom: '15px',
+            display: 'inline-block',
+            color: this.state.linkHover ? COLOR.dark : COLOR.gray3,
+            cursor: 'pointer',
+            textDecoration: this.state.linkHover ? 'underline' : 'none'
+          },
+          onClick: this.props.onSwitch,
+          onMouseEnter: (function() {this.setState({linkHover: true})}).bind(this),
+          onMouseLeave: (function() {this.setState({linkHover: false})}).bind(this)
+        }, 'Connexion')
+    )
   }
 })
 //Création d'une ligne de saisie

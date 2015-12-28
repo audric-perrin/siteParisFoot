@@ -11,7 +11,7 @@ var MyBetResult = React.createClass({
       url: './api/betUser.php?user=' + userId + '&round=' + round,
       method: 'GET',
     }
-    $.ajax(options).done(this.handleBet)
+    Ajax.request(options, this.handleBet.bind(this))
   },
   handleBet: function(data) {
     this.setState({userBets: data.userBets, matchs: data.matchs})

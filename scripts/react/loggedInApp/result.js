@@ -196,7 +196,7 @@ var Result = React.createClass({
       url: './api/match.php?round=' + round,
       method: 'GET',
     }
-    $.ajax(options).done(this.handleMatches)
+    Ajax.request(options, this.handleMatches.bind(this))
     if (this.props.handleRound) {
       this.props.handleRound(round)
     }
@@ -213,7 +213,7 @@ var Result = React.createClass({
       url: './api/currentRound.php',
       method: 'GET',
     }
-    $.ajax(options).done(this.handleCurrentRound)
+    Ajax.request(options, this.handleCurrentRound.bind(this))
   },
   onArrowHoverChange: function(left, hover) {
     var arrow = left ? 'arrowLeft' : 'arrowRight'

@@ -14,6 +14,7 @@ var Main = React.createClass({
     this.setState({loggedState: LoggedState.loggedIn})
   },
   componentWillMount: function() {
+    SessionManager.onLoggedOut(this.onLoggedOut.bind(this))
     var options = {url: './api/userInfo.php', method: 'GET'}
     var that = this
     var userInfoCallback = function(data) {
@@ -25,6 +26,9 @@ var Main = React.createClass({
       }
     }
     $.ajax(options).done(userInfoCallback)
+  },
+  onLoggedOut: function() {
+    this.setState({loggedState: LoggedState.loggedOut})
   },
   render: function() {
     var element = null

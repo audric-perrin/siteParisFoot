@@ -13,7 +13,7 @@ var LoggedInApp = React.createClass({
       url: './api/notification.php',
       method: 'GET',
     }
-    $.ajax(options).done(this.handleNotication)
+    Ajax.request(options, this.handleNotication.bind(this))
   },
   handleNotication: function(data) {
     this.setState({notificationBet: data.notificationBet})

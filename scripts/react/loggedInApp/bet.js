@@ -11,7 +11,7 @@ var BetTable = React.createClass({
       method: 'GET',
     }
     this.setState({isLoading: true})
-    $.ajax(options).done(this.handleMatches)
+    Ajax.request(options, this.handleMatches.bind(this))
   },
   handleMatches: function(data) {
     var matchs = []
@@ -447,7 +447,7 @@ var RenderBlocMatch = React.createClass({
       data: {'matchId': matchId, 'scoreDomicile': scoreDomicile, 'scoreExterieur': scoreExterieur}
     }
     this.setState({isLoading: true})
-    $.ajax(options).done(this.handlePostBet)
+    Ajax.request(options, this.handlePostBet.bind(this))
   },
   render: function() {
     var height = '40px'

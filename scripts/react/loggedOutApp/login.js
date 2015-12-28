@@ -17,19 +17,18 @@ var Box_login = React.createClass({
         password: password
       }
     }
-    var that = this
     var loginCallback = function(data) {
       if (data.result == 'ok') {
-        if (that.props.onConnect) {
-          that.props.onConnect()
+        if (this.props.onConnect) {
+          this.props.onConnect()
         }
       }
       else {
-        that.setState({error: data.result})
+        this.setState({error: data.result})
       }
-      that.setState({loading: false})
+      this.setState({loading: false})
     }
-    $.ajax(options).done(loginCallback)
+    Ajax.request(options, loginCallback.bind(this))
   },
   renderError: function() {
     return d.div({

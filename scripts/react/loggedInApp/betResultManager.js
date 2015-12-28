@@ -15,7 +15,7 @@ var BetResultManager = React.createClass({
       method: 'GET',
     }
     this.setState({isLoading: true})
-    $.ajax(options).done(this.handleUser)
+    Ajax.request(options, this.handleUser.bind(this))
   },
   onUserChanged: function(newUser) {
     this.setState({user: newUser})

@@ -14,7 +14,7 @@ var RankingL1 = React.createClass({
       method: 'GET',
     }
     this.setState({isLoading: true})
-    $.ajax(options).done(this.handleRanking)
+    Ajax.request(options, this.handleRanking.bind(this))
   },
   handleRanking: function(data) {
     this.setState({isLoading: false, ranking: data.rankingL1})

@@ -16,7 +16,7 @@ var RankingManager = React.createClass({
       url: './api/ranking.php?type=' + type + (option ? '&option=' + option : ''),
       method: 'GET'
     }
-    $.ajax(options).done(this.handleRanking)
+    Ajax.request(options, this.handleRanking.bind(this))
   },
   handleRanking: function(data) {
     this.setState({ranking: data.ranking})
@@ -26,7 +26,7 @@ var RankingManager = React.createClass({
       url: './api/rankingMetaData.php',
       method: 'GET'
     }
-    $.ajax(options).done(this.handleRankingMetaData)
+    Ajax.request(options, this.handleRankingMetaData.bind(this))
   },
   handleRankingMetaData: function(data) {
     this.setState({rankingMetaData: data})

@@ -159,6 +159,9 @@ var Master_box_input = React.createClass({
 })
 //Création de l'input
 var Box_input_text = React.createClass({
+  componentDidMound: function() {
+    this.onValueChange()
+  },
   onValueChange: function() {
     if (this.props.onChange){
       this.props.onChange(this.refs.input.getDOMNode().value)

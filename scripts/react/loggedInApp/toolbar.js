@@ -58,24 +58,28 @@ var ButtonToolbar = React.createClass({
         fontSize: '12px',
         position: 'relative',
         left: '10px',
-        padding: padding,
         boxSizing: 'border-box'
       }
     }, number)
   },
   render: function() {
     var color = COLOR.gray3
+    var cursor = 'pointer'
     if (this.props.selected) {
       color = COLOR.dark
     }
     if (this.state.buttonHover) {
       color = COLOR.dark
     }
+    if (this.props.disable) {
+      color = COLOR.gray1
+      cursor = 'auto'
+    }
     return d.div({
       style: {
         width: '120px',
         display: 'inline-block',
-        cursor: 'pointer'
+        cursor: cursor
       },
       onClick: this.buttonClick,
       onMouseOver: this.buttonHover.bind(this, true),

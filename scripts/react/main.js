@@ -76,7 +76,7 @@ var LoadingApp = React.createClass({
         verticalAlign: 'middle',
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
-        backgroundImage: 'url(./images/bannerParionsLigue1.png)',
+        backgroundImage: 'url(./images/bannerBetChallenger.png)',
         backgroundPosition: 'center center',
         height: '50%',
         width: '50%'

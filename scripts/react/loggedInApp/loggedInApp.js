@@ -31,7 +31,7 @@ var LoggedInApp = React.createClass({
         height: '90px',
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
-        backgroundImage: 'url(./images/bannerParionsLigue1.png)',
+        backgroundImage: 'url(./images/bannerBetChallenger.png)',
         backgroundPosition: 'center center'
       }
     })
@@ -61,21 +61,29 @@ var LoggedInApp = React.createClass({
         icone: "fa fa-bar-chart",
         name: 'Statistiques',
         selected: this.state.isClick == 'Statistiques',
-        onClick: this.onSelectChange
+        onClick: this.onSelectChange,
+        disable: true
+      }),
+      React.createElement(ButtonToolbar, {
+        icone: "fa fa-users",
+        name: 'Groupes',
+        selected: this.state.isClick == 'Groupes',
+        onClick: this.onSelectChange,
+        disable: true
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-trophy",
         name: 'Trophés',
         selected: this.state.isClick == 'Trophés',
         onClick: this.onSelectChange,
-        notification: 2
+        disable: true
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-star-o",
         name: 'Records',
         selected: this.state.isClick == 'Records',
         onClick: this.onSelectChange,
-        notification: 1
+        disable: true
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-balance-scale",
@@ -87,7 +95,7 @@ var LoggedInApp = React.createClass({
     return d.div({
       style: {
         backgroundColor: COLOR.white,
-        margin: '15px 0',
+        margin: ' 0 0 15px 0',
         padding: '5px 0',
         textAlign: 'center',
         borderTop: 'solid 2px ' + COLOR.gray3,
@@ -119,11 +127,14 @@ var LoggedInApp = React.createClass({
     if (isClick == 'Trophés') {
       element = 'React.createElement(Trophy)'
     }
+    if (isClick == 'Groupes') {
+      element = 'React.createElement(Groups)'
+    }
     return d.div({
       style: {
         backgroundColor: COLOR.white,
         textAlign: 'center',
-        padding: '15px 0'
+        padding: ' 0 0 15px 0'
       }
     }, this.banner(), this.toolbar(), element)
   }

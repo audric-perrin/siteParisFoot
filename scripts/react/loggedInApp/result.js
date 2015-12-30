@@ -40,7 +40,7 @@ var Score = React.createClass({
   render: function() {
     var element = []
     var fontType = 'normal'
-    if (DateFormat.getTime(this.props.match.date) == 'aN:aN' && this.props.match.scoreDomicile < 0) {
+    if (DateFormat.isValid(this.props.match.date) && this.props.match.scoreDomicile < 0) {
       element.push('-')
     }
     else if (this.props.match.scoreDomicile < 0) {
@@ -102,10 +102,10 @@ var Match = React.createClass({
 //ligne date
 var LineDate = React.createClass({
   render: function() {
-  var dateScreen = DateFormat.getDate(this.props.match.date) 
-  if (dateScreen == 'undefined NaN undefined') {
-    dateScreen = 'Date inconnue'
-  }
+    var dateScreen = DateFormat.getDate(this.props.match.date) 
+    if (DateFormat.isValid(this.props.match.date)) {
+      dateScreen = 'Date inconnue'
+    }
     return d.div({
       style:{
         backgroundColor: COLOR.blue,

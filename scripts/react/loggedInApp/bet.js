@@ -21,9 +21,9 @@ var BetTable = React.createClass({
       matchs.push(match)
     }
     matchs.sort(function(m1, m2) {
-      var date1 = new Date(m1.date)
-      var date2 = new Date(m2.date)
-      return date1.getTime() - date2.getTime()
+      var date1 = moment.utc(m1.date).unix()
+      var date2 = moment.utc(m2.date).unix()
+      return date1 - date2
     })
     this.setState({isLoading: false, matchs: matchs})
     if (this.props.onBet) {

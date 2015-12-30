@@ -9,6 +9,9 @@ var ButtonToolbar = React.createClass({
     this.setState({buttonHover: hover})
   },
   buttonClick: function() {
+    if (this.props.disable) {
+      return
+    }
     if (this.props.onClick) {
       this.props.onClick(this.props.name)
     }

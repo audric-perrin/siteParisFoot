@@ -29,7 +29,7 @@ var SelectRanking = React.createClass({
   },
   render: function () {
     var elements = [
-      this.customeMyButton('general', 'Générale', false),
+      this.customeMyButton('general', 'Général', false),
       this.customeMyButton('personnel', 'Personnel', false),
       this.customeMyButton('saison', 'Saison', true),
       this.customeMyButton('demiSaison', 'Demi-Saison', true),

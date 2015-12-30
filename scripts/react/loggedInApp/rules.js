@@ -98,7 +98,7 @@ var Rules = React.createClass({
         'Mois : Prend en compte tous les paris du mois sélectionné.',
         'Prend en compte tous les paris de la journée sélectionnée.'
       ]),
-      this.renderImage('url(./images/rules8.png)', '226px', '545px'),
+      this.renderImage('url(./images/rules8_2.png)', '226px', '545px'),
       this.renderText('Légende :'),
       this.renderPuce([
         'N° : Position dans le classement',

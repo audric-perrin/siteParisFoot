@@ -1,6 +1,6 @@
 'use strict'
 var d = React.DOM
-$('body').css({backgroundColor: COLOR.gray1, fontFamily: 'Helvetica'})
+$('body').css({backgroundColor: COLOR.gray1, fontFamily: 'Helvetica', width: '1340px'})
 var LoggedState = {
   loading: 0,
   loggedIn: 1,

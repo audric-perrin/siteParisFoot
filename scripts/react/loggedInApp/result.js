@@ -295,6 +295,7 @@ var Result = React.createClass({
       style:{
         textAlign: 'center',
         height: '100%',
+        width: '433px',
         display: 'block',
         backgroundColor: COLOR.gray1,
         padding: '15px',

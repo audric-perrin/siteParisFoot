@@ -96,7 +96,7 @@ var LoggedInApp = React.createClass({
       style: {
         backgroundColor: COLOR.white,
         margin: ' 0 0 15px 0',
-        padding: '5px 0 5px 0',
+        padding: '15px 0 5px 0',
         textAlign: 'center',
         borderTop: 'solid 2px ' + COLOR.gray3,
         borderBottom: 'solid 2px ' + COLOR.gray3

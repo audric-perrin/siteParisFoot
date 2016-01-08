@@ -56,7 +56,7 @@
       'SELECT id 
       FROM result 
       WHERE saison = "' . $saison . '" 
-      AND MONTH(date)' . ($demiSaison == "2" ? ">" : "<=") . '19');
+      AND round' . ($demiSaison == "2" ? ">" : "<=") . '19');
     foreach ($result as $row) {
       $matchIds[] = $row['id'];
     }

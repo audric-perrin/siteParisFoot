@@ -68,7 +68,7 @@
     INNER JOIN coteScore ON result.id = coteScore.id 
     INNER JOIN coteResult ON result.id = coteResult.id 
     -- WHERE result.scoreDomicile = "-1"
-    WHERE result.scoreDomicile = "-1" AND TIMESTAMPDIFF(SECOND, date, NOW()) < 0
+    WHERE result.scoreDomicile = "-1" AND TIMESTAMPDIFF(SECOND, date, NOW()) < 3600
     ORDER BY date');
     $matchIds = array();
     foreach ($result as $row) {

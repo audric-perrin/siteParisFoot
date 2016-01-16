@@ -226,7 +226,7 @@ var Result = React.createClass({
     var padding = left ? '0 0 0 20px' : '0 20px 0 0'
     return d.div({
       style:{
-        fontSize: '30px',
+        fontSize: '29px',
         padding: padding,
         display: 'inline-block',
         verticalAlign: 'middle',
@@ -293,14 +293,11 @@ var Result = React.createClass({
     }
     return d.div({
       style:{
-        textAlign: 'center',
-        height: '100%',
         width: '433px',
-        display: 'block',
+        display: 'inline-block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
-        borderRadius: '5px',
-        verticalAlign: 'middle'
+        borderRadius: '5px'
       }
     }, elements)
   }

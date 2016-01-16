@@ -64,7 +64,7 @@ var Box_login = React.createClass({
     var element = [
       React.createElement(Master_box_input,
         {
-          text: 'Pseudo',
+          text: 'Identifiant',
           type: 'text',
           nameIcone: 'fa fa-user',
           onChange: this.onPseudoChange

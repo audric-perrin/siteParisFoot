@@ -1,6 +1,6 @@
 'use strict'
 var d = React.DOM
-//Barre bleu victoire
+//
 var BetResultManager = React.createClass({
   getInitialState: function() {
     return {user: null, users: [], isLoading: true}
@@ -61,7 +61,6 @@ var BetResultManager = React.createClass({
         verticalAlign: 'top',
         display: 'block',
         backgroundColor: COLOR.gray1,
-        padding: '15px',
         borderRadius: '5px'
       }
     }, elements)

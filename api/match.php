@@ -8,6 +8,7 @@
   $matchs = array();
   foreach ($result as $row) {
     $match = [
+    'matchId' => $row['id'],
     'teamDomicile' => $row['teamDomicile'],
     'teamExterieur' => $row['teamExterieur'],
     'scoreDomicile' => $row['scoreDomicile'],

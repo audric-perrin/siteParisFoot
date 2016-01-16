@@ -85,7 +85,6 @@ var RankingManager = React.createClass({
         onDropDownSelectChanged: this.onDropDownSelectChanged
       })
     ]
-    console.log(this.state)
     if (!this.state.ranking) {
       elements.push(this.isLoading())
     }

@@ -36,7 +36,7 @@ var Main = React.createClass({
     if (this.state.loggedState == LoggedState.loggedIn) {
       element = React.createElement(LoggedInApp)
       style = {
-        width: '80%',
+        width: '85%',
         margin: 'auto',
         backgroundColor: COLOR.white
       }

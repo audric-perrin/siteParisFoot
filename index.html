@@ -9,9 +9,68 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="bower_components/chosen/chosen.min.css">
   <link rel="stylesheet" href="styles/chosen.css">
+  <style type="text/css">
+    .title h1 {
+      font-size: 40px;
+      color: #3386DB;
+      display: inline-block;
+      font-weight: bold;
+      background-image: url(images/logo.png);
+      background-position: left center;
+      background-size: 100px 100px;
+      background-repeat: no-repeat;
+      padding-left: 120px;
+      line-height: 100px;
+    }
+    .master {
+      background-image: url(images/player.png);
+      background-position: right top;
+      background-size: 258px 281px;
+      background-repeat: no-repeat;
+      width: 80%;
+      margin: auto;
+      background-color: #FFFFFF;
+    }
+    .info {
+      color: #000000;
+      background-color: #ECF0F1;
+      display: inline-block;
+      border-radius: 5px;
+      padding: 15px;
+      width: 300px;
+      height: 400px;
+      vertical-align: top;
+      margin: 50px;
+    }
+    #loginApp {
+      display: inline-block;
+      color: #000000;
+      background-color: #ECF0F1;
+      border-radius: 5px;
+      vertical-align: top;
+      margin: 50px;
+    }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
+  <div class="master">
+    <div class="title">
+      <h1>BetChallenger</h1>
+    </div>
+    <div class="content">
+      <div class="info">
+        blablabla<br/>
+        Test blalala<br/>
+        Test blalala<br/>
+        Test blalala<br/>
+        Test blalala
+      </div>
+      <div id="loginApp">
+        Chargement en cours
+      </div>
+    </div>
+  </div>
+  <div id="app" style="display: none"></div>
   <script type="text/javascript" src="https://fb.me/react-with-addons-0.14.0.min.js"></script>
   <script type="text/javascript" src="https://fb.me/react-dom-0.14.0.min.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>

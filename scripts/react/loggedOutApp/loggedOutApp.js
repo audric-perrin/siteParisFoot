@@ -14,7 +14,6 @@ var LoggedOutApp = React.createClass({
       style: {
         display: 'inline-block',
         verticalAlign: 'middle',
-        height: '100%'
       }
     })
   },

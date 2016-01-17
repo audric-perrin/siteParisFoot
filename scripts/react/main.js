@@ -65,7 +65,11 @@ var Main = React.createClass({
   }
 })
 Initializer.initialize(function () {
-  ReactDOM.render(React.createElement(Main), $('#app')[0])
+  ReactDOM.render(React.createElement(LoggedOutApp, {onConnect: function() {
+    ReactDOM.render(React.createElement(LoadingApp), $('#app')[0])
+    $('#app').css('display', 'block')
+    $('.master').css('display', 'none')
+  }}), $('#loginApp')[0])
 })
 //LoadingApp
 var LoadingApp = React.createClass({

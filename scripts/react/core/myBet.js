@@ -82,8 +82,7 @@ var MyBet = React.createClass({
     return d.div({
       style: {
         height: height,
-        lineHeight: height,
-        width: '220px'
+        lineHeight: height
       }
     }, elements)
   }

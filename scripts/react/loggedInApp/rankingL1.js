@@ -8,7 +8,7 @@ var RankingL1 = React.createClass({
   componentWillMount: function() {
     this.dataRanking()
   },
-  dataRanking: function () {
+  dataRanking: function() {
     var options = {
       url: './api/rankingL1.php',
       method: 'GET',

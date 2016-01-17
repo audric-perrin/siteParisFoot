@@ -33,7 +33,6 @@ var Rules = React.createClass({
   },
   renderPuce: function(puces) {
     var elements = []
-    console.log(puces.lenght)
     for (var i = 0; i < puces.length; i++) {
       elements.push(d.li(null, puces[i]))
     }

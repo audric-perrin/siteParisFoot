@@ -321,7 +321,6 @@ var RenderBlocMatch = React.createClass({
       }, cote))
   },
   onCoteScoreChange: function(otherRef, object, choose, names, cote) {
-    console.log(otherRef, choose, this.state.selectedCoteScore.result)
     var next = this.state.selectedCoteScore.result == choose && this.state.selectedCoteScore.otherRef == otherRef ? -1 : choose
     this.setState({selectedCoteScore: {
       otherRef: otherRef,
@@ -434,7 +433,6 @@ var RenderBlocMatch = React.createClass({
     this.setState({selectedCoteResult: {}, selectedCoteScore: {}, validate: true}, function() {
       this.refs['coteScoreSimple'].setSelectedIndex(-1, false)
     })
-    console.log(this.refs)
     if (this.props.onRefreshRequired) {
       this.props.onRefreshRequired(data)
     }

@@ -17,6 +17,7 @@ var ManagerComparisonBet = React.createClass({
     }
   },
   componentWillReceiveProps: function(newProps) {
+    console.log(newProps)
     if (newProps.round) {
       this.changeRound(newProps.round)
     }
@@ -33,6 +34,14 @@ var ManagerComparisonBet = React.createClass({
       method: 'GET',
     }
     Ajax.request(options, this.handleCurrentRound.bind(this))
+    if (this.props.matchId) {
+      this.onSelectedMatch(this.props.matchId)
+    }
+  },
+  onClose: function() {
+    this.setState({matchSelected: null})
+    this.setState({isClick: false})
+    this.props.onClose()
   },
   onClick: function() {
     this.setState({isClick: true})
@@ -111,10 +120,18 @@ var ManagerComparisonBet = React.createClass({
       }
     }
     if (this.state.isClick) {
-      elements = React.createElement(BetResultManager, {round: this.props.round, selectIndex: 1})
+      elements = React.createElement(BetResultManager, {
+        round: this.state.round, 
+        selectIndex: 1, 
+        onClose: this.onClose
+      })
     }
-    if (this.state.matchSelected) {
-      elements = React.createElement(MatchBetDetail, {matchId: this.state.matchSelected})
+    if (this.state.matchSelected && this.state.matchs) {
+      elements = React.createElement(MatchBetDetail, {
+        matchs: this.state.matchs, 
+        matchId: this.state.matchSelected, 
+        onClose: this.onClose
+      })
     }
     return d.div({
       style: {

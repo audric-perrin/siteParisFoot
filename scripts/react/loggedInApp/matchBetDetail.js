@@ -11,19 +11,26 @@ var MatchBetDetail = React.createClass({
       over: false, 
       domicile: 0, 
       nul: 0, 
-      exterieur: 0
+      exterieur: 0,
+      crossColor: COLOR.blue,
+      matchId: this.props.matchId
     }
   },
   componentWillMount: function() {
+    this.setState({matchId: this.props.matchId})
+    this.setState({matchs: this.props.matchs})
     this.dataMatchBet()
   },
   dataMatchBet: function() {
     var options = {
-      url: './api/matchBetCompare.php?matchId=' + this.props.matchId,
+      url: './api/matchBetCompare.php?matchId=' + this.state.matchId,
       method: 'GET',
     }
     this.setState({isLoading: true})
     Ajax.request(options, this.handleMatchBet.bind(this))
+  },
+  onClose: function() {
+    this.props.onClose()
   },
   handleMatchBet: function(data) {
     this.setState({isLoading: false, bets: data.bets, match: data.match, users: data.users})
@@ -55,9 +62,9 @@ var MatchBetDetail = React.createClass({
       }
     }
     this.setState({
-      percentageDomicile: Math.round(betDomicile * 100 / countBet),
-      percentageExterieur: Math.round(betExterieur * 100 / countBet),
-      percentageNul: Math.round(betNul * 100 / countBet)
+      percentageDomicile: betDomicile == 0 ? 0 : Math.round(betDomicile * 100 / countBet),
+      percentageExterieur: betExterieur == 0 ? 0 : Math.round(betExterieur * 100 / countBet),
+      percentageNul: betNul == 0 ? 0 : Math.round(betNul * 100 / countBet)
     })
   },
   renderUserBet: function(index) {
@@ -154,6 +161,20 @@ var MatchBetDetail = React.createClass({
       }
     }, 'Tendance des joueurs')
   },
+  onCrossHover: function(hover) {
+    this.setState({crossColor: COLOR.blue})
+    if (hover) {
+      this.setState({crossColor: COLOR.dark})
+    }
+  },
+  // onArrowClick: function(arrow) {
+  //   for (var i = 0; i < this.state.matchs.length; i++) {
+  //     console.log(this.state.matchs, this.state.matchId)
+  //     if (this.state.matchs[i].matchId == this.state.matchId) {
+  //       this.setState({matchId: this.state.matchs[i - 1].matchId})
+  //     }
+  //   }
+  // },
   renderMatchTitle: function() {
     var teamDomicile = this.state.match.teamDomicile
     var teamExterieur = this.state.match.teamExterieur
@@ -166,44 +187,79 @@ var MatchBetDetail = React.createClass({
     return d.div({
       style: {
         backgroundColor: COLOR.white,
-        height: '30px',
+        height: '40px',
         textAlign: 'center',
         color: COLOR.black,
-        lineHeight: '30px',
-        fontSize: '16px'
+        lineHeight: '40px',
+        fontSize: '16px',
+        paddingLeft: '50px'
       }
-    }, 
+    },
+      // d.div({
+      //   style: {
+      //     display: 'inline-block',
+      //     fontSize: '29px',
+      //     padding: '0 20px 0 0',
+      //     display: 'inline-block',
+      //     verticalAlign: 'middle',
+      //     color: COLOR.blue,
+      //     transition: 'color 0.3s',
+      //   },
+      //   onClick: this.onArrowClick.bind(this, 'left')
+      // }, d.i({className: "fa fa-angle-left"})),
       d.div({
         style: {
           color: COLOR.black,
           display: 'inline-block',
-          float: 'left',
-          width: '250px',
           textAlign: 'right'
         }
       }, 
         TeamInfo.get(teamDomicile).countryName,
-        React.createElement(Logo, {name: this.state.match.teamDomicile, float: 'right', margin: '5px 10px'})
+        React.createElement(Logo, {name: this.state.match.teamDomicile, float: 'right', margin: '10px 10px'})
       ),
       d.div({
         style: {
           color: COLOR.dark,
           fontWeight: 'bold',
-          display: 'inline-block'
+          display: 'inline-block',
+          padding: '0 10px'
         }
       }, score),
       d.div({
         style: {
           color: COLOR.black,
           display: 'inline-block',
-          float: 'right',
-          width: '250px',
           textAlign: 'left'
         }
       }, 
         TeamInfo.get(teamExterieur).countryName,
-        React.createElement(Logo, {name: this.state.match.teamExterieur, float: 'left', margin: '5px 10px'})
-      )
+        React.createElement(Logo, {name: this.state.match.teamExterieur, float: 'left', margin: '10px 10px'})
+      ),
+      // d.div({
+      //   style: {
+      //     display: 'inline-block',
+      //     fontSize: '29px',
+      //     padding: '0 0 0 20px',
+      //     display: 'inline-block',
+      //     verticalAlign: 'middle',
+      //     color: COLOR.blue,
+      //     transition: 'color 0.3s',
+      //   },
+      //   onClick: this.onArrowClick.bind(this, 'right')
+      // }, d.i({className: "fa fa-angle-right"})),
+      d.div({
+        style: {
+          display: 'inline-block',
+          color: this.state.crossColor,
+          transition: 'color 0.3s',
+          float: 'right',
+          paddingRight: '10px',
+          cursor: 'pointer'
+        },
+        onClick: this.onClose,
+        onMouseOver: this.onCrossHover.bind(this, true),
+        onMouseOut: this.onCrossHover.bind(this, false)
+      }, d.i({className: "fa fa-times"}))
     )
   },
   render: function() {

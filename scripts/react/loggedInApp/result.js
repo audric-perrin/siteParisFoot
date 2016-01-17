@@ -231,7 +231,7 @@ var Result = React.createClass({
         display: 'inline-block',
         verticalAlign: 'middle',
         color: isHover ? COLOR.blue2 : COLOR.blue,
-        transition: 'color 0.7s',
+        transition: 'color 0.3s',
         cursor: 'pointer',
         WebkitTouchCallout: 'none',
         WebkitUserSelect: 'none',

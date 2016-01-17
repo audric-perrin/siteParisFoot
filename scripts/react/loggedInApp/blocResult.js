@@ -6,13 +6,15 @@ var BlocResult = React.createClass({
     return {round: null, macthSelected: null}
   },
   handleRound: function(round) {
-    this.setState({round: round})
+    this.setState({round: round, macthSelected: null})
   },
   onMatchSelected: function(matchId) {
     this.setState({macthSelected: matchId})
   },
+  onMatchSelectedClose: function() {
+    this.setState({macthSelected: null})
+  },
   render: function() {
-    console.log(this.state)
     var elements = []
     elements.push(
       d.div({
@@ -34,7 +36,7 @@ var BlocResult = React.createClass({
             borderRadius: '5px',
             verticalAlign: 'top'
           }
-        }, React.createElement(BetResultManager, {round: this.state.round}))
+        }, React.createElement(MyBetResultManager, {round: this.state.round}))
       )
     }
     elements.push(
@@ -43,7 +45,12 @@ var BlocResult = React.createClass({
           display: 'inline-block',
           verticalAlign: 'top'
         }
-      }, React.createElement(ManagerComparisonBet, {round: this.state.round, onSelect: this.onMatchSelected}))
+      }, React.createElement(ManagerComparisonBet, {
+        onClose: this.onMatchSelectedClose,
+        round: this.state.round, 
+        onSelect: this.onMatchSelected, 
+        matchId: this.state.macthSelected
+      }))
     )
     return d.div({
       style: {

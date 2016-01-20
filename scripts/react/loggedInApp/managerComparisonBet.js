@@ -6,6 +6,7 @@ var ManagerComparisonBet = React.createClass({
     return {isClick: false, matchs: null, round: null, isLoading: true}
   },
   changeRound: function (round) {
+    console.log(round)
     this.setState({matchs: null, round: round, isLoading: true})
     var options = {
       url: './api/match.php?round=' + round,
@@ -17,7 +18,6 @@ var ManagerComparisonBet = React.createClass({
     }
   },
   componentWillReceiveProps: function(newProps) {
-    console.log(newProps)
     if (newProps.round) {
       this.changeRound(newProps.round)
     }
@@ -29,11 +29,16 @@ var ManagerComparisonBet = React.createClass({
     this.changeRound(data.currentRound)
   },
   componentWillMount: function() {
-    var options = {
-      url: './api/currentRound.php',
-      method: 'GET',
+    if (this.props.round) {
+      this.changeRound(this.props.round)
     }
-    Ajax.request(options, this.handleCurrentRound.bind(this))
+    else {    
+      var options = {
+        url: './api/currentRound.php',
+        method: 'GET',
+      }
+      Ajax.request(options, this.handleCurrentRound.bind(this))
+    }
     if (this.props.matchId) {
       this.onSelectedMatch(this.props.matchId)
     }

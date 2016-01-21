@@ -15,7 +15,6 @@ var BlocResult = React.createClass({
     this.setState({macthSelected: null})
   },
   render: function() {
-    console.log(this.state.round)
     var elements = []
     elements.push(
       d.div({

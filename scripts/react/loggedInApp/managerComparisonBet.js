@@ -6,7 +6,6 @@ var ManagerComparisonBet = React.createClass({
     return {isClick: false, matchs: null, round: null, isLoading: true}
   },
   changeRound: function (round) {
-    console.log(round)
     this.setState({matchs: null, round: round, isLoading: true})
     var options = {
       url: './api/match.php?round=' + round,

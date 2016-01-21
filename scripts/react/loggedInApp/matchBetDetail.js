@@ -13,17 +13,22 @@ var MatchBetDetail = React.createClass({
       nul: 0, 
       exterieur: 0,
       crossColor: COLOR.blue,
-      matchId: this.props.matchId
+      matchId: this.props.matchId,
+      matchMin: 0,
+      matchMax: 0
     }
   },
   componentWillMount: function() {
-    this.setState({matchId: this.props.matchId})
-    this.setState({matchs: this.props.matchs})
-    this.dataMatchBet()
+    this.setState({
+      matchs: this.props.matchs, 
+      matchMin: this.props.matchs[0].matchId, 
+      matchMax: this.props.matchs[this.props.matchs.length - 1].matchId
+    })
+    this.dataMatchBet(this.props.matchId)
   },
-  dataMatchBet: function() {
+  dataMatchBet: function(matchId) {
     var options = {
-      url: './api/matchBetCompare.php?matchId=' + this.state.matchId,
+      url: './api/matchBetCompare.php?matchId=' + matchId,
       method: 'GET',
     }
     this.setState({isLoading: true})
@@ -34,6 +39,7 @@ var MatchBetDetail = React.createClass({
   },
   handleMatchBet: function(data) {
     this.setState({isLoading: false, bets: data.bets, match: data.match, users: data.users})
+    this.setState({domicile: 0, exterieur: 0, nul: 0})
     if (data.match.scoreDomicile >= 0) {
       this.setState({over: true})
     }
@@ -167,15 +173,22 @@ var MatchBetDetail = React.createClass({
       this.setState({crossColor: COLOR.dark})
     }
   },
-  // onArrowClick: function(arrow) {
-  //   for (var i = 0; i < this.state.matchs.length; i++) {
-  //     console.log(this.state.matchs, this.state.matchId)
-  //     if (this.state.matchs[i].matchId == this.state.matchId) {
-  //       this.setState({matchId: this.state.matchs[i - 1].matchId})
-  //     }
-  //   }
-  // },
-  renderMatchTitle: function() {
+  onArrowClick: function(arrow) {
+    for (var i = 0; i < this.state.matchs.length; i++) {
+      if (this.state.matchs[i].matchId == this.state.matchId) {
+        if (arrow == 'left') {
+          var matchId = this.state.matchs[i - 1].matchId
+        }
+        else {
+          var matchId = this.state.matchs[i + 1].matchId
+        }
+        this.setState({matchId: matchId})
+        this.dataMatchBet(matchId)
+      }
+    }
+  },
+  renderMatchTitle: function(arrowLeft, arrowRight) {
+    console.log(arrowLeft, arrowRight)
     var teamDomicile = this.state.match.teamDomicile
     var teamExterieur = this.state.match.teamExterieur
     if (this.state.match.scoreDomicile < 0) {
@@ -195,18 +208,19 @@ var MatchBetDetail = React.createClass({
         paddingLeft: '50px'
       }
     },
-      // d.div({
-      //   style: {
-      //     display: 'inline-block',
-      //     fontSize: '29px',
-      //     padding: '0 20px 0 0',
-      //     display: 'inline-block',
-      //     verticalAlign: 'middle',
-      //     color: COLOR.blue,
-      //     transition: 'color 0.3s',
-      //   },
-      //   onClick: this.onArrowClick.bind(this, 'left')
-      // }, d.i({className: "fa fa-angle-left"})),
+      d.div({
+        style: {
+          display: 'inline-block',
+          fontSize: '29px',
+          padding: '0 20px 0 0',
+          display: 'inline-block',
+          verticalAlign: 'middle',
+          color: arrowLeft ? COLOR.blue : COLOR.white,
+          transition: 'color 0.3s',
+          cursor: arrowLeft ? 'pointer' : 'auto'
+        },
+        onClick: arrowLeft ? this.onArrowClick.bind(this, 'left') : null
+      }, d.i({className: "fa fa-angle-left"})),
       d.div({
         style: {
           color: COLOR.black,
@@ -235,18 +249,19 @@ var MatchBetDetail = React.createClass({
         TeamInfo.get(teamExterieur).countryName,
         React.createElement(Logo, {name: this.state.match.teamExterieur, float: 'left', margin: '10px 10px'})
       ),
-      // d.div({
-      //   style: {
-      //     display: 'inline-block',
-      //     fontSize: '29px',
-      //     padding: '0 0 0 20px',
-      //     display: 'inline-block',
-      //     verticalAlign: 'middle',
-      //     color: COLOR.blue,
-      //     transition: 'color 0.3s',
-      //   },
-      //   onClick: this.onArrowClick.bind(this, 'right')
-      // }, d.i({className: "fa fa-angle-right"})),
+      d.div({
+        style: {
+          display: 'inline-block',
+          fontSize: '29px',
+          padding: '0 0 0 20px',
+          display: 'inline-block',
+          verticalAlign: 'middle',
+          color: arrowRight ? COLOR.blue : COLOR.white,
+          transition: 'color 0.3s',
+          cursor: arrowRight ? 'pointer' : 'auto'
+        },
+        onClick: arrowRight ? this.onArrowClick.bind(this, 'right') : null
+      }, d.i({className: "fa fa-angle-right"})),
       d.div({
         style: {
           display: 'inline-block',
@@ -263,12 +278,15 @@ var MatchBetDetail = React.createClass({
     )
   },
   render: function() {
+    var elements =[]
+    var arrowRight = this.state.matchId == this.state.matchMax ? 0 : 1
+    var arrowLeft = this.state.matchId == this.state.matchMin ? 0 : 1
     if (this.state.isLoading) {
-      var elements = 'Chargement'
+      elements = ['Chargement']
     }
     else {
       elements = [
-        this.renderMatchTitle(),
+        this.renderMatchTitle(arrowLeft, arrowRight),
         this.renderStatsTitle(),
         this.renderStats(),
         this.renderBetTitle()

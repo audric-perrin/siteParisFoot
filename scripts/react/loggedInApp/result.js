@@ -264,7 +264,7 @@ var Result = React.createClass({
         round: this.state.round,
         maxRound: this.state.maxRound
       }),
-      this.state.round == 21 ? 
+      this.state.round == this.state.maxRound ? 
         d.div({
           style:{
             display: 'inline-block',

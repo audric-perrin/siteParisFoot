@@ -436,6 +436,9 @@ var RenderBlocMatch = React.createClass({
     if (this.props.onRefreshRequired) {
       this.props.onRefreshRequired(data)
     }
+    if (this.props.onBet) {
+      this.props.onBet()
+    }
   },
   onValidateSelected: function() {
     var matchId = this.props.bet.id

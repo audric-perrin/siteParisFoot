@@ -3,7 +3,7 @@ var d = React.DOM
 //Bloc bet
 var BlocBet = React.createClass({
   onBet: function() {
-    this.props.onBet
+    this.props.onBet()
   },
   render: function() {
     var element = [

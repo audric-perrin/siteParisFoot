@@ -188,7 +188,6 @@ var MatchBetDetail = React.createClass({
     }
   },
   renderMatchTitle: function(arrowLeft, arrowRight) {
-    console.log(arrowLeft, arrowRight)
     var teamDomicile = this.state.match.teamDomicile
     var teamExterieur = this.state.match.teamExterieur
     if (this.state.match.scoreDomicile < 0) {
@@ -282,7 +281,10 @@ var MatchBetDetail = React.createClass({
     var arrowRight = this.state.matchId == this.state.matchMax ? 0 : 1
     var arrowLeft = this.state.matchId == this.state.matchMin ? 0 : 1
     if (this.state.isLoading) {
-      elements = ['Chargement']
+      elements = [
+        'Chargement ',
+        d.i({className: "fa fa-spinner fa-pulse"})
+      ]
     }
     else {
       elements = [

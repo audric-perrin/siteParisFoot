@@ -32,6 +32,9 @@
     foreach ($result as $row) {
       $firstMatchDate = $row['date'];
     }
+    if (!isset($firstMatchDate)) {
+      $firstMatchDate = '2200-10-16 19:20:00';
+    }
     $result = runQuery('SELECT id FROM result WHERE `date` >= "' . $firstMatchDate . '"');
     foreach ($result as $row) {
       $matchIds[] = $row['id'];

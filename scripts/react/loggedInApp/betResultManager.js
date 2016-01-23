@@ -3,7 +3,7 @@ var d = React.DOM
 //Composant comparaison paris
 var BetResultManager = React.createClass({
   getInitialState: function() {
-    return {user: null, users: [], isLoading: true, round: null, crossHover: false}
+    return {user: null, users: [], isLoading: true, round: null}
   },
   handleUser: function(data) {
     var userId = this.props.selectIndex ? data.users[this.props.selectIndex].id : data.users[0].id
@@ -28,9 +28,6 @@ var BetResultManager = React.createClass({
   },
   onUserChanged: function(newUser) {
     this.setState({user: newUser})
-  },
-  onCrossHover: function(hover) {
-    this.setState({crossHover: this.state.crossHover ? false : true})
   },
   isLoading: function() {
     return d.div({
@@ -63,8 +60,6 @@ var BetResultManager = React.createClass({
         cursor: 'pointer'
       },
       onClick: this.onClose,
-      onMouseOver: this.onCrossHover,
-      onMouseOut: this.onCrossHover
     }, d.i({className: "fa fa-times"}))
   },
   render: function() {

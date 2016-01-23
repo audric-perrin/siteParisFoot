@@ -56,6 +56,9 @@
       vertical-align: top;
       margin: 30px 65px 50px 70px;
     }
+    .loading {
+      padding-top: 87px;
+    }
     #loginApp {
       display: inline-block;
       color: #000000;
@@ -64,11 +67,18 @@
       font-size: 16px;
       vertical-align: top;
       width: 360px;
+      min-height: 250px;
       text-align: center;
       margin: 30px 0 50px 0;
     }
     strong {
       font-weight: bold;
+    }
+    .loading i {
+      font-size: 30px;
+    }
+    .textLoading {
+      padding-bottom: 30px;
     }
     .blueBloc {
       background-color: #3386DB;
@@ -101,7 +111,10 @@
           <div class="whiteBloc">Comparer vos résultats et devenez le meilleur</div>
         </div><!--
      --><div id="loginApp">
-          Chargement en cours <i class="fa fa-spinner fa-pulse"></i>
+          <div class="loading">
+            <div class="textLoading">Chargement en cours...</div>
+            <i class="fa fa-spinner fa-pulse"></i>
+          </div>
         </div>
       </div>
     </div>

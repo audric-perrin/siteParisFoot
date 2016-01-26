@@ -7,21 +7,25 @@
     $matchId = intval($_POST['matchId']);
     $scoreDomicile = intval($_POST['scoreDomicile']);
     $scoreExterieur = intval($_POST['scoreExterieur']);
-    $result = runQuery('
+    $condition1 = '
       SELECT * FROM bet 
       INNER JOIN result ON bet.matchId = result.id
-      WHERE matchId = ' . $matchId . ' AND userId = ' . $_SESSION['id']);
+      WHERE matchId = ' . $matchId . ' AND userId = ' . $_SESSION['id'];
+    $result = runQuery($condition1);
     $count = 0;
     foreach ($result as $row) {
-      $count ++;
+      $count++;
+      break;
     }
-    $result = runQuery('
+    $condition2 = '
       SELECT * FROM bet 
       INNER JOIN result ON bet.matchId = result.id
-      WHERE matchId = ' . $matchId . ' AND TIMESTAMPDIFF(SECOND, date, NOW()) > 0
-    ');
+      WHERE matchId = ' . $matchId . ' AND TIMESTAMPDIFF(SECOND, date, NOW()) > 3600
+    ';
+    $result = runQuery($condition2);
     foreach ($result as $row) {
-      $count ++;
+      $count++;
+      break;
     }
     if ($count == 0) {
       $coteResultQuery = runQuery('SELECT * FROM coteResult WHERE id = ' . $_POST['matchId']);
@@ -66,8 +70,7 @@
     'SELECT DISTINCT(result.id)
     FROM result 
     INNER JOIN coteScore ON result.id = coteScore.id 
-    INNER JOIN coteResult ON result.id = coteResult.id 
-    -- WHERE result.scoreDomicile = "-1"
+    INNER JOIN coteResult ON result.id = coteResult.id
     WHERE result.scoreDomicile = "-1" AND TIMESTAMPDIFF(SECOND, date, NOW()) < 3600
     ORDER BY date');
     $matchIds = array();

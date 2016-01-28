@@ -62,8 +62,8 @@ var LoggedInApp = React.createClass({
         name: 'Statistiques',
         selected: this.state.isClick == 'Statistiques',
         onClick: this.onSelectChange,
-        // disable: false
-        disable: true
+        disable: false
+        // disable: true
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-users",
@@ -117,8 +117,8 @@ var LoggedInApp = React.createClass({
       element = React.createElement(RankingManager)
     }
     if (isClick == 'Statistiques') {
-      // element = React.createElement(MatchStats)
-      element = 'React.createElement(Stats)'
+      element = React.createElement(MatchStats, {matchId: '1202'})
+      // element = 'React.createElement(Stats)'
     }
     if (isClick == 'Règles') {
       element = React.createElement(Rules)

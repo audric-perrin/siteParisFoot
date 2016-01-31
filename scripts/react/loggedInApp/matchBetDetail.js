@@ -43,6 +43,9 @@ var MatchBetDetail = React.createClass({
     if (data.match.scoreDomicile >= 0) {
       this.setState({over: true})
     }
+    else {
+      this.setState({over: false})
+    }
     if (data.match.scoreDomicile - data.match.scoreExterieur > 0) {
       this.setState({domicile: 1})
     }

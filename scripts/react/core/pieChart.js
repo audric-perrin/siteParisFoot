@@ -43,13 +43,13 @@ var PieChart = React.createClass({
           name: 'Brands',
           colorByPoint: true,
           data: [{
-              y: 50,
+              y: this.props.win,
               color: COLOR.green
           }, {
-              y: 20,
+              y: this.props.nul,
               color: COLOR.gray2
           }, {
-              y: 30,
+              y: this.props.loose,
               color: COLOR.accent
           }]
       }],

@@ -15,6 +15,129 @@ var MatchStats = React.createClass({
     }
     Ajax.request(options, this.handleData.bind(this))
   },
+  renderLineLegend: function(type, number) {
+    var color = null
+    if (type == 'Victoire') {
+      color = COLOR.green
+    }
+    else if (type == 'Nul') {
+      color = COLOR.gray3
+    }
+    else {
+      color = COLOR.accent
+    }
+    return d.div({
+      style: {
+        display: 'inline-block',
+        height: '20px',
+        fontSize: '12px',
+        lineHeight: '20px'
+      }
+    }, d.div({
+      style: {
+        display: 'inline-block',
+        height: '10px',
+        width: '10px',
+        paddingtop: '5px',
+        marginRight: '5px',
+        backgroundColor: color
+      }
+    }), type + ' (' + number + ')')
+  },
+  renderLegendPieChart: function(win, nul, loose) {
+    var elements = [
+      this.renderLineLegend('Victoire', win),
+      this.renderLineLegend('Nul', nul),
+      this.renderLineLegend('Défaite', loose)
+    ]
+    return d.div({
+      style: {
+        display: 'inline-block',
+        width: '100px',
+        textAlign: 'left',
+        float: 'left',
+        paddingTop: '45px',
+        paddingLeft: '20px'
+      }
+    }, elements)
+  },
+  renderTitlePieChart: function(team) {
+    var element = 
+    team == this.state.data.match.teamDomicile ? 
+    TeamInfo.get(team).countryName + " à domicile (saison en cours)" : 
+    TeamInfo.get(team).countryName + " à l'exterieur (saison en cours)"
+    return d.div({
+      style: {    
+        backgroundColor: COLOR.blue,
+        height: '30px',
+        lineHeight: '30px',
+        color: COLOR.white
+      }
+    }, element)
+  },
+  renderPieChart: function(win, nul, loose) {
+    return d.div({
+      style: {
+        display: 'inline-block'
+      }
+    }, React.createElement(PieChart, {win: win, nul: nul, loose: loose}))
+  },
+  renderContentPieChart: function(team) {
+    var matchs = null
+    if (team == this.state.data.match.teamDomicile) {
+      matchs = this.state.data.matchsDomicile
+    }
+    else {
+      matchs = this.state.data.matchsExterieur
+    }
+    var win = 0
+    var nul = 0
+    var loose = 0
+    var winPercent = 0
+    var nulPercent = 0
+    var loosePercent = 0
+    for (var i = 0; i < matchs.length; i++) {
+      var domicile = team == matchs[i].teamDomicile ? true : false
+      if (matchs[i].scoreDomicile > matchs[i].scoreExterieur) {
+        domicile ? win++ : loose++
+      }
+      else if (matchs[i].scoreDomicile == matchs[i].scoreExterieur) {
+        nul++
+      }
+      else {
+        domicile ? loose++ : win++ 
+      }
+    }
+    var winPercent = win / matchs.length * 100
+    var nulPercent = nul / matchs.length * 100
+    var loosePercent = loose / matchs.length * 100
+    var elements = [
+      this.renderLegendPieChart(win, nul, loose),
+      this.renderPieChart(winPercent, nulPercent, loosePercent)
+    ]
+    return d.div({
+      style: {
+        height: '150px',
+        backgroundColor: COLOR.white,
+        textAlign: 'left'
+      }
+    }, elements)
+  },
+  renderBlocPieChart: function(team) {
+    var marginRight = this.state.data.match.teamDomicile == team ? '10px' : 0 
+    var elements = [
+      this.renderTitlePieChart(team),
+      this.renderContentPieChart(team)
+    ]
+    return d.div({
+      style: {
+        display: 'inline-block',
+        width: '350px',
+        marginRight: marginRight,
+        marginBottom: '10px'
+      }
+    }, elements)
+  },
   renderMatchHistorical: function(match, type) {
     var teamDomicile = match.teamDomicile
     var teamExterieur = match.teamExterieur
@@ -236,7 +359,6 @@ var MatchStats = React.createClass({
     )
   },
   render: function() {
-    console.log(this.state.data)
     var elements = []
     if (this.state.isLoading) {
       elements = [
@@ -250,6 +372,8 @@ var MatchStats = React.createClass({
       elements.push(this.renderTitle('Derniers résultats'))
       elements.push(this.renderBlocMatchHistorical('domicile'))
       elements.push(this.renderBlocMatchHistorical('exterieur'))
+      elements.push(this.renderBlocPieChart(this.state.data.match.teamDomicile))
+      elements.push(this.renderBlocPieChart(this.state.data.match.teamExterieur))
       elements.push(this.renderTitle('Match aller'))
       var matchAller = this.state.data.matchAller ? this.state.data.matchAller : null
       elements.push(matchAller ? this.renderMatch(matchAller, 'score') : null)
@@ -260,7 +384,7 @@ var MatchStats = React.createClass({
         width: '710px',
         backgroundColor: COLOR.gray1,
         borderRadius: '5px',
-        padding: '15px'
+        padding: '15px 15px 5px 15px'
       }
     }, elements)
   }

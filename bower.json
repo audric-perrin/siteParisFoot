@@ -20,6 +20,10 @@
     "react": "~0.14.2",
     "jquery": "~2.1.4",
     "chosen": "~1.4.2",
-    "moment": "~2.10.6"
+    "moment": "^2.11.2",
+    "reset-css": "^2.0.2011012603",
+    "components-font-awesome": "^4.5.0",
+    "highcharts": "^4.2.1",
+    "boron": "^0.2.4"
   }
 }

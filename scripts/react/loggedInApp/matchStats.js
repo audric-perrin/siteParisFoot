@@ -1,5 +1,15 @@
 'use strict'
 var d = React.DOM
+//Modal matchs stats
+var ModalMatchStats = React.createClass({
+  render: function() {
+    var element = React.createElement(MatchStats, {matchId: 1200})
+    var elements = React.createElement(ReactModal, {isOpen: true}, element)
+    return d.div({
+
+    }, elements)
+  }
+})
 //Composant match stats
 var MatchStats = React.createClass({
   getInitialState: function() {
@@ -8,7 +18,15 @@ var MatchStats = React.createClass({
   handleData: function(data) {
     this.setState({isLoading: false, data: data})
   },
-  componentWillMount: function() {  
+  handleRanking: function(data) {
+    this.setState({rankingL1: data})
+  },
+  componentWillMount: function() { 
+    var options = {
+      url: './api/rankingL1.php',
+      method: 'GET',
+    }
+    Ajax.request(options, this.handleRanking.bind(this))
     var options = {
       url: './api/matchStats.php?matchId=' + this.props.matchId,
       method: 'GET',
@@ -71,7 +89,8 @@ var MatchStats = React.createClass({
         backgroundColor: COLOR.blue,
         height: '30px',
         lineHeight: '30px',
-        color: COLOR.white
+        color: COLOR.white,
+        textAlign: 'center'
       }
     }, element)
   },
@@ -268,7 +287,8 @@ var MatchStats = React.createClass({
         height: '30px',
         lineHeight: '30px',
         width: '350px',
-        backgroundColor: COLOR.white
+        backgroundColor: COLOR.white,
+        textAlign: 'center'
       }
     }, elements)
   },
@@ -306,6 +326,16 @@ var MatchStats = React.createClass({
   renderMatch: function(match, score) {
     var teamDomicile = match.teamDomicile
     var teamExterieur = match.teamExterieur
+    var rankingDomicile = 0
+    var rankingExterieur = 0
+    for (var i = 0; i < this.state.rankingL1.rankingL1.length; i++) {
+      if (teamDomicile == this.state.rankingL1.rankingL1[i].name) {
+        rankingDomicile = this.state.rankingL1.rankingL1[i].rank
+      }
+      if (teamExterieur == this.state.rankingL1.rankingL1[i].name) {
+        rankingExterieur = this.state.rankingL1.rankingL1[i].rank
+      }
+    }
     var fontType = 'normal'
     if (score == 'score') {
       var score = match.scoreDomicile + ' - ' + match.scoreExterieur
@@ -334,6 +364,7 @@ var MatchStats = React.createClass({
         }
       }, 
         TeamInfo.get(teamDomicile).countryName,
+        score !== 'score' ? ' (' + rankingDomicile + ')' : null,
         React.createElement(Logo, {name: teamDomicile, float: 'right', margin: '10px 10px'})
       ),
       d.div({
@@ -354,6 +385,7 @@ var MatchStats = React.createClass({
         }
       }, 
         TeamInfo.get(teamExterieur).countryName,
+        score !== 'score' ? ' (' + rankingExterieur + ')' : null,
         React.createElement(Logo, {name: teamExterieur, float: 'left', margin: '10px 10px'})
       )
     )

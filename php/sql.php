@@ -1,4 +1,4 @@
-<?php 
+<?php
 	// Open the SQL connection
 	$conn = mysqli_connect('localhost', 'root', 'root', 'parisFootL1') or die(mysql_error());
 	mysqli_set_charset($conn, 'utf8');

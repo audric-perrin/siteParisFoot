@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BetChallenger</title>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- build:css styles/vendor.min.css -->
+    <link href="bower_components/reset-css/reset.css" rel="stylesheet" type="text/css">
+    <link href="bower_components/chosen/chosen.min.css" rel="stylesheet" type="text/css">
+    <!-- endbuild -->
+
+    <!-- Built with gulp 'html' task -->
+    <link href="styles/app.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Use external link for fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Inline CSS for the static front page -->
+  <style type="text/css">
+    html, body {
+      height: 100%;
+    }
+    body {
+      background-color: #ECF0F1;
+      font-family: 'Helvetica';
+      width: 1100px;
+      margin: auto;
+      display: table;
+    }
+    .title h1 {
+      font-size: 36px;
+      color: #3386DB;
+      display: inline-block;
+      font-weight: bold;
+      background-image: url(images/logo.png);
+      background-position: left center;
+      background-size: 80px 80px;
+      background-repeat: no-repeat;
+      padding-left: 100px;
+      line-height: 100px;
+      margin: 20px 0 0 70px;
+    }
+    .master {
+      display: table-cell;
+      vertical-align: middle;
+    }
+    .master-inner {
+      background-image: url(images/player.png);
+      background-position: right 20px;
+      background-size: 258px 281px;
+      background-repeat: no-repeat;
+      background-color: #FFFFFF;
+      padding-top: 10px;
+      border-radius: 5px;
+    }
+    .info {
+      color: #000000;
+      background-color: #ECF0F1;
+      display: inline-block;
+      border-radius: 5px;
+      padding: 15px;
+      width: 400px;
+      vertical-align: top;
+      margin: 30px 65px 50px 70px;
+    }
+    .loading {
+      padding-top: 87px;
+    }
+    #loginApp {
+      display: inline-block;
+      color: #000000;
+      background-color: #ECF0F1;
+      border-radius: 5px;
+      font-size: 16px;
+      vertical-align: top;
+      width: 360px;
+      min-height: 250px;
+      text-align: center;
+      margin: 30px 0 50px 0;
+    }
+    strong {
+      font-weight: bold;
+    }
+    .loading i {
+      font-size: 30px;
+    }
+    .textLoading {
+      padding-bottom: 30px;
+    }
+    .blueBloc {
+      background-color: #3386DB;
+      color: #FFFFFF;
+      text-align: center;
+      height: 45px;
+      line-height: 45px;
+    }
+    .whiteBloc {
+      background-color: #FFFFFF;
+      height: 50px;
+      line-height: 50px;
+      padding-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="master">
+    <div class="master-inner">
+      <div class="title">
+        <h1>BetChallenger</h1>
+      </div>
+      <div class="content">
+        <div class="info">
+          <div class="blueBloc">Inscrivez-vous</div>
+          <div class="whiteBloc">L’inscription est <strong>gratuite</strong>, l’utilisation aussi!</div>
+          <div class="blueBloc">Pariez</div>
+          <div class="whiteBloc">Effectuer des <strong>paris</strong> sur tous les matchs de la <strong>L1</strong></div>
+          <div class="blueBloc">Soyez le maître des pronostics</div>
+          <div class="whiteBloc">Comparer vos résultats et devenez le meilleur</div>
+        </div>
+        <div id="loginApp">
+          <div class="loading">
+            <div class="textLoading">Chargement en cours...</div>
+            <i class="fa fa-spinner fa-pulse"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="app" style="display: none"></div>
+
+  <!-- build:js scripts/vendor.min.js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/react/react-with-addons.js"></script>
+  <script src="bower_components/react/react-dom.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/moment/locale/fr.js"></script>
+  <script src="bower_components/highcharts/highcharts.js"></script>
+  <script src="app/scripts/lib/chosen.jquery.min.js"></script>
+  <!-- endbuild -->
+
+  <!-- Built with gulp 'html' task -->
+  <script src="scripts/app.min.js"></script>
+</body>
+</html>

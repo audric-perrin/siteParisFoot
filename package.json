@@ -24,6 +24,8 @@
     "gulp-useref": "^3.0.5",
     "gulp-util": "^3.0.7",
     "lazypipe": "^1.0.1",
+    "react": "^0.14.7",
+    "reactify": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },

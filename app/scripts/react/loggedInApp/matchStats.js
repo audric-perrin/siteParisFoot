@@ -23,8 +23,15 @@ var ModalMatchStats = React.createClass({
         onClick: this.showModal
       }, 'Open'),
       React.createElement(Modal, {
-        ref: 'modal'
-      }, React.createElement(MatchStats, {matchId: 1200}))
+        ref: 'modal',
+        modalStyle: {
+          width: '740px',
+        },
+        contentStyle: {
+          borderRadius: '5px'
+        },
+        closeOnClick: true
+      }, React.createElement(MatchStats, {matchId: 1202}))
     )
   }
 })
@@ -109,7 +116,7 @@ var MatchStats = React.createClass({
         textAlign: 'center'
       }
     },
-      TeamInfo.get(team).countryName + (domicile ? " à domicile" : " à l'exterieur") + ' (saison en cours)'
+      TeamInfo.get(team).countryName + (team == domicile ? " à domicile" : " à l'exterieur") + ' (saison en cours)'
     )
   },
   renderPieChart: function(win, nul, loose) {
@@ -372,7 +379,7 @@ var MatchStats = React.createClass({
           color: COLOR.black,
           display: 'inline-block',
           textAlign: 'right',
-          width: '150px'
+          width: '170px'
         }
       },
         TeamInfo.get(teamDomicile).countryName,
@@ -393,7 +400,7 @@ var MatchStats = React.createClass({
           color: COLOR.black,
           display: 'inline-block',
           textAlign: 'left',
-          width: '150px'
+          width: '170px'
         }
       },
         TeamInfo.get(teamExterieur).countryName,

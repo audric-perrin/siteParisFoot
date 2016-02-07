@@ -9,6 +9,7 @@ var MyBet = require('../core/MyBet')
 var MyButton = require('../core/button')
 var Bloc = require('../core/bloc')
 var Logo = require('../core/logo')
+var ModalMatchStats = require('./matchStats')
 
 var d = React.DOM
 
@@ -201,18 +202,12 @@ var RenderBlocMatch = React.createClass({
           padding: '6px 9px'
         }
       })
-      var elementsButtonStats = React.createElement(MyButton, {
-        fontSize: 15,
-        style: {
-          marginTop: '4px',
-          padding: '4px 11px'
-        }
-      }, d.i({className: "fa fa-bar-chart"}))
+      var elementModalStats = React.createElement(ModalMatchStats, {matchId: this.props.bet.id})
       var elements = [
         React.createElement(Bloc, {key: bet.id + 'time', width: 'initial', textAlign: 'center', lineHeight: '35px'}, time),
         React.createElement(Bloc, {key: bet.id + 'matchUpName', width: '284px', textAlign: 'center', lineHeight: '35px'}, matchUpName),
         React.createElement(Bloc, {key: bet.id + 'elementsCoteResult', width: 'initial', textAlign: 'center'}, elementsCoteResult),
-        React.createElement(Bloc, {key: bet.id + 'elementsButtonStats', width: 'initial', textAlign: 'center'}, elementsButtonStats)
+        React.createElement(Bloc, {key: bet.id + 'elementsButtonStats', width: 'initial', textAlign: 'center'}, elementModalStats)
       ]
     }
     return d.div({

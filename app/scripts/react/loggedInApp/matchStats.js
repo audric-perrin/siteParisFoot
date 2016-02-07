@@ -6,10 +6,12 @@ var COLOR = require('../../utils/style')
 var TeamInfo = require('../../utils/TeamInfo')
 var PieChart = require('../core/pieChart')
 var DateFormat = require('../../utils/DateFormat')
+var MyButton = require('../core/button')
 var Logo = require('../core/logo')
+
 var d = React.DOM
 
-//Modal matchs stats
+//Modal match stats
 var ModalMatchStats = React.createClass({
   showModal: function(){
     this.refs.modal.show()
@@ -18,10 +20,16 @@ var ModalMatchStats = React.createClass({
     this.refs.modal.hide()
   },
   render: function() {
+    console.log(this.props)
     return d.div(null,
-      d.button({
+      React.createElement(MyButton, {
+        fontSize: 15,
+        style: {
+          marginTop: '4px',
+          padding: '4px 11px'
+        },
         onClick: this.showModal
-      }, 'Open'),
+      }, d.i({className: "fa fa-bar-chart"})),
       React.createElement(Modal, {
         ref: 'modal',
         modalStyle: {
@@ -31,7 +39,7 @@ var ModalMatchStats = React.createClass({
           borderRadius: '5px'
         },
         closeOnClick: true
-      }, React.createElement(MatchStats, {matchId: 1202}))
+      }, React.createElement(MatchStats, {matchId: this.props.matchId}))
     )
   }
 })

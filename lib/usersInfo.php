@@ -1,4 +1,5 @@
 <?php
+  session_start();
   header('Content-Type: application/json');
   require_once('../php/sql.php');
   require_once('../lib/general.php');
@@ -11,5 +12,22 @@
       );
     }
     return $users;
+  }
+  function getUserInfo() {
+    if (isset($_SESSION['id'])) {
+      $result = runQuery('SELECT * FROM user WHERE id = ' . $_SESSION['id']);
+      foreach ($result as $row) {        
+        $user = array(
+          'id' => $row['id'],
+          'username' => $row['username'],
+          'password' => $row['password'],
+          'email' => $row['email'],
+          'pseudo' => $row['pseudo']);
+        return $user;
+      }
+    }
+    else {
+      return 'not connected';
+    }
   }
 ?>

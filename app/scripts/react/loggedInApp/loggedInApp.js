@@ -9,6 +9,7 @@ var RankingManager = require('./rankingManager')
 var MatchStats = require('./matchStats')
 var Rules = require('./rules')
 var ModalMatchStats = require('./matchStats')
+var AccountManager = require('./accountManager')
 var d = React.DOM
 
 //Composant application
@@ -90,7 +91,8 @@ var LoggedInApp = React.createClass({
         name: 'Groupes',
         selected: this.state.isClick == 'Groupes',
         onClick: this.onSelectChange,
-        disable: true
+        // disable: true
+        disable: false
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-trophy",
@@ -138,7 +140,8 @@ var LoggedInApp = React.createClass({
       element = 'React.createElement(Trophy)'
     }
     if (isClick == 'Groupes') {
-      element = 'React.createElement(Groups)'
+      // element = 'React.createElement(Groups)'
+      element = React.createElement(AccountManager)
     }
     return d.div({
       style: {

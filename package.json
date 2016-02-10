@@ -41,5 +41,6 @@
   "bugs": {
     "url": "https://github.com/audric-perrin/siteParisFoot/issues"
   },
-  "homepage": "https://github.com/audric-perrin/siteParisFoot#readme"
+  "homepage": "https://github.com/audric-perrin/siteParisFoot#readme",
+  "dependencies": {}
 }

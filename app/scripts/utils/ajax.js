@@ -1,5 +1,7 @@
 'use strict'
 
+var SessionManager = require('./SessionManager')
+
 var Ajax = {
   request: function (options, callback) {
     var handleResponse = function(data) {

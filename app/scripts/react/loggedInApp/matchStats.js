@@ -1,6 +1,6 @@
 'use strict'
 
-var Modal = require('boron/ScaleModal')
+var Modal = require('../core/modal')
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
 var TeamInfo = require('../../utils/TeamInfo')
@@ -13,14 +13,16 @@ var d = React.DOM
 
 //Modal match stats
 var ModalMatchStats = React.createClass({
+  getInitialState: function() {
+    return {modalShown: false}
+  },
   showModal: function(){
-    this.refs.modal.show()
+    this.setState({modalShown: true})
   },
   hideModal: function(){
-    this.refs.modal.hide()
+    this.setState({modalShown: false})
   },
   render: function() {
-    console.log(this.props)
     return d.div(null,
       React.createElement(MyButton, {
         fontSize: 15,
@@ -31,14 +33,9 @@ var ModalMatchStats = React.createClass({
         onClick: this.showModal
       }, d.i({className: "fa fa-bar-chart"})),
       React.createElement(Modal, {
-        ref: 'modal',
-        modalStyle: {
-          width: '740px',
-        },
-        contentStyle: {
-          borderRadius: '5px'
-        },
-        closeOnClick: true
+        shown: this.state.modalShown,
+        onClose: this.hideModal,
+        width: 740
       }, React.createElement(MatchStats, {matchId: this.props.matchId}))
     )
   }

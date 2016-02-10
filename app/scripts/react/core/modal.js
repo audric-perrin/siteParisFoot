@@ -53,12 +53,12 @@ var Modal = React.createClass({
   renderDefaultModalClose: function() {
     return d.div({
       style: {
-        color: COLOR.gray2,
+        color: COLOR.white,
         cursor: 'pointer',
         display: 'inline-block',
-        marginRight: 1,
-        marginTop: 1,
-        fontSize: 15
+        marginRight: 20,
+        marginTop: 21,
+        fontSize: 16
       }
     }, d.i({className: 'fa fa-times'}))
   },

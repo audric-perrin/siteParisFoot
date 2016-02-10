@@ -1,6 +1,6 @@
 'use strict'
 
-var Ajax = require('../../utils/Ajax')
+var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
 var TeamInfo = require('../../utils/TeamInfo')
 var DateFormat = require('../../utils/DateFormat')

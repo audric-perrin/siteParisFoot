@@ -3,7 +3,7 @@
 var DecimalNumber = require('../../utils/DecimalNumber')
 var TeamInfo = require('../../utils/TeamInfo')
 var COLOR = require('../../utils/style')
-var Logo = require('./Logo')
+var Logo = require('./logo')
 var d = React.DOM
 
 //Composant mon paris

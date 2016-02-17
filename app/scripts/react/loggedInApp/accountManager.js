@@ -9,7 +9,16 @@ var d = React.DOM
 var AccountManager = React.createClass({
   displayName: 'AccountManager',
   getInitialState: function() {
-    return {isLoading: true, dataUser: null, onEditClick: false, email: ''}
+    return {
+      isLoading: true,
+      dataUser: null,
+      onEditClick: [],
+      email: '',
+      username: '',
+      pseudo: '',
+      saveLoading: false,
+      error: null
+    }
   },
   componentWillMount: function() {
     this.dataUser()
@@ -22,20 +31,44 @@ var AccountManager = React.createClass({
     Ajax.request(options, this.handleUserInfo)
   },
   handleUserInfo: function(data) {
-    this.setState({isLoading: false, dataUser: data.user})
+    this.setState({isLoading: false, dataUser: data.user, saveLoading: false, onEditClick: null})
   },
-  onEdit: function() {
-    if (this.state.onEditClick) {
-      this.setState({onEditClick: false})
+  onEdit: function(stateName) {
+    if (this.state.onEditClick == stateName) {
+      this.setState({onEditClick: null, email: '', pseudo: '', username: ''})
     }
     else {
-      this.setState({onEditClick: true})
+      this.setState({onEditClick: stateName, email: '', pseudo: '', username: ''})
     }
   },
-  onValueChange: function() {
-    this.setState({email: this.refs.input.value})
+  onSaveClick: function(stateName) {
+    this.setState({saveLoading: true})
+    var data = {}
+    data[stateName] = this.state[stateName]
+    var options = {
+      url: './api/dataUser.php',
+      method: 'POST',
+      data: {
+        data
+      }
+    }
+    var editCallBack = function(data) {
+      if (data.result == 'ok') {
+        this.setState({email: '', pseudo: '', username: ''})
+      }
+      else {
+        this.setState({error: data.result})
+      }
+      this.dataUser()
+    }
+    Ajax.request(options, editCallBack.bind(this))
   },
-  renderBloc: function() {
+  onValueChange: function(stateName) {
+    var newState = {}
+    newState[stateName] = this.refs[stateName].value
+    this.setState(newState)
+  },
+  renderBloc: function(title, stateName, placeholder) {
     var elementDescription = null
     var elementEdit = null
     if (this.state.dataUser) {    
@@ -52,8 +85,8 @@ var AccountManager = React.createClass({
             width: '100px',
             marginRight: '5px',
             paddingLeft: '5px'
-          }
-        }, 'Email'),
+          },
+        }, title),
         d.div({
           style: {
             display: 'inline-block',
@@ -63,7 +96,7 @@ var AccountManager = React.createClass({
             marginRight: '5px',
             paddingLeft: '5px'
           }
-        }, this.state.dataUser.email),
+        }, this.state.dataUser[stateName]),
         React.createElement(MyButton, {
           style: {          
             marginTop: '2.5px',          
@@ -78,8 +111,8 @@ var AccountManager = React.createClass({
           hoverColor: COLOR.white,
           backgroundColor: COLOR.blue,
           hoverBackgroundColor: COLOR.dark,
-          onClick: this.onEdit
-        }, d.i({className: this.state.onEditClick ? "fa fa-undo" : "fa fa-pencil-square-o"}))
+          onClick: this.onEdit.bind(this, stateName)
+        }, d.i({className: this.state.onEditClick == stateName ? "fa fa-undo" : "fa fa-pencil-square-o"}))
       )
       elementEdit = d.div({
         style: {
@@ -87,11 +120,12 @@ var AccountManager = React.createClass({
         }
       },
         d.input({
-          ref: 'input',
+          ref: stateName,
           type: 'text',
-          name: 'email',
-          placeholder: 'Entrer votre nouvel email...',
-          onChange: this.onValueChange,
+          name: stateName,
+          value: this.state[stateName], 
+          placeholder: placeholder,
+          onChange: this.onValueChange.bind(this, stateName),
           style:{
             display: 'inline-block',
             backgroundColor: COLOR.white,
@@ -121,20 +155,21 @@ var AccountManager = React.createClass({
           hoverColor: COLOR.white,
           backgroundColor: COLOR.blue,
           hoverBackgroundColor: COLOR.dark,
-          onClick: this.onEdit,
-          disabled: this.state.email == '' ? true : false
-        }, d.i({className: "fa fa-floppy-o"}))
+          onClick: this.onSaveClick.bind(this, stateName),
+          disabled: this.state[stateName] == '' ? true : false
+        }, d.i({className: this.state.saveLoading ? "fa fa-spinner fa-pulse" : "fa fa-floppy-o"}))
       )
     }
     var height = '40px'
-    if (this.state.onEditClick) {
+    if (this.state.onEditClick == stateName) {
       height = '90px'
     }
     return d.div({
       style: {
         overflowY: 'hidden',
         height: height,
-        transition: 'all 300ms'
+        transition: 'all 300ms',
+        marginBottom: '5px'
       }
     }, elementDescription, elementEdit)
   },
@@ -144,7 +179,11 @@ var AccountManager = React.createClass({
       var element = 'Chargement'
     }
     else {
-      var element = this.renderBloc()
+      var element = [
+        this.renderBloc('Email', 'email', 'Entrer votre nouvel email...'),
+        this.renderBloc('Identifiant', 'username', 'Entrer votre nouvel identifiant...'),
+        this.renderBloc('Pseudo', 'pseudo', 'Entrer votre nouveau pseudo...')
+      ]
     }
     return d.div({
       style: {

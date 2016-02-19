@@ -44,19 +44,6 @@ var ButtonToolbar = React.createClass({
     }, name)
   },
   notification: function(number) {
-    var padding = ''
-    if (number == 0){
-      return d.div({
-        height: '16px',
-        display: 'inline-block'
-      })
-    }
-    if (number < 10){
-      padding = '0 0 0 1px'
-    }
-    else {
-      padding = '0 3px'
-    }
     return d.div({
       style: {
         backgroundColor: COLOR.accent,
@@ -70,7 +57,7 @@ var ButtonToolbar = React.createClass({
         left: '10px',
         boxSizing: 'border-box'
       }
-    }, number)
+    }, number || '')
   },
   render: function() {
     var color = COLOR.gray3

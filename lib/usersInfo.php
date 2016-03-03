@@ -1,6 +1,4 @@
 <?php
-  session_start();
-  header('Content-Type: application/json');
   require_once('../php/sql.php');
   require_once('../lib/general.php');
   function getUsersInfo() {

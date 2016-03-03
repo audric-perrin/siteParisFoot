@@ -4,7 +4,7 @@ var COLOR = require('../../utils/style')
 var Ajax = require('../../utils/ajax')
 var SessionManager = require('../../utils/sessionManager')
 var MyButton = require('../core/button')
-var Modal = require('react-modal-component')
+var Modal = require('../core/modal')
 var d = React.DOM
 
 //Modal account manager
@@ -25,16 +25,18 @@ var ModalAccountManager = React.createClass({
         onClick: this.showModal
       }, d.i({className: "fa fa-cog"})),
         React.createElement(Modal, {
-          transitionName: 'fade',
-          closeOnEsc: true,
-          closeOnOutsideClick: true,
-          close: this.hideModal
+          shown: this.state.showModal,
+          onClose: this.hideModal,
+          renderModalClose: function() {return null},
+          width: '392px'
         }, React.createElement(AccountManager))
       )
     }
     else {
       return d.div(null, d.div({
-        style: {},
+        style: {
+          cursor: 'pointer'
+        },
         onClick: this.showModal
       }, d.i({className: "fa fa-cog"})))
     }

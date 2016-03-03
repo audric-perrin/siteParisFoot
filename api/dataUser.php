@@ -1,4 +1,5 @@
 <?php
+  session_start();
   header('Content-Type: application/json');
   require_once('../api/lag.php');
   require_once('../php/sql.php');

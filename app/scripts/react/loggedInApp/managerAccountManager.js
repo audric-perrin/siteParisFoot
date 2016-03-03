@@ -7,6 +7,7 @@ var d = React.DOM
 
 //Composant application
 var ManagerAccountManager = React.createClass({
+  displayName: 'ManagerAccountManager',
   getInitialState: function() {
     return {isLoading: true, dataUser: null}
   },
@@ -38,13 +39,12 @@ var ManagerAccountManager = React.createClass({
     }, element)
   },
   render: function() {
-    var elements  = [
-      this.renderUsername(),
-      React.createElement(ModalAccountManager)
-    ]
     return d.div({
       style: {}
-    }, elements)
+    },
+      this.renderUsername(),
+      React.createElement(ModalAccountManager)
+    )
   }
 })
 

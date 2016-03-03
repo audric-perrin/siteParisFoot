@@ -9,37 +9,33 @@ var d = React.DOM
 
 //Modal account manager
 var ModalAccountManager = React.createClass({
+  displayName: 'ModalAccountManager',
   getInitialState: function() {
     return {showModal: false}
   },
-  showModal: function(){
+  showModal: function() {
     this.setState({showModal: true})
   },
-  hideModal: function(){
+  hideModal: function() {
     this.setState({showModal: false})
   },
   render: function() {
-    if (this.state.showModal) {    
-      return d.div(null, d.div({
+    return d.div(null,
+      d.div({
         style: {},
         onClick: this.showModal
-      }, d.i({className: "fa fa-cog"})),
-        React.createElement(Modal, {
-          shown: this.state.showModal,
-          onClose: this.hideModal,
-          renderModalClose: function() {return null},
-          width: '392px'
-        }, React.createElement(AccountManager, {onClose: this.hideModal}))
+      },
+        d.i({className: "fa fa-cog"})
+      ),
+      React.createElement(Modal, {
+        shown: this.state.showModal,
+        onClose: this.hideModal,
+        renderModalClose: function() {return null},
+        width: '392px'
+      },
+        React.createElement(AccountManager, {onClose: this.hideModal})
       )
-    }
-    else {
-      return d.div(null, d.div({
-        style: {
-          cursor: 'pointer'
-        },
-        onClick: this.showModal
-      }, d.i({className: "fa fa-cog"})))
-    }
+    )
   }
 })
 
@@ -116,7 +112,7 @@ var AccountManager = React.createClass({
   },
   onValueChange: function(stateName, confirm) {
     var newState = {}
-    if (confirm) {    
+    if (confirm) {
       newState['confirm'] = this.refs['confirm'].value
     }
     else {
@@ -129,6 +125,7 @@ var AccountManager = React.createClass({
     var elementEdit = null
     var elementEditPassword = null
       elementDescription = d.div({
+        key: 'elementDescription',
         style: {
           paddingBottom: '5px'
         }
@@ -156,8 +153,8 @@ var AccountManager = React.createClass({
           }
         }, confirm ? '******' : this.state.dataUser[stateName]),
         React.createElement(MyButton, {
-          style: {          
-            marginTop: '2.5px',          
+          style: {
+            marginTop: '2.5px',
             fontSize: '18px',
             width: '40px',
             height: '35px',
@@ -174,6 +171,7 @@ var AccountManager = React.createClass({
       )
       if (confirm) {
         elementEditPassword = d.div({
+          key: 'elementEditPassword',
           style: {
             textAlign: 'left',
             marginTop: '5px',
@@ -184,7 +182,7 @@ var AccountManager = React.createClass({
             ref: 'confirm',
             type: 'password',
             name: 'confirm',
-            value: this.state['confirm'], 
+            value: this.state['confirm'],
             placeholder: placeholder,
             onChange: this.onValueChange.bind(this, stateName, true),
             tabIndex: -1,
@@ -206,6 +204,7 @@ var AccountManager = React.createClass({
         )
       }
       elementEdit = d.div({
+        key: 'elementEdit',
         style: {
           textAlign: 'left'
         }
@@ -214,10 +213,10 @@ var AccountManager = React.createClass({
           ref: stateName,
           type: confirm ? 'password' : 'text',
           name: stateName,
-          value: this.state[stateName], 
+          value: this.state[stateName],
           placeholder: confirm ? 'Confirmer votre nouveau mot de passe...' : placeholder,
           onChange: this.onValueChange.bind(this, stateName, false),
-          tabIndex: -1, 
+          tabIndex: -1,
           style: {
             display: 'inline-block',
             backgroundColor: COLOR.white,
@@ -235,7 +234,7 @@ var AccountManager = React.createClass({
         }),
         React.createElement(MyButton, {
           style: {
-            marginTop: '2.5px',          
+            marginTop: '2.5px',
             fontSize: '18px',
             width: '40px',
             height: '35px',
@@ -286,7 +285,7 @@ var AccountManager = React.createClass({
       }
     }, React.createElement(MyButton, {
         style: {
-          marginTop: '10px',          
+          marginTop: '10px',
           fontSize: '16px',
           height: '35px',
           lineHeight: '35px',
@@ -335,12 +334,11 @@ var AccountManager = React.createClass({
     }, d.i({className: "fa fa-times"}))
   },
   render: function() {
-    console.log(this.state)
     if (this.state.isLoading) {
       var element = 'Chargement'
     }
     else {
-      var element = [
+      var element = d.span(null,
         this.renderTitle(),
         this.renderCross(),
         this.renderBloc('Pseudo', 'pseudo', false, 'Entrer votre nouveau pseudo...'),
@@ -348,17 +346,15 @@ var AccountManager = React.createClass({
         this.renderBloc('Email', 'email', false, 'Entrer votre nouvel email...'),
         this.renderBloc('Identifiant', 'username', false, 'Entrer votre nouvel identifiant...'),
         this.renderButtonDeconnexion()
-      ]
-      var elementError = null
+      )
       if (this.state.error) {
-        elementError = d.div({
+        var elementError = d.div({
           style: {
             color: COLOR.accent,
             marginTop: '10px'
           }
         }, this.state.error)
-        element.push(elementError)
-      }  
+      }
     }
     return d.div({
       style: {
@@ -369,7 +365,7 @@ var AccountManager = React.createClass({
         borderRadius: '5px',
         textAlign: 'left'
       }
-    }, element)
+    }, element, elementError)
   }
 })
 

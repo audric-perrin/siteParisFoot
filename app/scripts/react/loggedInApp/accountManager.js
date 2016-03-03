@@ -29,7 +29,7 @@ var ModalAccountManager = React.createClass({
           onClose: this.hideModal,
           renderModalClose: function() {return null},
           width: '392px'
-        }, React.createElement(AccountManager))
+        }, React.createElement(AccountManager, {onClose: this.hideModal}))
       )
     }
     else {
@@ -329,7 +329,7 @@ var AccountManager = React.createClass({
         paddingLeft: '10px',
         cursor: 'pointer'
       },
-      // onClick: this.onClose,
+      onClick: this.props.onClose,
       onMouseOver: this.crossHover.bind(this, true),
       onMouseOut: this.crossHover.bind(this, false)
     }, d.i({className: "fa fa-times"}))

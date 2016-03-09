@@ -18,11 +18,19 @@ var ModalAccountManager = React.createClass({
   },
   hideModal: function() {
     this.setState({showModal: false})
+    this.props.onClose()
   },
   render: function() {
-    return d.div(null,
+    return d.div({
+        style: {
+          display: 'inline-block',
+          marginLeft: '15px'
+        },
+     },
       d.div({
-        style: {},
+        style: {
+          cursor: 'pointer'
+        },
         onClick: this.showModal
       },
         d.i({className: "fa fa-cog"})
@@ -33,7 +41,7 @@ var ModalAccountManager = React.createClass({
         renderModalClose: function() {return null},
         width: '392px'
       },
-        React.createElement(AccountManager, {onClose: this.hideModal})
+        React.createElement(AccountManager, {onClose: this.hideModal, onDeconnexion: this.hideModal})
       )
     )
   }
@@ -276,7 +284,7 @@ var AccountManager = React.createClass({
     }, elements)
   },
   onDeconnexion: function() {
-    SessionManager.deconnexion()
+    SessionManager.deconnexion(this.props.onDeconnexion)
   },
   renderButtonDeconnexion: function() {
     return d.div({
@@ -311,10 +319,10 @@ var AccountManager = React.createClass({
         lineHeight: '40px',
         paddingLeft: '5px',
         textAlign: 'center',
-        width: '310px',
-        margin: '0 10px 5px 0'
+        width: '355px',
+        margin: '0 0 5px 0'
       }
-    }, 'Gestion de compte')
+    }, 'Gestion de compte', this.renderCross())
   },
   crossHover: function(hover) {
     this.setState({crossHover: hover})
@@ -323,10 +331,11 @@ var AccountManager = React.createClass({
     return d.div({
       style: {
         display: 'inline-block',
-        color: this.state.crossHover ? COLOR.dark : COLOR.blue,
+        color: this.state.crossHover ? COLOR.gray1 : COLOR.white,
         transition: 'color 0.3s',
-        paddingLeft: '10px',
-        cursor: 'pointer'
+        padding: '0 15px',
+        cursor: 'pointer',
+        float: 'right'
       },
       onClick: this.props.onClose,
       onMouseOver: this.crossHover.bind(this, true),
@@ -340,7 +349,6 @@ var AccountManager = React.createClass({
     else {
       var element = d.span(null,
         this.renderTitle(),
-        this.renderCross(),
         this.renderBloc('Pseudo', 'pseudo', false, 'Entrer votre nouveau pseudo...'),
         this.renderBloc('Mot de passe', 'password', true, 'Entrer votre nouveau mot de passe...'),
         this.renderBloc('Email', 'email', false, 'Entrer votre nouvel email...'),

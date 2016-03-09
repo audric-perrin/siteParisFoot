@@ -1,18 +1,23 @@
 'use strict'
 
 var callbacks = []
-var Ajax = require('./ajax')
 
 var SessionManager = {
   onLoggedOut: function(callback) {
     callbacks.push(callback)
   },
-  deconnexion: function() {
+  deconnexion: function(callback) {
     var options = {
       url: './api/logOut.php',
       method: 'GET',
     }
-    Ajax.request(options, this.triggerLogOut)
+    var Ajax = require('./ajax')
+    Ajax.request(options, function() {
+      SessionManager.triggerLogOut()
+      if (callback) {
+        callback()
+      }
+    })
   },
   triggerLogOut: function() {
     for (var i = 0; i < callbacks.length; i++){

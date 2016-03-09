@@ -34,16 +34,21 @@ var ManagerAccountManager = React.createClass({
     }
     return d.div({
       style: {
+        display: 'inline-block',
         color: COLOR.gray4
       }
     }, element)
+  },
+  onChange: function() {
+    this.setState(this.getInitialState())
+    this.dataUser()
   },
   render: function() {
     return d.div({
       style: {}
     },
       this.renderUsername(),
-      React.createElement(ModalAccountManager)
+      React.createElement(ModalAccountManager, {onClose: this.onChange})
     )
   }
 })

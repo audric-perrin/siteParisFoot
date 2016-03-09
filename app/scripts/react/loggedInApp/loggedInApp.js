@@ -9,6 +9,8 @@ var RankingManager = require('./rankingManager')
 var MatchStats = require('./matchStats')
 var Rules = require('./rules')
 var ModalMatchStats = require('./matchStats')
+var AccountManager = require('./accountManager')
+var ManagerAccountManager = require('./managerAccountManager')
 var d = React.DOM
 
 //Composant application
@@ -38,15 +40,27 @@ var LoggedInApp = React.createClass({
     this.dataNotification()
   },
   banner: function() {
-    return d.div({
-      style: {
-        height: '90px',
-        backgroundSize: 'contain',
-        backgroundRepeat: 'no-repeat',
-        backgroundImage: 'url(./images/bannerBetChallenger.png)',
-        backgroundPosition: 'center center'
-      }
-    })
+    return d.div({}, 
+      d.div({
+        style: {
+          display: 'inline-block',
+          height: '90px',
+          width: '500px',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundImage: 'url(./images/bannerBetChallenger.png)',
+          backgroundPosition: 'center center'
+        }
+      }), 
+      d.div({
+        style: {
+          display: 'inline-block',
+          position: 'absolute',
+          top: '10px',
+          right: '150px'
+        }
+      }, React.createElement(ManagerAccountManager))
+    )
   },
   toolbar: function() {
     return d.div({

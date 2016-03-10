@@ -22,6 +22,9 @@ var LoggedInApp = React.createClass({
   componentWillMount: function() {
     this.dataNotification()
   },
+  componentWillReceiveProps: function() {
+    this.dataNotification()
+  },
   dataNotification: function() {
     var options = {
       url: './api/notification.php',

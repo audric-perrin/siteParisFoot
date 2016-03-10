@@ -14,6 +14,9 @@ var ManagerAccountManager = React.createClass({
   componentWillMount: function() {
     this.dataUser()
   },
+  componentWillReceiveProps: function() {
+    this.dataUser()
+  },
   dataUser: function() {
     var options = {
       url: './api/dataUser.php',

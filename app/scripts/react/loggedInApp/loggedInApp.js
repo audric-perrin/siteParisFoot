@@ -40,7 +40,8 @@ var LoggedInApp = React.createClass({
     this.dataNotification()
   },
   banner: function() {
-    return d.div({}, 
+    var accountManagerStyle = {width: 250, marginRight: 14}
+    return d.div({},
       d.div({
         style: {
           display: 'inline-block',
@@ -51,13 +52,15 @@ var LoggedInApp = React.createClass({
           backgroundImage: 'url(./images/bannerBetChallenger.png)',
           backgroundPosition: 'center center'
         }
-      }), 
+      }),
       d.div({
         style: {
-          display: 'inline-block',
-          position: 'absolute',
-          top: '10px',
-          right: '150px'
+          float: 'right',
+          width: accountManagerStyle.width,
+          textAlign: 'right',
+          marginTop: 10,
+          marginRight: accountManagerStyle.marginRight,
+          marginLeft: -(accountManagerStyle.width + accountManagerStyle.marginRight)
         }
       }, React.createElement(ManagerAccountManager))
     )

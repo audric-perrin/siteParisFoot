@@ -20,7 +20,7 @@
     $condition2 = '
       SELECT * FROM bet 
       INNER JOIN result ON bet.matchId = result.id
-      WHERE matchId = ' . $matchId . ' AND TIMESTAMPDIFF(SECOND, date, NOW()) > 3600
+      WHERE matchId = ' . $matchId . ' AND TIMESTAMPDIFF(SECOND, date, UTC_TIMESTAMP( )) > 0
     ';
     $result = runQuery($condition2);
     foreach ($result as $row) {
@@ -71,7 +71,7 @@
     FROM result 
     INNER JOIN coteScore ON result.id = coteScore.id 
     INNER JOIN coteResult ON result.id = coteResult.id
-    WHERE result.scoreDomicile = "-1" AND TIMESTAMPDIFF(SECOND, date, NOW()) < 3600
+    WHERE result.scoreDomicile = "-1" AND TIMESTAMPDIFF(SECOND, date, UTC_TIMESTAMP( )) < 0
     ORDER BY date');
     $matchIds = array();
     foreach ($result as $row) {

@@ -52,8 +52,28 @@ var Ranking = React.createClass({
   },
   renderLineRanking : function(index) {
     var ranking = this.props.ranking[index]
+    var backgroundColor = null
+    var color = null
+    if (ranking.rank < 2) {
+      backgroundColor = COLOR.gold
+      color = COLOR.white
+    }
+    else if (ranking.rank < 3) {
+      backgroundColor = COLOR.silver
+      color = COLOR.white
+    }
+    else if (ranking.rank < 4){
+      backgroundColor = COLOR.bronze
+      color = COLOR.white
+    }
+    else {
+      backgroundColor = COLOR.white
+      color = COLOR.black
+    }
     var styleRank = {
-      padding: '0, 15px'
+      padding: '0, 15px',
+      color: color,
+      backgroundColor: backgroundColor
     }
     var styleUsername = {
       textAlign: 'left',

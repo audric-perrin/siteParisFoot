@@ -6,6 +6,9 @@ var COLOR = {
   accent: '#FF5252',
   darkAccent : '#F44336',
   green: '#27AE60',
+  gold: '#FFC000',
+  silver: '#A5A5A5',
+  bronze: '#ED7D31',
   blue: '#3386DB',
   blue2: '#2C74BE',//blue color opacity black 13%
   blue3: '#EBF3FB',//blue color opacity white 90%

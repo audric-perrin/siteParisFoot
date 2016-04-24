@@ -10,6 +10,7 @@ var MatchStats = require('./matchStats')
 var Rules = require('./rules')
 var ModalMatchStats = require('./matchStats')
 var AccountManager = require('./accountManager')
+var RecordsManager = require('./recordsManager')
 var ManagerAccountManager = require('./managerAccountManager')
 var d = React.DOM
 
@@ -124,7 +125,7 @@ var LoggedInApp = React.createClass({
         name: 'Records',
         selected: this.state.isClick == 'Records',
         onClick: this.onSelectChange,
-        disable: true
+        disable: false
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-balance-scale",
@@ -152,7 +153,7 @@ var LoggedInApp = React.createClass({
       element = React.createElement(Rules)
     }
     if (isClick == 'Records') {
-      element = 'React.createElement(Records)'
+      element = React.createElement(RecordsManager)
     }
     if (isClick == 'Trophés') {
       element = 'React.createElement(Trophy)'

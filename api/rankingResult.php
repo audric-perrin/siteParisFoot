@@ -11,7 +11,7 @@
     }
     return $scoreExact1['coteValue'] > $scoreExact2['coteValue'] ? -1 : 1;
   }
-  $listScoreExact = array();
+  $listCorrectResult = array();
   $users = array();
   $matchs = array();
   $usersQuery = 'SELECT * FROM user';
@@ -38,7 +38,9 @@
   FROM bet
   INNER JOIN result ON result.id = bet.matchId
   INNER JOIN user ON user.id = bet.userId
-  WHERE result.scoreDomicile = bet.scoreDomicile AND result.scoreExterieur = bet.scoreExterieur
+  WHERE result.scoreDomicile - result.scoreExterieur = 0 AND bet.scoreDomicile - bet.scoreExterieur = 0 AND result.scoreDomicile >= 0
+  OR result.scoreDomicile - result.scoreExterieur > 0 AND bet.scoreDomicile - bet.scoreExterieur > 0 AND result.scoreDomicile >= 0
+  OR result.scoreDomicile - result.scoreExterieur < 0 AND bet.scoreDomicile - bet.scoreExterieur < 0 AND result.scoreDomicile >= 0
   ORDER BY date';
   $result = runQuery($scoreExactQuery);
   foreach ($result as $row) {
@@ -61,10 +63,10 @@
       'scoreDomicile' => $row['scoreDomicile'],
       'scoreExterieur' => $row['scoreExterieur'],
       'matchId' => $row['matchId'],
-      'coteValue' => $row['coteScore'],
+      'coteValue' => $row['coteResult'],
     ];
-    $listScoreExact[] = $scoreExact;
+    $listCorrectResult[] = $scoreExact;
   }
-  usort($listScoreExact, 'compareScore');
-  echo json_encode($listScoreExact);
+  usort($listCorrectResult, 'compareScore');
+  echo json_encode($listCorrectResult);
 ?>

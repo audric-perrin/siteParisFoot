@@ -32,10 +32,10 @@ var BoxRecords = React.createClass({
   renderDataRanking: function() {
     var elements = []
     var data = this.props.data
-    var coteScore = 0
+    var coteValue = 0
     var rank = 0
     for (var i = 0; i < data.length; i++) {
-      if (coteScore !== data[i].coteScore) {
+      if (coteValue !== data[i].coteValue) {
         var rank = rank + 1
         if (rank > 3) {
           break
@@ -45,14 +45,14 @@ var BoxRecords = React.createClass({
         (i, 
         rank, 
         data[i].userName, 
-        data[i].coteScore, 
+        data[i].coteValue, 
         data[i].teamDomicile,
         data[i].teamExterieur,
         data[i].scoreDomicile,
         data[i].scoreExterieur
         )
       )
-      coteScore = data[i].coteScore
+      coteValue = data[i].coteValue
     }
     return d.table({
       style:{
@@ -61,7 +61,7 @@ var BoxRecords = React.createClass({
       }
     }, d.tbody(null, elements))
   },
-  renderLineRanking : function(key, rank, userName, coteScore, teamDomicile, teamExterieur, scoreDomicile, scoreExterieur) {
+  renderLineRanking : function(key, rank, userName, coteValue, teamDomicile, teamExterieur, scoreDomicile, scoreExterieur) {
     var logoDomicile = React.createElement(Logo, {name: teamDomicile, float: 'left', margin: '-5px 10px'})
     var logoExterieur = React.createElement(Logo, {name: teamExterieur, float: 'left', margin: '-5px 10px'})
     var teamDomicile = TeamInfo.get(teamDomicile).countryName
@@ -87,7 +87,7 @@ var BoxRecords = React.createClass({
       padding: '0 0 0 10px',
       width: '200px'
     }
-    var styleCoteScore = {
+    var styleCoteValue = {
       padding: '0 10px 0 20px',
       color: COLOR.dark
     }
@@ -115,7 +115,7 @@ var BoxRecords = React.createClass({
     },
       this.renderCell(rank, styleRank),
       this.renderCell(userName, styleUserName),
-      this.renderCell(coteScore, styleCoteScore),
+      this.renderCell(coteValue, styleCoteValue),
       this.renderCell(logoDomicile),
       this.renderCell(teamDomicile, styleTeamDomicile),
       this.renderCell(scoreDomicile),
@@ -134,7 +134,9 @@ var BoxRecords = React.createClass({
         display: 'inline-block',
         backgroundColor: COLOR.gray1,
         padding: '15px',
-        borderRadius: '5px'
+        borderRadius: '5px',
+        width: '650px',
+        marginBottom: '15px'
       }
     }, elements)
   }

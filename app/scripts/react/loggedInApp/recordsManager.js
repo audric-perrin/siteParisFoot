@@ -9,31 +9,20 @@ var d = React.DOM
 var RecordsManager = React.createClass({
   displayName: 'RecordsManager',
   getInitialState: function() {
-    return {isLoading: true, dataRankingScoreExact: null}
+    return {isLoading: true, records: []}
   },
-  componentWillReceiveProps: function() {
-    this.dataRankingScoreExact()
+  componentWillMount: function() {
+    this.dataRecords()
   },
-  dataRankingScoreExact: function() {
+  dataRecords: function() {
     var options = {
-      url: './api/rankingScoreExact.php',
+      url: './api/dataRecords.php',
       method: 'GET',
     }
-    Ajax.request(options, this.handleRankingScoreExact)
+    Ajax.request(options, this.handleDataRecords)
   },
-  handleRankingScoreExact: function(data) {
-    this.setState({isLoading: true, dataRankingScoreExact: data})
-    this.dataRankingResult()
-  },
-  dataRankingResult: function() {
-    var options = {
-      url: './api/rankingResult.php',
-      method: 'GET',
-    }
-    Ajax.request(options, this.handleRankingResult)
-  },
-  handleRankingResult: function(data) {
-    this.setState({isLoading: false, dataRankingResult: data})
+  handleDataRecords: function(data) {
+    this.setState({isLoading: false, records: data})
   },
   isLoading: function() {
     return d.div({
@@ -60,14 +49,12 @@ var RecordsManager = React.createClass({
     }
     else {
       var elements = []
-      elements.push(React.createElement(BoxRecords, {
-        title: 'Meilleur cote score exact', 
-        data: this.state.dataRankingScoreExact
-      }))
-      elements.push(React.createElement(BoxRecords, {
-        title: 'Meilleur cote résultat', 
-        data: this.state.dataRankingResult
-      }))
+      for (var i = 0; i < this.state.records.length; i++) {      
+        elements.push(React.createElement(BoxRecords, {
+          key: i,
+          data: this.state.records[i]
+        }))
+      }
     }
     return d.div({
       style: {}

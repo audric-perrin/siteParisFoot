@@ -3,6 +3,7 @@
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
 var TeamInfo = require('../../utils/TeamInfo')
+var DateFormat = require('../../utils/DateFormat')
 var Logo = require('../core/logo')
 var d = React.DOM
 
@@ -20,7 +21,7 @@ var BoxRecords = React.createClass({
         textAlign: 'center',
         marginBottom: '10px',
       }
-    }, this.props.title)
+    }, this.props.data.title)
   },
   renderCell: function(element, specificStyle) {
     var style = {
@@ -31,28 +32,16 @@ var BoxRecords = React.createClass({
   },
   renderDataRanking: function() {
     var elements = []
-    var data = this.props.data
-    var coteValue = 0
-    var rank = 0
+    var data = this.props.data.ranking
     for (var i = 0; i < data.length; i++) {
-      if (coteValue !== data[i].coteValue) {
-        var rank = rank + 1
-        if (rank > 3) {
-          break
-        }
-      }
-      elements.push(this.renderLineRanking
-        (i, 
-        rank, 
+      elements.push(this.renderLineRanking(
+        i,
+        this.props.data.type,
+        data[i].rank, 
         data[i].userName, 
-        data[i].coteValue, 
-        data[i].teamDomicile,
-        data[i].teamExterieur,
-        data[i].scoreDomicile,
-        data[i].scoreExterieur
-        )
-      )
-      coteValue = data[i].coteValue
+        data[i].value,
+        data[i].extra
+      ))
     }
     return d.table({
       style:{
@@ -61,43 +50,39 @@ var BoxRecords = React.createClass({
       }
     }, d.tbody(null, elements))
   },
-  renderLineRanking : function(key, rank, userName, coteValue, teamDomicile, teamExterieur, scoreDomicile, scoreExterieur) {
-    var logoDomicile = React.createElement(Logo, {name: teamDomicile, float: 'left', margin: '-5px 10px'})
-    var logoExterieur = React.createElement(Logo, {name: teamExterieur, float: 'left', margin: '-5px 10px'})
-    var teamDomicile = TeamInfo.get(teamDomicile).countryName
-    var teamExterieur = TeamInfo.get(teamExterieur).countryName
-    var tiret = '-'
+  renderLineRanking : function(key, type, rank, userName, score, extra) {
     var color = null
+    var backgroundColor = null
     if (rank < 2) {
-      color = COLOR.gold
+      backgroundColor = COLOR.gold
+      color = COLOR.white
     }
     else if (rank < 3) {
-      color = COLOR.silver
+      backgroundColor = COLOR.silver
+      color = COLOR.white
+    }
+    else if (rank < 4){
+      backgroundColor = COLOR.bronze
+      color = COLOR.white
     }
     else {
-      color = COLOR.bronze
+      backgroundColor = COLOR.white
+      color = COLOR.black
     }
     var styleRank = {
-      backgroundColor: color,
+      backgroundColor: backgroundColor,
       padding: '0 10px',
-      color: COLOR.white
+      color: color
     }
     var styleUserName = {
       textAlign: 'left',
       padding: '0 0 0 10px',
       width: '200px'
     }
-    var styleCoteValue = {
+    var styleScore = {
       padding: '0 10px 0 20px',
-      color: COLOR.dark
-    }
-    var styleTeamDomicile = {
-      textAlign: 'left',
-      width: '100px'
-    }
-    var styleTeamExterieur = {
-      textAlign: 'right',
-      width: '100px'
+      color: COLOR.dark,
+      width: '80px'
     }
     return d.tr({
       key: key,
@@ -115,20 +100,59 @@ var BoxRecords = React.createClass({
     },
       this.renderCell(rank, styleRank),
       this.renderCell(userName, styleUserName),
-      this.renderCell(coteValue, styleCoteValue),
-      this.renderCell(logoDomicile),
-      this.renderCell(teamDomicile, styleTeamDomicile),
-      this.renderCell(scoreDomicile),
-      this.renderCell(tiret),
-      this.renderCell(scoreExterieur),
-      this.renderCell(teamExterieur, styleTeamExterieur),
-      this.renderCell(logoExterieur)
+      this.renderCell(score, styleScore),
+      this.renderCell(this.renderExtra(extra, type))
     )
   },
+  //Choix de l'affichage d'extra
+  renderExtra: function(extra, type) {
+    if (type == 'match') {
+      return this.renderExtraMatch(extra)
+    }
+    if (type == 'round') {
+      return this.renderExtraRound(extra)
+    }    
+    if (type == 'month') {
+      return this.renderExtraMonth(extra)
+    }
+  },
+  renderExtraMatch: function(extra) {
+    var logoDomicile = React.createElement(Logo, {name: extra.teamDomicile, float: 'left', margin: '-5px 10px'})
+    var logoExterieur = React.createElement(Logo, {name: extra.teamExterieur, float: 'left', margin: '-5px 10px'})
+    var teamDomicile = TeamInfo.get(extra.teamDomicile).countryName
+    var teamExterieur = TeamInfo.get(extra.teamExterieur).countryName
+    var tiret = '-'
+    var styleTeamDomicile = {
+      textAlign: 'left',
+      width: '100px'
+    }
+    var styleTeamExterieur = {
+      textAlign: 'right',
+      width: '100px'
+    }
+    return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
+      this.renderCell(logoDomicile),
+      this.renderCell(teamDomicile, styleTeamDomicile),
+      this.renderCell(extra.scoreDomicile),
+      this.renderCell(tiret),
+      this.renderCell(extra.scoreExterieur),
+      this.renderCell(teamExterieur, styleTeamExterieur),
+      this.renderCell(logoExterieur)
+    )))
+  },
+  renderExtraRound: function(extra) {
+    return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
+      this.renderCell('Journée ' + extra.round),
+      this.renderCell('Saison ' + extra.saison)
+    )))
+  },
+  renderExtraMonth: function(extra) {
+    return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
+      this.renderCell(DateFormat.getMonth(extra.date)),
+      this.renderCell('Saison ' + extra.saison)
+    )))
+  },
   render: function() {
-    var elements = []
-    elements.push(this.renderTitle())
-    elements.push(this.renderDataRanking())
     return d.div({
       style: {
         display: 'inline-block',
@@ -138,7 +162,7 @@ var BoxRecords = React.createClass({
         width: '650px',
         marginBottom: '15px'
       }
-    }, elements)
+    }, this.renderTitle(), this.renderDataRanking())
   }
 })
 

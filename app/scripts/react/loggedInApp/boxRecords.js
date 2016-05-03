@@ -10,6 +10,9 @@ var d = React.DOM
 //Composant manager records
 var BoxRecords = React.createClass({
   displayName: 'BoxRecords',
+  getInitialState: function() {
+    return {isClick: false, isHover: false}
+  },
   renderTitle: function() {
     return d.div({
       style: {
@@ -19,9 +22,43 @@ var BoxRecords = React.createClass({
         lineHeight: '40px',
         paddingLeft: '5px',
         textAlign: 'center',
-        marginBottom: '10px',
+        marginBottom: '10px'
       }
     }, this.props.data.title)
+  },
+  arrowClick: function() {
+    if (this.state.isClick) {
+      this.setState({isClick: false})
+    }
+    else {
+      this.setState({isClick: true})
+    }
+  },
+  arrowHover: function() {
+    if (this.state.isHover) {
+      this.setState({isHover: false})
+    }
+    else {
+      this.setState({isHover: true})
+    }
+  },
+  renderArrow: function() {
+    return d.div({
+      style: {
+        backgroundColor: this.state.isHover ? COLOR.blue2 : COLOR.blue,
+        color: COLOR.white,
+        height: '30px',
+        lineHeight: '30px',
+        paddingLeft: '5px',
+        textAlign: 'center',
+        marginTop: '10px',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s, color 0.3s'
+      },
+      onClick: this.arrowClick,
+      onMouseOver: this.arrowHover.bind(this, true),
+      onMouseOut: this.arrowHover.bind(this, false)
+    }, d.i({className: this.state.isClick ? "fa fa-chevron-up" : "fa fa-chevron-down"}))
   },
   renderCell: function(element, specificStyle) {
     var style = {
@@ -33,7 +70,14 @@ var BoxRecords = React.createClass({
   renderDataRanking: function() {
     var elements = []
     var data = this.props.data.ranking
+    var limit = this.state.isClick ? 10000 : 3
     for (var i = 0; i < data.length; i++) {
+      if (data[i].value == 0) {
+        break
+      }
+      if (data[i].rank > limit) {
+        break
+      }
       elements.push(this.renderLineRanking(
         i,
         this.props.data.type,
@@ -162,7 +206,7 @@ var BoxRecords = React.createClass({
         width: '650px',
         marginBottom: '15px'
       }
-    }, this.renderTitle(), this.renderDataRanking())
+    }, this.renderTitle(), this.renderDataRanking(), this.renderArrow())
   }
 })
 

@@ -105,7 +105,7 @@
     return $scoreExact1['value'] > $scoreExact2['value'] ? -1 : 1;
   }
 
-  function buildRecordTable($type, $title, $listUsersBet, $recordFunc, $maxRank = 3) {
+  function buildRecordTable($type, $title, $listUsersBet, $recordFunc) {
     $results = array();
     foreach ($listUsersBet as $userName => $data) {
       $results[] = call_user_func_array($recordFunc, [$userName, $data]);
@@ -113,19 +113,13 @@
     usort($results, 'compareScore');
     $currentRank = 0;
     $currentScore = $results[0]['value'];
-    $end = 0;
     foreach ($results as $index => $result) {
       if ($result['value'] != $currentScore) {
         $currentRank++;
         $currentScore = $result['value'];
       }
       $results[$index]['rank'] = $currentRank + 1;
-      if ($currentRank == $maxRank) {
-        $end = $index;
-        break;
-      }
     }
-    $results = array_slice($results, 0, $end);
     return [
       'type' => $type,
       'title' => $title,
@@ -205,13 +199,71 @@
     ];
   }
 
+  function BestRound($userName, $data) {
+    $rounds = array();
+    foreach ($data as $row) {
+      if (!isset($rounds[$row['dataMatch']['round']])) {
+        $rounds[$row['dataMatch']['round']] = [
+          'value' => 0,
+          'dataRound' => $row
+        ];
+      }
+      $isCorrectResult = (
+        ($row['dataMatch']['scoreDomicile'] - $row['dataMatch']['scoreExterieur'] > 0
+        && $row['dataBet']['scoreDomicileBet'] - $row['dataBet']['scoreExterieurBet'] > 0
+        && $row['dataMatch']['scoreDomicile'] >= 0)
+        ||
+        ($row['dataMatch']['scoreDomicile'] - $row['dataMatch']['scoreExterieur'] < 0
+        && $row['dataBet']['scoreDomicileBet'] - $row['dataBet']['scoreExterieurBet'] < 0
+        && $row['dataMatch']['scoreDomicile'] >= 0)
+        ||
+        ($row['dataMatch']['scoreDomicile'] - $row['dataMatch']['scoreExterieur'] == 0 
+        && $row['dataBet']['scoreDomicileBet'] - $row['dataBet']['scoreExterieurBet'] == 0      
+        && $row['dataMatch']['scoreDomicile'] >= 0)
+      );
+      if ($isCorrectResult) {
+        $rounds[$row['dataMatch']['round']]['value'] = 
+        $rounds[$row['dataMatch']['round']]['value'] + $row['dataBet']['coteResult'];
+      }
+      $isScoreExact = (
+        $row['dataBet']['scoreDomicileBet'] == $row['dataMatch']['scoreDomicile']
+        && $row['dataBet']['scoreExterieurBet'] == $row['dataMatch']['scoreExterieur']
+      );
+      if ($isScoreExact) {
+        $rounds[$row['dataMatch']['round']]['value'] = 
+        $rounds[$row['dataMatch']['round']]['value'] + $row['dataBet']['coteScore'];
+      }
+    }
+    $bestRoundScore = 0;
+    $index = 0;
+    foreach ($rounds as $round) {
+      if ($round['value'] > $bestRoundScore) {
+        $bestRoundScore = $round['value'];
+        $dataRound = $round['dataRound'];
+      }
+    }
+    $extra = array();
+    if ($bestRoundScore > 0) {    
+      $extra = [
+        'round' => $dataRound['dataMatch']['round'],
+        'saison' => $dataRound['dataMatch'] ['saison']
+      ];
+    }
+    return [
+      'userName' => $userName,
+      'value' => $bestRoundScore,
+      'extra' => $extra
+    ];
+  }
+
   $users = fetchUsers();
   $matchs = fetchMatchs();
   $bets = fetchBets();
   $listUsersBet = processData($users, $matchs, $bets);
   $listRecord = [
-    buildRecordTable('match', 'Meilleurs cotes scores exacts', $listUsersBet, 'BestExactScore', 10),
-    buildRecordTable('match', 'Meilleurs cotes résultats corrects', $listUsersBet, 'BestCorrectResult', 10)
+    buildRecordTable('match', 'Meilleurs cotes scores exacts', $listUsersBet, 'BestExactScore', 15),
+    buildRecordTable('match', 'Meilleurs cotes résultats corrects', $listUsersBet, 'BestCorrectResult', 20),
+    buildRecordTable('round', 'Meilleurs journées', $listUsersBet, 'BestRound', 20)
   ];
   echo json_encode($listRecord);
 

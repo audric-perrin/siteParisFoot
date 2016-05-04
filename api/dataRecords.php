@@ -69,6 +69,7 @@
       $dataMatch = [
         'saison' => $match['saison'],
         'date' => $match['date'],
+        'month' => $match['month'],
         'teamDomicile' => $match['teamDomicile'],
         'teamExterieur' => $match['teamExterieur'],
         'scoreDomicile' => $match['scoreDomicile'],
@@ -202,36 +203,39 @@
   function BestRound($userName, $data) {
     $rounds = array();
     foreach ($data as $row) {
-      if (!isset($rounds[$row['dataMatch']['round']])) {
-        $rounds[$row['dataMatch']['round']] = [
+      $round = $row['dataMatch']['round'];
+      $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+      $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+      $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+      $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+      if (!isset($rounds[$round])) {
+        $rounds[$round] = [
           'value' => 0,
           'dataRound' => $row
         ];
       }
       $isCorrectResult = (
-        ($row['dataMatch']['scoreDomicile'] - $row['dataMatch']['scoreExterieur'] > 0
-        && $row['dataBet']['scoreDomicileBet'] - $row['dataBet']['scoreExterieurBet'] > 0
-        && $row['dataMatch']['scoreDomicile'] >= 0)
+        ($scoreDomicile - $scoreExterieur > 0
+        && $scoreDomicileBet - $scoreExterieurBet > 0
+        && $scoreDomicile >= 0)
         ||
-        ($row['dataMatch']['scoreDomicile'] - $row['dataMatch']['scoreExterieur'] < 0
-        && $row['dataBet']['scoreDomicileBet'] - $row['dataBet']['scoreExterieurBet'] < 0
-        && $row['dataMatch']['scoreDomicile'] >= 0)
+        ($scoreDomicile - $scoreExterieur < 0
+        && $scoreDomicileBet - $scoreExterieurBet < 0
+        && $scoreDomicile >= 0)
         ||
-        ($row['dataMatch']['scoreDomicile'] - $row['dataMatch']['scoreExterieur'] == 0 
-        && $row['dataBet']['scoreDomicileBet'] - $row['dataBet']['scoreExterieurBet'] == 0      
-        && $row['dataMatch']['scoreDomicile'] >= 0)
+        ($scoreDomicile - $scoreExterieur == 0 
+        && $scoreDomicileBet - $scoreExterieurBet == 0      
+        && $scoreDomicile >= 0)
       );
       if ($isCorrectResult) {
-        $rounds[$row['dataMatch']['round']]['value'] = 
-        $rounds[$row['dataMatch']['round']]['value'] + $row['dataBet']['coteResult'];
+        $rounds[$round]['value'] = $rounds[$round]['value'] + $row['dataBet']['coteResult'];
       }
       $isScoreExact = (
-        $row['dataBet']['scoreDomicileBet'] == $row['dataMatch']['scoreDomicile']
-        && $row['dataBet']['scoreExterieurBet'] == $row['dataMatch']['scoreExterieur']
+        $scoreDomicileBet == $scoreDomicile
+        && $scoreExterieurBet == $scoreExterieur
       );
       if ($isScoreExact) {
-        $rounds[$row['dataMatch']['round']]['value'] = 
-        $rounds[$row['dataMatch']['round']]['value'] + $row['dataBet']['coteScore'];
+        $rounds[$round]['value'] = $rounds[$round]['value'] + $row['dataBet']['coteScore'];
       }
     }
     $bestRoundScore = 0;
@@ -256,14 +260,311 @@
     ];
   }
 
+  function BestMonth($userName, $data) {
+    $months = array();
+    foreach ($data as $row) {
+      $month = $row['dataMatch']['month'];
+      $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+      $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+      $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+      $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+      if (!isset($months[$month])) {
+        $months[$month] = [
+          'value' => 0,
+          'dataMonth' => $row
+        ];
+      }
+      $isCorrectResult = (
+        ($scoreDomicile - $scoreExterieur > 0
+        && $scoreDomicileBet - $scoreExterieurBet > 0
+        && $scoreDomicile >= 0)
+        ||
+        ($scoreDomicile - $scoreExterieur < 0
+        && $scoreDomicileBet - $scoreExterieurBet < 0
+        && $scoreDomicile >= 0)
+        ||
+        ($scoreDomicile - $scoreExterieur == 0 
+        && $scoreDomicileBet - $scoreExterieurBet == 0      
+        && $scoreDomicile >= 0)
+      );
+      if ($isCorrectResult) {
+        $months[$month]['value'] = $months[$month]['value'] + $row['dataBet']['coteResult'];
+      }
+      $isScoreExact = (
+        $scoreDomicileBet == $scoreDomicile
+        && $scoreExterieurBet == $scoreExterieur
+      );
+      if ($isScoreExact) {
+        $months[$month]['value'] = $months[$month]['value'] + $row['dataBet']['coteScore'];
+      }
+    }
+    $bestMonthScore = 0;
+    $index = 0;
+    foreach ($months as $month) {
+      if ($month['value'] > $bestMonthScore) {
+        $bestMonthScore = $month['value'];
+        $dataMonth = $month['dataMonth'];
+      }
+    }
+    $extra = array();
+    if ($bestMonthScore > 0) {    
+      $extra = [
+        'date' => $dataMonth['dataMatch']['date'],
+        'saison' => $dataMonth['dataMatch'] ['saison']
+      ];
+    }
+    return [
+      'userName' => $userName,
+      'value' => $bestMonthScore,
+      'extra' => $extra
+    ];
+  }
+
+  function BestNumberCorrectResultRound($userName, $data) {
+    $rounds = array();
+    foreach ($data as $row) {
+      $round = $row['dataMatch']['round'];
+      $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+      $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+      $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+      $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+      if (!isset($rounds[$round])) {
+        $rounds[$round] = [
+          'value' => 0,
+          'dataRound' => $row
+        ];
+      }
+      $isCorrectResult = (
+        ($scoreDomicile - $scoreExterieur > 0
+        && $scoreDomicileBet - $scoreExterieurBet > 0
+        && $scoreDomicile >= 0)
+        ||
+        ($scoreDomicile - $scoreExterieur < 0
+        && $scoreDomicileBet - $scoreExterieurBet < 0
+        && $scoreDomicile >= 0)
+        ||
+        ($scoreDomicile - $scoreExterieur == 0 
+        && $scoreDomicileBet - $scoreExterieurBet == 0      
+        && $scoreDomicile >= 0)
+      );
+      if ($isCorrectResult) {
+        $rounds[$round]['value'] = $rounds[$round]['value'] + 1;
+      }
+    }
+    $bestRoundScore = 0;
+    $index = 0;
+    foreach ($rounds as $round) {
+      if ($round['value'] > $bestRoundScore) {
+        $bestRoundScore = $round['value'];
+        $dataRound = $round['dataRound'];
+      }
+    }
+    $extra = array();
+    if ($bestRoundScore > 0) {    
+      $extra = [
+        'round' => $dataRound['dataMatch']['round'],
+        'saison' => $dataRound['dataMatch'] ['saison']
+      ];
+    }
+    return [
+      'userName' => $userName,
+      'value' => $bestRoundScore,
+      'extra' => $extra
+    ];
+  }
+
+  function BestNumberCorrectResultMonth($userName, $data) {
+    $months = array();
+    foreach ($data as $row) {
+      $month = $row['dataMatch']['month'];
+      $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+      $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+      $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+      $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+      if (!isset($months[$month])) {
+        $months[$month] = [
+          'value' => 0,
+          'dataMonth' => $row
+        ];
+      }
+      $isCorrectResult = (
+        ($scoreDomicile - $scoreExterieur > 0
+        && $scoreDomicileBet - $scoreExterieurBet > 0
+        && $scoreDomicile >= 0)
+        ||
+        ($scoreDomicile - $scoreExterieur < 0
+        && $scoreDomicileBet - $scoreExterieurBet < 0
+        && $scoreDomicile >= 0)
+        ||
+        ($scoreDomicile - $scoreExterieur == 0 
+        && $scoreDomicileBet - $scoreExterieurBet == 0      
+        && $scoreDomicile >= 0)
+      );
+      if ($isCorrectResult) {
+        $months[$month]['value'] = $months[$month]['value'] + 1;
+      }
+    }
+    $bestMonthScore = 0;
+    $index = 0;
+    foreach ($months as $month) {
+      if ($month['value'] > $bestMonthScore) {
+        $bestMonthScore = $month['value'];
+        $dataMonth = $month['dataMonth'];
+      }
+    }
+    $extra = array();
+    if ($bestMonthScore > 0) {    
+      $extra = [
+        'date' => $dataMonth['dataMatch']['date'],
+        'saison' => $dataMonth['dataMatch'] ['saison']
+      ];
+    }
+    return [
+      'userName' => $userName,
+      'value' => $bestMonthScore,
+      'extra' => $extra
+    ];
+  }
+
+  function BestNumberScoreExactMonth($userName, $data) {
+    $months = array();
+    foreach ($data as $row) {
+      $month = $row['dataMatch']['month'];
+      $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+      $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+      $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+      $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+      if (!isset($months[$month])) {
+        $months[$month] = [
+          'value' => 0,
+          'dataMonth' => $row
+        ];
+      }
+      $isScoreExact = (
+        $scoreDomicileBet == $scoreDomicile
+        && $scoreExterieurBet == $scoreExterieur
+      );
+      if ($isScoreExact) {
+        $months[$month]['value'] = $months[$month]['value'] + 1;
+      }
+    }
+    $bestMonthScore = 0;
+    $index = 0;
+    foreach ($months as $month) {
+      if ($month['value'] > $bestMonthScore) {
+        $bestMonthScore = $month['value'];
+        $dataMonth = $month['dataMonth'];
+      }
+    }
+    $extra = array();
+    if ($bestMonthScore > 0) {    
+      $extra = [
+        'date' => $dataMonth['dataMatch']['date'],
+        'saison' => $dataMonth['dataMatch'] ['saison']
+      ];
+    }
+    return [
+      'userName' => $userName,
+      'value' => $bestMonthScore,
+      'extra' => $extra
+    ];
+  }
+
+  function TeamWinSeries($userName, $data) {
+    $rounds = array();
+    $teams = array();
+    foreach ($data as $row) {
+      $round = $row['dataMatch']['round'];
+      if (!isset($rounds[$round])) {
+        $rounds[$round] = array();
+      }
+      $rounds[$round][] = $row;
+    }
+    foreach ($rounds as $round => $matchs) {
+      foreach ($matchs as $row) {
+        $teamDomicile = $row['dataMatch']['teamDomicile'];
+        $teamExterieur = $row['dataMatch']['teamExterieur'];
+        $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+        $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+        $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+        $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+        if (!isset($teams[$teamDomicile])) {
+          $teams[$teamDomicile] = [
+            'value' => 0,
+            'bestValue' => 0,
+            'team' => $teamDomicile
+          ];
+        }
+        if (!isset($teams[$teamExterieur])) {
+          $teams[$teamExterieur] = [
+            'value' => 0,
+            'bestValue' => 0,
+            'team' => $teamExterieur
+          ];
+        }
+        $isCorrectResult = (
+          ($scoreDomicile - $scoreExterieur > 0
+          && $scoreDomicileBet - $scoreExterieurBet > 0
+          && $scoreDomicile >= 0)
+          ||
+          ($scoreDomicile - $scoreExterieur < 0
+          && $scoreDomicileBet - $scoreExterieurBet < 0
+          && $scoreDomicile >= 0)
+          ||
+          ($scoreDomicile - $scoreExterieur == 0 
+          && $scoreDomicileBet - $scoreExterieurBet == 0      
+          && $scoreDomicile >= 0)
+        );
+        if ($isCorrectResult) {
+          $teams[$teamDomicile]['value'] = $teams[$teamDomicile]['value'] + 1;
+          if ($teams[$teamDomicile]['value'] > $teams[$teamDomicile]['bestValue']) {
+            $teams[$teamDomicile]['bestValue'] = $teams[$teamDomicile]['value'];
+          }
+          $teams[$teamExterieur]['value'] = $teams[$teamExterieur]['value'] + 1;
+          if ($teams[$teamExterieur]['value'] > $teams[$teamExterieur]['bestValue']) {
+            $teams[$teamExterieur]['bestValue'] = $teams[$teamExterieur]['value'];
+          }
+        }
+        else {
+          $teams[$teamDomicile]['value'] = 0;
+          $teams[$teamExterieur]['value'] = 0;
+        }
+      }
+    }
+    $bestSeries = 0;
+    $index = 0;
+    foreach ($teams as $team) {
+      if ($team['bestValue'] > $bestSeries) {
+        $bestSeries = $team['bestValue'];
+        $dataTeam = $team['team'];
+      }
+    }
+    $extra = array();
+    if ($bestSeries > 0) {    
+      $extra = [
+        'team' => $dataTeam
+      ];
+    }
+    return [
+      'userName' => $userName,
+      'value' => $bestSeries,
+      'extra' => $extra
+    ];
+  }
+
   $users = fetchUsers();
   $matchs = fetchMatchs();
   $bets = fetchBets();
   $listUsersBet = processData($users, $matchs, $bets);
   $listRecord = [
-    buildRecordTable('match', 'Meilleurs cotes scores exacts', $listUsersBet, 'BestExactScore', 15),
-    buildRecordTable('match', 'Meilleurs cotes résultats corrects', $listUsersBet, 'BestCorrectResult', 20),
-    buildRecordTable('round', 'Meilleurs journées', $listUsersBet, 'BestRound', 20)
+    buildRecordTable('match', 'Meilleurs cotes scores exacts', $listUsersBet, 'BestExactScore'),
+    buildRecordTable('match', 'Meilleurs cotes résultats corrects', $listUsersBet, 'BestCorrectResult'),
+    buildRecordTable('round', 'Meilleurs journées', $listUsersBet, 'BestRound'),
+    buildRecordTable('month', 'Meilleurs mois', $listUsersBet, 'BestMonth'),
+    buildRecordTable('round', 'Plus grand nombre de résultats corrects sur une journée', $listUsersBet, 'BestNumberCorrectResultRound'),
+    buildRecordTable('month', 'Plus grand nombre de résultats corrects sur un mois', $listUsersBet, 'BestNumberCorrectResultMonth'),
+    buildRecordTable('month', 'Plus grand nombre de scores exacts sur un mois', $listUsersBet, 'BestNumberScoreExactMonth'),
+    buildRecordTable('team', 'Plus grosse série de résultats corrects avec la même équipe impliquée', $listUsersBet, 'TeamWinSeries'),
   ];
   echo json_encode($listRecord);
 

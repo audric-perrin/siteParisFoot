@@ -159,6 +159,9 @@ var BoxRecords = React.createClass({
     if (type == 'month') {
       return this.renderExtraMonth(extra)
     }
+    if (type == 'team') {
+      return this.renderExtraTeam(extra)
+    }
   },
   renderExtraMatch: function(extra) {
     var logoDomicile = React.createElement(Logo, {name: extra.teamDomicile, float: 'left', margin: '-5px 10px'})
@@ -166,14 +169,8 @@ var BoxRecords = React.createClass({
     var teamDomicile = TeamInfo.get(extra.teamDomicile).countryName
     var teamExterieur = TeamInfo.get(extra.teamExterieur).countryName
     var tiret = '-'
-    var styleTeamDomicile = {
-      textAlign: 'left',
-      width: '100px'
-    }
-    var styleTeamExterieur = {
-      textAlign: 'right',
-      width: '100px'
-    }
+    var styleTeamDomicile = {textAlign: 'left', width: '100px'}
+    var styleTeamExterieur = {textAlign: 'right', width: '100px'}
     return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
       this.renderCell(logoDomicile),
       this.renderCell(teamDomicile, styleTeamDomicile),
@@ -185,15 +182,29 @@ var BoxRecords = React.createClass({
     )))
   },
   renderExtraRound: function(extra) {
+    var styleRound = {textAlign: 'left', paddingLeft: '30px'}
+    var styleSaison = {textAlign: 'right', paddingRight: '30px'}
     return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
-      this.renderCell('Journée ' + extra.round),
-      this.renderCell('Saison ' + extra.saison)
+      this.renderCell('Journée ' + extra.round, styleRound),
+      this.renderCell('Saison ' + extra.saison, styleSaison)
     )))
   },
   renderExtraMonth: function(extra) {
+    var styleMonth = {textAlign: 'left', paddingLeft: '30px'}
+    var styleSaison = {textAlign: 'right', paddingRight: '30px'}
     return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
-      this.renderCell(DateFormat.getMonth(extra.date)),
-      this.renderCell('Saison ' + extra.saison)
+      this.renderCell(DateFormat.getMonth(extra.date), styleMonth),
+      this.renderCell('Saison ' + extra.saison, styleSaison)
+    )))
+  },
+  renderExtraTeam: function(extra) {
+    var logoTeam = React.createElement(Logo, {name: extra.team, float: 'left', margin: '-5px 10px'})
+    var team = TeamInfo.get(extra.team).trueName
+    var styleTeam = {textAlign: 'right' ,paddingRight: '30px'}
+    var styleLogo = {textAlign: 'left' ,paddingLeft: '30px'}
+    return d.table({style: {width: '310px'}}, d.tbody(null, d.tr(null,
+      this.renderCell(logoTeam, styleLogo),
+      this.renderCell(team, styleTeam)
     )))
   },
   render: function() {

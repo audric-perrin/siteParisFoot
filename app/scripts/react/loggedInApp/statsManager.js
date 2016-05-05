@@ -2,7 +2,7 @@
 
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
-var ColumnChart = require('./columnChart')
+// var ColumnChart = require('./columnChart')
 var d = React.DOM
 
 //Composant manager records

@@ -59,7 +59,6 @@ var BoxRecords = React.createClass({
       onClick: this.arrowClick,
       onMouseOver: this.arrowHover.bind(this, true),
       onMouseOut: this.arrowHover.bind(this, false)
-    // }, d.i({className: this.state.isClick ? "fa fa-chevron-up" : "fa fa-chevron-down"}))
     }, this.state.isClick ? d.i({className: "fa fa-chevron-up"}) : '•••')
   },
   renderCell: function(element, specificStyle) {

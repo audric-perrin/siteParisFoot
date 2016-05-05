@@ -45,20 +45,22 @@ var BoxRecords = React.createClass({
   renderArrow: function() {
     return d.div({
       style: {
-        backgroundColor: this.state.isHover ? COLOR.blue2 : COLOR.blue,
-        color: COLOR.white,
+        color: this.state.isHover ? COLOR.blue2 : COLOR.blue,
+        backgroundColor: COLOR.white,
         height: '30px',
+        fontSize: '20px',
         lineHeight: '30px',
         paddingLeft: '5px',
         textAlign: 'center',
-        marginTop: '10px',
+        marginTop: '5px',
         cursor: 'pointer',
         transition: 'background-color 0.3s, color 0.3s'
       },
       onClick: this.arrowClick,
       onMouseOver: this.arrowHover.bind(this, true),
       onMouseOut: this.arrowHover.bind(this, false)
-    }, d.i({className: this.state.isClick ? "fa fa-chevron-up" : "fa fa-chevron-down"}))
+    // }, d.i({className: this.state.isClick ? "fa fa-chevron-up" : "fa fa-chevron-down"}))
+    }, this.state.isClick ? d.i({className: "fa fa-chevron-up"}) : '•••')
   },
   renderCell: function(element, specificStyle) {
     var style = {

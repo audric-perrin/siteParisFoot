@@ -1,4 +1,5 @@
 <?php
+  require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
   require_once('../api/lag.php');
@@ -88,7 +89,8 @@
       $dataMatch = $matchMap[$bet['matchId']];
       $data = [
         'dataMatch' => $dataMatch,
-        'dataBet' => $dataBet
+        'dataBet' => $dataBet,
+        'userInfo' => ['userId' => $bet['userId']]
       ];
       $listUsersBet[$userMap[$bet['userId']]['userName']][] = $data;
     }
@@ -109,7 +111,14 @@
   function buildRecordTable($type, $title, $listUsersBet, $recordFunc) {
     $results = array();
     foreach ($listUsersBet as $userName => $data) {
-      $results[] = call_user_func_array($recordFunc, [$userName, $data]);
+      $result = call_user_func_array($recordFunc, [$userName, $data]);
+      if (count($data) == 0) {
+        $result['userId'] = 0;
+      }
+      else {
+        $result['userId'] = $data[0]['userInfo']['userId'];
+      }
+      $results[] = $result;
     }
     usort($results, 'compareScore');
     $currentRank = 0;

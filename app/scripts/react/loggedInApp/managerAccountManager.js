@@ -3,6 +3,7 @@
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
 var ModalAccountManager = require('./accountManager')
+var UserInfo = require('../../utils/userInfo')
 var d = React.DOM
 
 //Composant application
@@ -25,6 +26,7 @@ var ManagerAccountManager = React.createClass({
     Ajax.request(options, this.handleUserInfo)
   },
   handleUserInfo: function(data) {
+    UserInfo.initialize(data)
     this.setState({isLoading: false, dataUser: data.user})
   },
   renderUsername: function() {

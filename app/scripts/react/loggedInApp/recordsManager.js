@@ -3,6 +3,7 @@
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
 var BoxRecords = require('./boxRecords')
+var UserInfo = require('../../utils/userInfo')
 var d = React.DOM
 
 //Composant manager records
@@ -52,7 +53,8 @@ var RecordsManager = React.createClass({
       for (var i = 0; i < this.state.records.length; i++) {      
         elements.push(React.createElement(BoxRecords, {
           key: i,
-          data: this.state.records[i]
+          data: this.state.records[i],
+          dataUser: UserInfo.get()
         }))
       }
     }

@@ -18,7 +18,6 @@
         $user = array(
           'id' => $row['id'],
           'username' => $row['username'],
-          'password' => $row['password'],
           'email' => $row['email'],
           'pseudo' => $row['pseudo']);
         return $user;

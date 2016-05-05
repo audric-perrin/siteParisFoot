@@ -2,14 +2,27 @@
 
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
-// var ColumnChart = require('./columnChart')
+var ColumnChart = require('../core/columnChart')
 var d = React.DOM
 
-//Composant manager records
+//Composant manager stats
 var StatsManager = React.createClass({
   displayName: 'statsManager',
   getInitialState: function() {
-    return {isLoading: true, records: []}
+    return {isLoading: true, stats: null}
+  },
+  componentWillMount: function() {
+    this.dataStats()
+  },
+  dataStats: function() {
+    var options = {
+      url: './api/dataStats.php',
+      method: 'GET',
+    }
+    Ajax.request(options, this.handleDataStats)
+  },
+  handleDataStats: function(data) {
+    this.setState({isLoading: false, stats: data})
   },
   isLoading: function() {
     return d.div({
@@ -28,17 +41,28 @@ var StatsManager = React.createClass({
         color: COLOR.gray3
       },
       className: "fa fa-spinner fa-pulse"
-    }), "Chargement des Classements")
+    }), "Chargement des statistiques")
   },
   render: function() {
     if (this.state.isLoading) {
       var elements = this.isLoading()
     }
-    // else {
-    //   var elements = []
-    //   for (var i = 0; i < this.state.records.length; i++) {      
-    //     elements.push(React.createElement(BoxRecords, {
-    // }
+    else {
+      var dataUserRoundPoints = []
+      var currentRound = 0
+      for (var round in this.state.stats.userRoundPoints) {
+        var value = this.state.stats.userRoundPoints[round]
+        var round = parseFloat(value.round)
+        if (currentRound < round - 1 && currentRound != 0) {
+          for (var i = currentRound + 1; i < round; i++) {
+            dataUserRoundPoints.push(['Journée ' + i, 0])
+          }
+        } 
+        currentRound = round
+        dataUserRoundPoints.push(['Journée ' + round, value.value])
+      }
+      var elements = React.createElement(ColumnChart, {'data' : dataUserRoundPoints})
+    }
     return d.div({
       style: {}
     }, elements)

@@ -3,6 +3,7 @@
 var LoggedInApp = require('./react/loggedInApp/loggedInApp')
 var LoggedOutApp = require('./react/loggedOutApp/loggedOutApp')
 var Initializer = require('./utils/Initializer')
+var UserInfo = require('./utils/userInfo')
 var SessionManager = require('./utils/sessionManager')
 
 var d = React.DOM
@@ -27,6 +28,7 @@ Initializer.initialize(function() {
   SessionManager.onLoggedOut(initializeUI.bind(this, false))
   var options = {url: './api/userInfo.php', method: 'GET'}
   $.ajax(options).done(function(data) {
+    UserInfo.initialize(data)
     if (data.result == 'not connected') {
       initializeUI(false)
     }

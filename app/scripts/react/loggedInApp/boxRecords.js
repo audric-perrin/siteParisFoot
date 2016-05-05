@@ -61,9 +61,11 @@ var BoxRecords = React.createClass({
       onMouseOut: this.arrowHover.bind(this, false)
     }, this.state.isClick ? d.i({className: "fa fa-chevron-up"}) : '•••')
   },
-  renderCell: function(element, specificStyle) {
+  renderCell: function(element, specificStyle, weight) {
+    var fontWeight = weight ? 'bold' : 'normal'
     var style = {
       textAlign: 'center',
+      fontWeight: fontWeight
     }
     style = $.extend(true, style, specificStyle)
     return d.td({style: style}, element)
@@ -79,23 +81,25 @@ var BoxRecords = React.createClass({
       if (data[i].rank > limit) {
         break
       }
+      var isUser = data[i].userId == this.props.dataUser.user.id ? true : false
       elements.push(this.renderLineRanking(
         i,
         this.props.data.type,
         data[i].rank, 
         data[i].userName, 
         data[i].value,
-        data[i].extra
+        data[i].extra,
+        isUser
       ))
     }
     return d.table({
-      style:{
+      style: {
         padding: '0 10px',
         width: '100%'
       }
     }, d.tbody(null, elements))
   },
-  renderLineRanking : function(key, type, rank, userName, score, extra) {
+  renderLineRanking : function(key, type, rank, userName, score, extra, isUser) {
     var color = null
     var backgroundColor = null
     if (rank < 2) {
@@ -143,9 +147,9 @@ var BoxRecords = React.createClass({
         lineHeight: '30px'
       }
     },
-      this.renderCell(rank, styleRank),
-      this.renderCell(userName, styleUserName),
-      this.renderCell(score, styleScore),
+      this.renderCell(rank, styleRank, isUser),
+      this.renderCell(userName, styleUserName, isUser),
+      this.renderCell(score, styleScore, isUser),
       this.renderCell(this.renderExtra(extra, type))
     )
   },

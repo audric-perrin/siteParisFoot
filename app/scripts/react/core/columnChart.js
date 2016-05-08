@@ -24,9 +24,6 @@ var ColumnChart = React.createClass({
       },
       xAxis: {
         type: 'category',
-        labels: {
-            rotation: -45,
-        }
       },
       yAxis: {
         min: 0,

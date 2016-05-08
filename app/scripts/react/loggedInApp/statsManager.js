@@ -3,6 +3,7 @@
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
 var ColumnChart = require('../core/columnChart')
+var LineChart = require('../core/lineChart')
 var d = React.DOM
 
 //Composant manager stats
@@ -59,9 +60,12 @@ var StatsManager = React.createClass({
           }
         } 
         currentRound = round
-        dataUserRoundPoints.push(['Journée ' + round, value.value])
+        dataUserRoundPoints.push([round, value.value])
       }
-      var elements = React.createElement(ColumnChart, {'data' : dataUserRoundPoints})
+      var elements = [
+        React.createElement(ColumnChart, {'data' : dataUserRoundPoints}),
+        React.createElement(LineChart, {'data' : null})
+      ]
     }
     return d.div({
       style: {}

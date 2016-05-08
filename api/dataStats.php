@@ -145,13 +145,90 @@
     }
     return $listRoundPoints;
   }
+
+  function compareScore($scoreExact1, $scoreExact2) {
+    if ($scoreExact1['value'] == $scoreExact2['value']) {
+      if ($scoreExact1['userId'] == $scoreExact2['userId']) {
+        return 0;
+      }
+      return $scoreExact1['userId'] < $scoreExact2['userId'] ? -1 : 1;
+    }
+    return $scoreExact1['value'] > $scoreExact2['value'] ? -1 : 1;
+  }
+
+  function userRank($listUsersBet, $sessionId) {
+    $roundMaxPoint = array();
+    $roundMin = 20;
+    $roundMax = 37;
+    $listRank = array();
+    for ($currentRound = $roundMin; $currentRound <= $roundMax; $currentRound++) {
+      $roundMaxPoint = array();
+      foreach ($listUsersBet as $id => $data) {
+        $value = calculRoundMaxPoint($data, $id, $roundMin, $currentRound);
+        if ($value != 0) {      
+          $roundMaxPoint[] = [
+            'userId' => $id,
+            'value' => $value,
+            'round' => $currentRound
+          ];
+        }
+      }
+      usort($roundMaxPoint, 'compareScore');
+      foreach ($roundMaxPoint as $rank => $data) {
+        if ($data['userId'] == $sessionId) {
+          $listRank[] = [
+            'round' => $data['round'],
+            'rank' => $rank + 1
+          ];
+        }
+      }
+    }
+    return $listRank;
+  }
+
+  function calculRoundMaxPoint($data, $userId, $roundMin, $roundMax) {
+    $value = 0;
+    foreach ($data as $row) {
+      $scoreDomicile = $row['dataMatch']['scoreDomicile'];
+      $scoreExterieur = $row['dataMatch']['scoreExterieur'];
+      $scoreDomicileBet = $row['dataBet']['scoreDomicileBet'];
+      $scoreExterieurBet = $row['dataBet']['scoreExterieurBet'];
+      if ($roundMin <= $row['dataMatch']['round'] && $roundMax >= $row['dataMatch']['round']) {
+        $isCorrectResult = (
+          ($scoreDomicile - $scoreExterieur > 0
+          && $scoreDomicileBet - $scoreExterieurBet > 0
+          && $scoreDomicile >= 0)
+          ||
+          ($scoreDomicile - $scoreExterieur < 0
+          && $scoreDomicileBet - $scoreExterieurBet < 0
+          && $scoreDomicile >= 0)
+          ||
+          ($scoreDomicile - $scoreExterieur == 0 
+          && $scoreDomicileBet - $scoreExterieurBet == 0      
+          && $scoreDomicile >= 0)
+        );
+        if ($isCorrectResult) {
+          $value = $value + $row['dataBet']['coteResult'];
+        }
+        $isScoreExact = (
+          $scoreDomicileBet == $scoreDomicile
+          && $scoreExterieurBet == $scoreExterieur
+        );
+        if ($isScoreExact) {
+          $value = $value + $row['dataBet']['coteScore'];
+        }
+      }
+    }
+    return $value;
+  }
   
   $users = fetchUsers();
   $matchs = fetchMatchs();
   $bets = fetchBets();
   $listUsersBet = processData($users, $matchs, $bets);
   $listStats = [
-    'userRoundPoints' => userRoundPoints($listUsersBet, $sessionId)
+    'userRoundPoints' => userRoundPoints($listUsersBet, $sessionId),
+    'userRank' => userRank($listUsersBet, $sessionId)
   ];
   echo json_encode($listStats);
 ?>

@@ -62,9 +62,15 @@ var StatsManager = React.createClass({
         currentRound = round
         dataUserRoundPoints.push([round, value.value])
       }
+      var dataRound = []
+      var dataRank = []
+      for (var i = 0; i < this.state.stats.userRank.length; i++) {
+        dataRound.push(this.state.stats.userRank[i].round)
+        dataRank.push(this.state.stats.userRank[i].rank)
+      }
       var elements = [
         React.createElement(ColumnChart, {'data' : dataUserRoundPoints}),
-        React.createElement(LineChart, {'data' : null})
+        React.createElement(LineChart, {'dataRound' : dataRound, 'dataRank' : dataRank})
       ]
     }
     return d.div({

@@ -10,7 +10,7 @@ var ColumnChart = React.createClass({
     $(this.refs.container).highcharts({
       chart: {
         type: 'column',
-        width: 800,
+        width: 1100,
         height: 300,
         style: {
           fontFamily: 'Helvetica'
@@ -23,7 +23,7 @@ var ColumnChart = React.createClass({
         text: 'Saison 2015-2016'
       },
       xAxis: {
-        type: 'category',
+        categories: this.props.rounds,
       },
       yAxis: {
         min: 0,
@@ -32,18 +32,24 @@ var ColumnChart = React.createClass({
         }
       },
       legend: {
-        enabled: false
+        enabled: true
       },
       credits: {
         enabled: false
       },
       tooltip: {
-        enabled: false
+        enabled: true,
+        border: 0,
+        pointFormat: '<span style="color:{point.color}">\u25CF</span><b>{point.y}</b>',
+        shadow: false
       },
       plotOptions: {
         pie: {
           dataLabels: {
-            enabled: false
+            style: {
+              color: COLOR.white,
+              textShadow: 'none'
+            },
           },
           borderWidth: 2,
           showInLegend: true,
@@ -53,26 +59,12 @@ var ColumnChart = React.createClass({
         series: {
           states: {
             hover: {
-              enabled: false
+              enabled: true
             }
           }
         }
       },
-      series: [{
-        color: COLOR.blue,
-        data: this.props.data,
-        dataLabels: {
-          style: {
-            color: COLOR.white,
-            textShadow: 'none'
-          },
-          enabled: true,
-          rotation: -90,
-          align: 'right',
-          format: '{point.y:.0f}', // one decimal
-          y: 10, // 10 pixels down from the top
-        }
-      }]
+      series: this.props.data,
     })
   },
   render: function() {

@@ -104,8 +104,7 @@ var LoggedInApp = React.createClass({
         icone: "fa fa-bar-chart",
         name: 'Statistiques',
         selected: this.state.isClick == 'Statistiques',
-        onClick: this.onSelectChange,
-        disable: true
+        onClick: this.onSelectChange
       }),
       React.createElement(ButtonToolbar, {
         icone: "fa fa-users",

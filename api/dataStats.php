@@ -4,7 +4,13 @@
   require_once('../php/sql.php');
   require_once('../api/lag.php');
 
-  $sessionId = $_SESSION['id'];
+  $userSelected = array();
+  $userSelected = [
+    'userId1' => 1,
+    'userId2' => 5,
+    'userId3' => 6,
+    'userId4' => 8
+  ];
 
   //Récupération des data
   function fetchUsers() {
@@ -98,6 +104,24 @@
     return $listUsersBet;
   }
 
+  function buildData($statsFunc, $userSelected, $listUsersBet, $users) {
+    $results = array();
+    foreach ($userSelected as $userId) {
+      $result = call_user_func_array($statsFunc, [$listUsersBet, $userId]);
+      $userName = 'undefined';
+      foreach ($users as $row) {
+        if ($userId == $row['id']) {
+          $userName = $row['userName'];
+        }
+      }
+      $results[] = [
+        'userName' => $userName,
+        'data' => $result
+      ];
+    }
+    return $results;
+  }
+
   //Traitement data
   function userRoundPoints($listUsersBet, $sessionId) {
     $listRoundPoints = array();
@@ -178,7 +202,7 @@
         if ($data['userId'] == $sessionId) {
           $listRank[] = [
             'round' => $data['round'],
-            'rank' => $rank + 1
+            'value' => $rank + 1
           ];
         }
       }
@@ -227,8 +251,8 @@
   $bets = fetchBets();
   $listUsersBet = processData($users, $matchs, $bets);
   $listStats = [
-    'userRoundPoints' => userRoundPoints($listUsersBet, $sessionId),
-    'userRank' => userRank($listUsersBet, $sessionId)
+    'usersRoundPoints' => buildData('userRoundPoints', $userSelected, $listUsersBet, $users),
+    'usersRank' => buildData('userRank', $userSelected, $listUsersBet, $users)
   ];
   echo json_encode($listStats);
 ?>

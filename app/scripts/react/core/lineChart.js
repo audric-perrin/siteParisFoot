@@ -10,7 +10,7 @@ var LineChart = React.createClass({
     $(this.refs.container).highcharts({
       chart: {
         type: 'line',
-        width: 800,
+        width: 1100,
         height: 300,
         style: {
           fontFamily: 'Helvetica'
@@ -23,8 +23,9 @@ var LineChart = React.createClass({
         text: 'Demi-saison 2015-2016'
       },
       xAxis: {
-        categories: this.props.dataRound
+        categories: this.props.rounds
       },
+      series: this.props.data,
       yAxis: {
         title: {
           text: 'Classement'
@@ -32,29 +33,39 @@ var LineChart = React.createClass({
         allowDecimals: false,
         reversed: true
       },
-      legend: {
-        enabled: false
+            legend: {
+        enabled: true
       },
       credits: {
         enabled: false
       },
       tooltip: {
-        enabled: false
+        enabled: true,
+        border: 0,
+        pointFormat: '<span style="color:{point.color}">\u25CF</span><b>{point.y}</b>',
+        shadow: false
       },
       plotOptions: {
-        line: {
+        pie: {
           dataLabels: {
-            enabled: true
+            style: {
+              color: COLOR.white,
+              textShadow: 'none'
+            },
           },
-          enableMouseTracking: false
+          borderWidth: 2,
+          showInLegend: true,
+          allowPointSelect: false,
+          size: '100%'
+        },
+        series: {
+          states: {
+            hover: {
+              enabled: true
+            }
+          }
         }
       },
-      series: [
-        {
-          color: COLOR.blue,
-          data: this.props.dataRank
-        },
-      ]
     })
   },
   render: function() {

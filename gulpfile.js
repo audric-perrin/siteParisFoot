@@ -44,6 +44,8 @@ var HTML_ENTRY_POINT    = SRC + '/index.html'
 
 var TMP_FOLDER          = './tmp'
 
+var _isWatching = false
+
 
 // Delete caches and every generated files
 gulp.task('clean', function(cb) {
@@ -110,7 +112,7 @@ gulp.task('images', function() {
 gulp.task('html', function() {
   return gulp.src(DIST + 'index.html') // Use the index.html file generated during the 'rev' task
     .pipe(useref({}, lazypipe().pipe(sourcemaps.init, { loadMaps: true }))) // TODO - Remove sourcemap when in prod
-    .pipe(gulpif('*.js', uglify()))
+    .pipe(gulpif('*.js', gulpif(!_isWatching, uglify())))
     .pipe(gulpif('*.css', minifyCSS()))
     .pipe(gulpif('*.js', rev()))
     .pipe(gulpif('*.css', rev()))
@@ -158,6 +160,7 @@ gulp.task('build', gulp.series(
 ))
 
 gulp.task('watchAll', function() {
+  _isWatching = true
   gulp.watch(HTML_ENTRY_POINT, gulp.series('rev', 'html'));
   gulp.watch(IMAGES_SRC_FOLDER + '/**/*', gulp.series('images'));
   gulp.watch(SCRIPTS_SRC_FOLDER + '/**/*.js', gulp.series('scripts', 'rev', 'html'));

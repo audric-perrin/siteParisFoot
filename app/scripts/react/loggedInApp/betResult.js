@@ -10,12 +10,12 @@ var d = React.DOM
 var MyBetResult = React.createClass({
   displayName: 'MyBetResult',
   getInitialState: function() {
-    return {isLoading: true, userSelect: null, userBets: null, matchs: null, round: null}
+    return {isLoading: true, userSelect: null, userBets: null, matchs: null, round: null, saison: null}
   },
-  changeRound: function (round, userId) {
-    this.setState({matchs: null, userBets: null, round: round})
+  changeRound: function (round, saison, userId) {
+    this.setState({matchs: null, userBets: null, round: round, saison: saison})
     var options = {
-      url: './api/betUser.php?user=' + userId + '&round=' + round,
+      url: './api/betUser.php?user=' + userId + '&round=' + round + '&saison=' + saison,
       method: 'GET',
     }
     Ajax.request(options, this.handleBet)
@@ -25,12 +25,12 @@ var MyBetResult = React.createClass({
   },
   componentWillReceiveProps: function(newProps) {
     if (newProps.round && newProps.userSelect) {
-      this.changeRound(newProps.round, newProps.userSelect)
+      this.changeRound(newProps.round, newProps.saison, newProps.userSelect)
     }
   },
   componentWillMount: function() {
     if (this.props.round && this.props.userSelect) {
-      this.changeRound(this.props.round, this.props.userSelect)
+      this.changeRound(this.props.round, this.props.saison, this.props.userSelect)
     }
   },
   renderLineDate: function() {

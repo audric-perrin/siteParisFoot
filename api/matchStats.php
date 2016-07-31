@@ -1,7 +1,9 @@
 <?php
   header('Content-Type: application/json');
   require_once('../php/sql.php');
+  require_once('../lib/general.php');
   require_once('../api/lag.php');
+  $currentSaison = currentSaison();
   if (isset($_GET['matchId'])) {
     $matchId = $_GET['matchId'];
   }
@@ -10,7 +12,7 @@
   }
   $match = array();
   $result = runQuery('SELECT * FROM result 
-    WHERE id = ' . $matchId
+    WHERE id = ' . $matchId . ' AND saison = "' . $currentSaison . '"'
   );
   foreach ($result as $row) {
     $match = [
@@ -26,7 +28,8 @@
   $result = runQuery('SELECT * FROM result 
     WHERE teamExterieur = "' . $match['teamDomicile'] . '"
     AND teamDomicile = "' . $match['teamExterieur'] . '"
-    AND scoreDomicile > -1'
+    AND scoreDomicile > -1 
+    AND saison = "' . $currentSaison . '"'
   );
   foreach ($result as $row) {
     $matchAller = [
@@ -40,7 +43,8 @@
   $matchsDomicile = array();
   $result = runQuery('SELECT * FROM result
     WHERE teamDomicile = "' . $match['teamDomicile'] . '"
-    AND scoreDomicile > -1
+    AND scoreDomicile > -1 
+    AND saison = "' . $currentSaison . '"
     ORDER BY round DESC'
   );
   foreach ($result as $row) {
@@ -58,6 +62,7 @@
   $result = runQuery('SELECT * FROM result
     WHERE teamExterieur = "' . $match['teamExterieur'] . '"
     AND scoreDomicile > -1
+    AND saison = "' . $currentSaison . '"
     ORDER BY round DESC'
   );
   foreach ($result as $row) {

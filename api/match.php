@@ -3,7 +3,9 @@
   require_once('../php/sql.php');
   require_once('../api/lag.php');
   $round = $_GET['round'];
-  $matchsRoundQuery = 'SELECT * FROM result WHERE round = ' . $round . ' ORDER BY date';
+  $saison = $_GET['saison'];
+  $matchsRoundQuery = 'SELECT * FROM result WHERE round = ' . $round . ' AND saison = "' . $saison . '" ORDER BY date';
+  echo $matchsRoundQuery;
   $result = runQuery($matchsRoundQuery);
   $matchs = array();
   foreach ($result as $row) {

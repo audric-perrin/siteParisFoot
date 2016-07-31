@@ -9,15 +9,31 @@
   $currentMonth = currentMonth();
   $currentSaison = currentSaison();
   if ($_GET['type'] == 'round') {
-    $round = isset($_GET['option']) ? $_GET['option'] : $currentRound;
-    $result = runQuery('SELECT id FROM result WHERE round = ' . $round);
+    if (isset($_GET['option'])) {
+      $explode = explode('_', $_GET['option']);
+      $round = $explode[0];
+      $saison = $explode[1];
+    }
+    else {
+      $round = $currentRound;
+      $saison = $currentSaison;
+    }
+    $result = runQuery('SELECT id FROM result WHERE round = ' . $round . ' AND saison = "' . $saison . '"');
     foreach ($result as $row) {
       $matchIds[] = $row['id'];
     }
   }
   if ($_GET['type'] == 'month') {
-    $month = isset($_GET['option']) ? $_GET['option'] : $currentMonth;
-    $result = runQuery('SELECT id FROM result WHERE MONTH(date) = ' . $month);
+    if (isset($_GET['option'])) {
+      $explode = explode('_', $_GET['option']);
+      $month = $explode[0];
+      $saison = $explode[1];
+    }
+    else { 
+      $month = $currentMonth;
+      $saison = $currentSaison;
+    }
+    $result = runQuery('SELECT id FROM result WHERE MONTH(date) = ' . $month . ' AND saison = "' . $saison . '"');
     foreach ($result as $row) {
       $matchIds[] = $row['id'];
     }

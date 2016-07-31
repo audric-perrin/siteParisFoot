@@ -13,3 +13,4 @@ styles
 images
 index.html
 !app/*
+server/*

@@ -39,7 +39,6 @@
     return $ranking;
   }
   function getUserRanking($idSelected) {
-    $currentRound = currentRound();
     $users = getUsers();
     $ranking = initialRanking();
     $result = runQuery(

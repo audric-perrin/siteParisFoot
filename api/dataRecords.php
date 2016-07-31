@@ -259,7 +259,7 @@
     if ($bestRoundScore > 0) {    
       $extra = [
         'round' => $dataRound['dataMatch']['round'],
-        'saison' => $dataRound['dataMatch'] ['saison']
+        'saison' => $dataRound['dataMatch']['saison']
       ];
     }
     return [

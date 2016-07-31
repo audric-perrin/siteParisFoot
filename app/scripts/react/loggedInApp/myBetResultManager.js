@@ -66,7 +66,7 @@ var MyBetResultManager = React.createClass({
     }
     else {
       elements.push(this.renderTitle())
-      elements.push(React.createElement(MyBetResult, {userSelect: this.state.user, round: this.props.round}))
+      elements.push(React.createElement(MyBetResult, {userSelect: this.state.user, round: this.props.round, saison: this.props.saison}))
     }
     return d.div({
       style: {

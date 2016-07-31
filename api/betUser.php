@@ -2,13 +2,18 @@
   require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
+  require_once('../lib/general.php');
   require_once('../api/lag.php');
   $round = $_GET['round'];
+  $saison = currentSaison();
+  if (isset($_GET['saison'])) {
+    $saison = $_GET['saison'];
+  }
   $userId = 0;
   $userBets = array();
   $matchs = array();
   $userId = intval($_GET['user']);
-  $matchsRoundQuery = 'SELECT * FROM result WHERE round = ' . $round . ' ORDER BY date';
+  $matchsRoundQuery = 'SELECT * FROM result WHERE round = ' . $round . ' AND saison = "' . $saison . '" ORDER BY date';
   $result = runQuery($matchsRoundQuery);
   foreach ($result as $row) {
     $match = [

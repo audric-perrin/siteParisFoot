@@ -23,7 +23,10 @@
       $roundLimit = currentRound() - 1;
     }
     $rankingL1 = array();
-    $result = runQuery('SELECT * FROM result WHERE scoreDomicile >= 0 && round <= ' . $roundLimit);
+    $currentSaison = currentSaison();
+    $result = runQuery('
+      SELECT * FROM result WHERE scoreDomicile >= 0 && round <= ' . $roundLimit . ' && saison = "' . $currentSaison . '"
+    ');
     foreach ($result as $row) {
       $round = intval($row['round']);
       $teamDomicile = $row['teamDomicile'];

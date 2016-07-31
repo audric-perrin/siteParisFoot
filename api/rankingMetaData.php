@@ -4,11 +4,29 @@
   require_once('../php/sql.php');
   require_once('../api/lag.php');
   require_once('../lib/general.php');
-  //Selection des classements par journées
+  $currentMonth = currentMonth();
   $currentRound = currentRound();
+  //Selection des classements par saison
+  $saison = array();
+  $result = runQuery('SELECT DISTINCT saison FROM result');
+  foreach ($result as $row) {
+    $saison[] = array('label' => 'Saison ' . $row['saison'], 'value' => $row['saison']);
+  }
+  //Selection des classements par journées
+  $countSaison = 0;
   $round = array();
-  for ($i = 1; $i <= $currentRound; $i ++) { 
-    $round[] = array('label' => 'Journée ' . $i, 'value' => $i);
+  foreach ($saison as $row) {
+    $countSaison++;
+    if ($countSaison == count($saison)) {
+      for ($i = 1; $i <= $currentRound; $i ++) { 
+        $round[] = array('label' => 'Journée ' . $i . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+      }
+    }
+    else {
+      for ($i = 1; $i <= 38; $i ++) { 
+        $round[] = array('label' => 'Journée ' . $i . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+      }
+    }
   }
   //Tableau monthName
   $monthName = [
@@ -26,32 +44,49 @@
     'Décembre'
   ];
   //Selection des classements par mois
-  $currentMonth = currentMonth();
+  $countSaison = 0;
   $mois = array();
-  if ($currentMonth > 6) {
-    for ($i = 8; $i <= $currentMonth; $i ++) {
-      $mois[] = array('label' => $monthName[$i - 1], 'value' => $i);
+  foreach ($saison as $row) {
+    $countSaison++;
+    if ($countSaison == count($saison)) {
+      if ($currentMonth > 6) {
+        for ($i = 8; $i <= $currentMonth; $i ++) {
+          $mois[] = array('label' => $monthName[$i - 1] . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+        }
+      }
+      else {
+        for ($i = 8; $i <= 12; $i ++) {
+          $mois[] = array('label' => $monthName[$i - 1] . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+        }
+        $i = 0;
+        for ($i = 1; $i <= $currentMonth; $i ++) {
+          $mois[] = array('label' => $monthName[$i - 1] . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+        }
+      }
+    }
+    else {
+      for ($i = 8; $i <= 12; $i++) {
+        $mois[] = array('label' => $monthName[$i - 1] . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+      }
+      for ($i = 1; $i <= 5; $i++) {
+        $mois[] = array('label' => $monthName[$i - 1] . ' saison ' . $row['value'], 'value' => $i . '_' . $row['value']);
+      }
     }
   }
-  else {
-    for ($i = 8; $i <= 12; $i ++) {
-      $mois[] = array('label' => $monthName[$i - 1], 'value' => $i);
-    }
-    $i = 0;
-    for ($i = 1; $i <= $currentMonth; $i ++) {
-      $mois[] = array('label' => $monthName[$i - 1], 'value' => $i);
-    }
-  }
-  //Selection des classements par saison
-  $currentSaison = currentSaison();
-  $saison = [
-    array('label' => 'Saison ' . $currentSaison, 'value' => $currentSaison)
-  ];
   //Selection des classements par demi-saison
   $demiSaison = array();
-  $demiSaison[] = array('label' => '1er partie saison ' . $currentSaison, 'value' => $currentSaison . '_1');
-  if ($currentRound > 19) {
-    $demiSaison[] = array('label' => '2em partie saison ' . $currentSaison, 'value' => $currentSaison . '_2');
+  $i = 0;
+  foreach ($saison as $row) {
+    $i++;
+    $demiSaison[] = array('label' => '1er partie saison ' . $row['value'], 'value' => $row['value'] . '_1');
+    if ($i == count($saison)) {
+      if ($currentRound > 19) {
+        $demiSaison[] = array('label' => '2em partie saison ' . $row['value'], 'value' => $row['value'] . '_2');
+      }
+    }
+    else {
+      $demiSaison[] = array('label' => '2em partie saison ' . $row['value'], 'value' => $row['value'] . '_2');
+    }
   }
   echo json_encode(array('saison' => $saison, 'demiSaison' => $demiSaison, 'month' => $mois, 'round' => $round));
 ?>

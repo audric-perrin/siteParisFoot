@@ -1,6 +1,6 @@
 <?php
 	// Open the SQL connection
-	$conn = mysqli_connect('localhost', 'root', 'root', 'parisFootL1') or die(mysql_error());
+	$conn = mysqli_connect('localhost', 'root', 'root', 'parions-sport-gratuit') or die(mysql_error());
 	mysqli_set_charset($conn, 'utf8');
   // Execution de la query
 	function runQuery($query){

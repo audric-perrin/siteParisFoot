@@ -207,24 +207,24 @@ var LoadingBox = React.createClass({
 var Result = React.createClass({
   displayName: 'Result',
   getInitialState: function() {
-    return {matchs: null, round: null, maxRound: null}
+    return {matchs: null, round: null, maxRound: null, saison: null}
   },
-  changeRound: function (round) {
-    this.setState({matchs: null, round: round})
+  changeRound: function (round, saison) {
+    this.setState({matchs: null, round: round, saison: saison})
     var options = {
-      url: './api/match.php?round=' + round,
+      url: './api/match.php?round=' + round + '&saison=' + saison,
       method: 'GET',
     }
     Ajax.request(options, this.handleMatches)
     if (this.props.handleRound) {
-      this.props.handleRound(round)
+      this.props.handleRound(round, saison)
     }
   },
   handleMatches: function(data) {
     this.setState({matchs: data.match})
   },
   handleCurrentRound: function(data) {
-    this.changeRound(data.currentRound)
+    this.changeRound(data.currentRound, data.currentSaison)
     this.setState({maxRound: data.maxRound})
   },
   componentWillMount: function() {

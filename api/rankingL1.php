@@ -2,6 +2,7 @@
   require_once('../api/requireConnected.php');
   header('Content-Type: application/json');
   require_once('../php/sql.php');
+  require_once('../lib/general.php');
   require_once('../api/lag.php');
   function compareTeam($team1, $team2) {
     if ($team1['points'] == $team2['points']) {
@@ -16,7 +17,9 @@
     return $team1['points'] > $team2['points'] ? -1 : 1;
   }
   $rankingL1 = array();
-  $result = runQuery('SELECT * FROM result WHERE scoreDomicile >= 0');
+  $currentSaison = currentSaison();
+  $result = runQuery('SELECT * FROM result WHERE saison = "' . $currentSaison . '"
+    ');
   foreach ($result as $row) {
     $round = intval($row['round']);
     $teamDomicile = $row['teamDomicile'];
@@ -49,28 +52,30 @@
         'points' => 0
       ];
     }
-    $rankingL1[$teamDomicile]['round']++;
-    $rankingL1[$teamExterieur]['round']++;
-    if ($scoreDomicile > $scoreExterieur) {
+    if ($scoreDomicile > $scoreExterieur && $scoreDomicile >= 0) {
       $rankingL1[$teamDomicile]['win']++;
       $rankingL1[$teamDomicile]['points'] = $rankingL1[$teamDomicile]['points'] + 3;
       $rankingL1[$teamExterieur]['loose']++;
     }
-    else if ($scoreDomicile < $scoreExterieur) {
+    else if ($scoreDomicile < $scoreExterieur && $scoreDomicile >= 0) {
       $rankingL1[$teamExterieur]['win']++;
       $rankingL1[$teamExterieur]['points'] = $rankingL1[$teamExterieur]['points'] + 3;
       $rankingL1[$teamDomicile]['loose']++;
     }
-    else {
+    else if ($scoreDomicile >= 0) {
       $rankingL1[$teamDomicile]['equality']++;
       $rankingL1[$teamDomicile]['points']++;
       $rankingL1[$teamExterieur]['equality']++;
       $rankingL1[$teamExterieur]['points']++;
     }
-    $rankingL1[$teamDomicile]['bp'] = $rankingL1[$teamDomicile]['bp'] + $scoreDomicile;
-    $rankingL1[$teamDomicile]['bc'] = $rankingL1[$teamDomicile]['bc'] + $scoreExterieur;
-    $rankingL1[$teamExterieur]['bp'] = $rankingL1[$teamExterieur]['bp'] + $scoreExterieur;
-    $rankingL1[$teamExterieur]['bc'] = $rankingL1[$teamExterieur]['bc'] + $scoreDomicile;
+    if ($scoreDomicile >= 0) {
+      $rankingL1[$teamDomicile]['round']++;
+      $rankingL1[$teamExterieur]['round']++;
+      $rankingL1[$teamDomicile]['bp'] = $rankingL1[$teamDomicile]['bp'] + $scoreDomicile;
+      $rankingL1[$teamDomicile]['bc'] = $rankingL1[$teamDomicile]['bc'] + $scoreExterieur;
+      $rankingL1[$teamExterieur]['bp'] = $rankingL1[$teamExterieur]['bp'] + $scoreExterieur;
+      $rankingL1[$teamExterieur]['bc'] = $rankingL1[$teamExterieur]['bc'] + $scoreDomicile;
+    }
   }
   $ranking = array();
   foreach ($rankingL1 as $team => $row) {

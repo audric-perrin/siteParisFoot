@@ -10,7 +10,7 @@ var d = React.DOM
 var BlocResult = React.createClass({
   displayName: 'BlocResult',
   getInitialState: function() {
-    return {round: null, macthSelected: null}
+    return {round: null, macthSelected: null, saison: null}
   },
   handleRound: function(round) {
     this.setState({round: round, macthSelected: null})
@@ -45,7 +45,7 @@ var BlocResult = React.createClass({
             borderRadius: '5px',
             verticalAlign: 'top'
           }
-        }, React.createElement(MyBetResultManager, {round: this.state.round}))
+        }, React.createElement(MyBetResultManager, {round: this.state.round, saison: this.state.saison}))
       )
     }
     elements.push(
@@ -58,6 +58,7 @@ var BlocResult = React.createClass({
       }, React.createElement(ManagerComparisonBet, {
         onClose: this.onMatchSelectedClose,
         round: this.state.round,
+        saison: this.state.saison,
         onSelect: this.onMatchSelected,
         matchId: this.state.macthSelected
       }))

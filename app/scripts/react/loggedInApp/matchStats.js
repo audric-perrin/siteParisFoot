@@ -428,16 +428,17 @@ var MatchStats = React.createClass({
         d.i({className: "fa fa-spinner fa-pulse"})
       )
     } else {
-      var matchAller = this.state.data.matchAller ? this.renderMatch(this.state.data.matchAller, 'score') : null
+      var matchAller = this.state.data.matchAller.teamDomicile ? this.renderMatch(this.state.data.matchAller, 'score') : null
+      var titleMatchAller = matchAller ? this.renderTitle('Match aller') : null
       return d.div({ style: style },
         this.renderTitle(DateFormat.getDate(this.state.data.match.date)),
         this.renderMatch(this.state.data.match, 'time'),
-        this.renderTitle('Derniers résultats'),
+        this.renderTitle('Derniers résultats en championnat'),
         this.renderBlocMatchHistorical('domicile'),
         this.renderBlocMatchHistorical('exterieur'),
         this.renderBlocPieChart(this.state.data.match.teamDomicile),
         this.renderBlocPieChart(this.state.data.match.teamExterieur),
-        this.renderTitle('Match aller'),
+        titleMatchAller,
         matchAller
       )
     }

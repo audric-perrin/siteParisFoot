@@ -27,7 +27,8 @@
   }
   function maxRound() {
     $maxRound = 1;
-    $result = runQuery('SELECT round FROM result ORDER BY round DESC LIMIT 1');
+    $currentSaison = currentSaison();
+    $result = runQuery('SELECT round FROM result WHERE saison = "' . $currentSaison . '" ORDER BY round DESC LIMIT 1');
     foreach ($result as $row) {
       $maxRound = $row['round'];
     }

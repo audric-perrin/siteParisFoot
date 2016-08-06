@@ -16,7 +16,7 @@ var ManagerComparisonBet = React.createClass({
   },
   changeRound: function (round, saison) {
     this.setState({matchs: null, round: round, saison: saison, isLoading: true})
-    console.log(this.state)
+    // console.log(this.state)
     var options = {
       url: './api/match.php?round=' + round + '&saison=' + saison,
       method: 'GET',
@@ -27,10 +27,10 @@ var ManagerComparisonBet = React.createClass({
     }
   },
   componentWillReceiveProps: function(newProps) {
-    console.log('componentWillReceiveProps', newProps)
+    // console.log('componentWillReceiveProps', newProps)
     if (newProps.round && newProps.saison) {
       //on ne devrait pas faire newProps.saison
-      console.log(1)
+      // console.log(1)
       this.changeRound(newProps.round, newProps.saison)
     }
   },
@@ -38,17 +38,17 @@ var ManagerComparisonBet = React.createClass({
     this.setState({matchs: data.match, isLoading: false})
   },
   handleCurrentRound: function(data) {
-    console.log('handleCurrentRound', data)
+    // console.log('handleCurrentRound', data)
     this.changeRound(data.currentRound, data.currentSaison)
   },
   componentWillMount: function() {
-    console.log('componentWillMount', this.props)
-    if (this.props.round) {
-      console.log('2', this.props)
+    // console.log('componentWillMount', this.props)
+    if (this.props.round && this.props.saison) {
+      // console.log('2', this.props)
       this.changeRound(this.props.round, this.props.saison)
     }
     else {
-      console.log('3', this.props)
+      // console.log('3', this.props)
       var options = {
         url: './api/currentRound.php',
         method: 'GET',
@@ -143,6 +143,7 @@ var ManagerComparisonBet = React.createClass({
     if (this.state.isClick) {
       elements = React.createElement(BetResultManager, {
         round: this.state.round,
+        saison: this.state.saison,
         selectIndex: 1,
         onClose: this.onClose
       })

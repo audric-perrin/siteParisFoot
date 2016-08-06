@@ -12,7 +12,7 @@
   }
   $match = array();
   $result = runQuery('SELECT * FROM result 
-    WHERE id = ' . $matchId . ' AND saison = "' . $currentSaison . '"'
+    WHERE id = ' . $matchId
   );
   foreach ($result as $row) {
     $match = [

@@ -9,7 +9,7 @@ var d = React.DOM
 var BetResultManager = React.createClass({
   displayName: 'BetResultManager',
   getInitialState: function() {
-    return {user: null, users: [], isLoading: true, round: null}
+    return {user: null, users: [], isLoading: true, round: null, saison: null}
   },
   handleUser: function(data) {
     var userId = this.props.selectIndex ? data.users[this.props.selectIndex].id : data.users[0].id
@@ -22,11 +22,11 @@ var BetResultManager = React.createClass({
     }
     this.setState({isLoading: true})
     Ajax.request(options, this.handleUser)
-    this.setState({round: this.props.round})
+    this.setState({round: this.props.round, saison: this.props.saison})
   },
   componentWillReceiveProps: function(newProps) {
     if (newProps.round) {
-      this.setState({round: newProps.round})
+      this.setState({round: newProps.round, saison: newProps.saison})
     }
   },
   onClose: function() {
@@ -76,6 +76,7 @@ var BetResultManager = React.createClass({
     else {
       content = React.createElement(MyBetResult, {
         userSelect: this.state.user,
+        saison: this.state.saison,
         round: this.state.round
       })
     }

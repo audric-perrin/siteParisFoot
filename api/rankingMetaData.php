@@ -8,7 +8,7 @@
   $currentRound = currentRound();
   //Selection des classements par saison
   $saison = array();
-  $result = runQuery('SELECT DISTINCT saison FROM result');
+  $result = runQuery('SELECT DISTINCT saison FROM result WHERE scoreDomicile > -1 ');
   foreach ($result as $row) {
     $saison[] = array('label' => 'Saison ' . $row['saison'], 'value' => $row['saison']);
   }

@@ -5,7 +5,7 @@
   require_once('../api/lag.php');
   $currentRound = 1;
   $currentSaison = null;
-  $result = runQuery('SELECT * FROM result WHERE scoreDomicile != -1 ORDER BY date DESC LIMIT 1');
+  $result = runQuery('SELECT * FROM result ORDER BY date DESC LIMIT 1');
   foreach ($result as $row) {
     $currentRound = $row['round'];
     $currentSaison = $row['saison'];

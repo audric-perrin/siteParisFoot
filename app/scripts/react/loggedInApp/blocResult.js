@@ -12,8 +12,8 @@ var BlocResult = React.createClass({
   getInitialState: function() {
     return {round: null, macthSelected: null, saison: null}
   },
-  handleRound: function(round) {
-    this.setState({round: round, macthSelected: null})
+  handleRound: function(round, saison) {
+    this.setState({round: round, macthSelected: null, saison: saison})
   },
   onMatchSelected: function(matchId) {
     this.setState({macthSelected: matchId})

@@ -151,12 +151,13 @@ var RoundInput = React.createClass({
     }).change(this.onChange)
   },
   componentWillReceiveProps: function(newProps) {
+    console.log(newProps)
     var select = $(this.refs.container)
     select.val(newProps.round)
     select.trigger('chosen:updated')
   },
   onChange: function(e, data) {
-    this.props.onRoundChanged(parseFloat(data.selected))
+    this.props.onRoundChanged(parseFloat(data.selected), this.props.saison)
   },
   render: function() {
     var options = []
@@ -173,6 +174,47 @@ var RoundInput = React.createClass({
     }, d.select({
       ref: 'container',
       value: this.props.round
+    }, options))
+  }
+})
+
+//Input saison
+var SaisonInput = React.createClass({
+  displayName: 'SaisonInput',
+  componentDidMount: function() {
+    $(this.refs.container).chosen({
+      disable_search: true,
+      width: '170px',
+      placeholder_text_single: 'Loading...'
+    }).change(this.onChange)
+  },
+  componentWillReceiveProps: function(newProps) {
+    var select = $(this.refs.container)
+    select.val(newProps.saison)
+    select.trigger('chosen:updated')
+  },
+  onChange: function(e, data) {
+    this.props.onSaisonChanged(data.selected)
+  },
+  render: function() {
+    if (this.props.saisons) {    
+      var options = []
+  // DANGER VALEUR EN DUR (2)
+      for (var i = 0; i <= this.props.saisons.length - 1; i++) {
+  // DANGER VALEUR EN DUR (2)
+        options[i] = d.option({key: i, value: this.props.saisons[i].value}, this.props.saisons[i].label)
+      }
+    }
+    return d.div({
+      style: {
+        paddingBottom: '5px',
+        display: 'inline-block',
+        margin: '0px 15px',
+        fontSize: '16px'
+      }
+    }, d.select({
+      ref: 'container',
+      value: this.props.saison
     }, options))
   }
 })
@@ -207,7 +249,15 @@ var LoadingBox = React.createClass({
 var Result = React.createClass({
   displayName: 'Result',
   getInitialState: function() {
-    return {matchs: null, round: null, maxRound: null, saison: null}
+    return {
+      matchs: null,
+      round: null,
+      maxRound: null,
+      saison: null,
+      currentSaison: null,
+      currentRound: null,
+      currentMaxRound: null
+    }
   },
   changeRound: function (round, saison) {
     this.setState({matchs: null, round: round, saison: saison})
@@ -220,12 +270,33 @@ var Result = React.createClass({
       this.props.handleRound(round, saison)
     }
   },
+  changeSaison: function (saison) {
+    this.setState({saison: saison})
+    var round = null
+    if (saison == this.state.currentSaison) {
+      round = this.state.currentRound
+      this.setState({maxRound: this.state.currentMaxRound})
+    }
+    else {
+      round = 38
+      this.setState({maxRound: 38})
+    }
+    this.changeRound(round, saison)
+  },
   handleMatches: function(data) {
     this.setState({matchs: data.match})
   },
+  handleSaisons: function(data) {
+    this.setState({saisons: data.saison})
+  },
   handleCurrentRound: function(data) {
     this.changeRound(data.currentRound, data.currentSaison)
-    this.setState({maxRound: data.maxRound})
+    this.setState({
+      currentMaxRound: data.maxRound,
+      maxRound: data.maxRound,
+      currentSaison: data.currentSaison,
+      currentRound: data.currentRound
+    })
   },
   componentWillMount: function() {
     var options = {
@@ -233,6 +304,11 @@ var Result = React.createClass({
       method: 'GET',
     }
     Ajax.request(options, this.handleCurrentRound)
+    var options = {
+      url: './api/listSaison.php',
+      method: 'GET',
+    }
+    Ajax.request(options, this.handleSaisons)
   },
   onArrowHoverChange: function(left, hover) {
     var arrow = left ? 'arrowLeft' : 'arrowRight'
@@ -266,34 +342,42 @@ var Result = React.createClass({
     }, left ? d.i({className: "fa fa-angle-left"}) : d.i({className: "fa fa-angle-right"}))
   },
   nextRound: function() {
-    this.changeRound(this.state.round + 1)
+    this.changeRound(this.state.round + 1, this.state.saison)
   },
   previousRound: function() {
-    this.changeRound(this.state.round - 1)
+    this.changeRound(this.state.round - 1, this.state.saison)
   },
   render: function() {
-    var elements = [
-      this.state.round == 1 ?
-        d.div({
-          key: 'leftArrow',
-          style:{
-            display: 'inline-block',
-            padding: '5px 0px 5px 34.2969px'}
-          }) : this.renderArrow(true, this.previousRound),
-      React.createElement(RoundInput, {
-        key: 'input',
-        onRoundChanged: this.changeRound,
-        round: this.state.round,
-        maxRound: this.state.maxRound
-      }),
-      this.state.round == this.state.maxRound ?
-        d.div({
-          key: 'rightArrow',
-          style:{
-            display: 'inline-block',
-            padding: '5px 34.2969px 5px 0px'}
-          }) : this.renderArrow(false, this.nextRound)
-    ]
+    var elements = []
+    elements.push(React.createElement(SaisonInput, {
+      key: 'inputSaison',
+      onSaisonChanged: this.changeSaison,
+      saisons: this.state.saisons,
+      saison: this.state.saison
+    }))
+    this.state.round == 1 ?
+    elements.push(d.div({
+      key: 'leftArrow',
+      style:{
+        display: 'inline-block',
+        padding: '5px 0px 5px 34.2969px'}
+    })) : 
+    elements.push(this.renderArrow(true, this.previousRound))
+    elements.push(React.createElement(RoundInput, {
+      key: 'inputRound',
+      onRoundChanged: this.changeRound,
+      round: this.state.round,
+      saison: this.state.saison,
+      maxRound: this.state.maxRound
+    }))
+    this.state.round == this.state.maxRound ?
+    elements.push(d.div({
+      key: 'rightArrow',
+      style:{
+        display: 'inline-block',
+        padding: '5px 34.2969px 5px 0px'}
+    })) : 
+    elements.push(this.renderArrow(false, this.nextRound))
     if (this.state.matchs) {
       //Fonction tous les matchs
       var results = []

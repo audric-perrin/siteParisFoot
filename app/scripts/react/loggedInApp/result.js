@@ -151,7 +151,6 @@ var RoundInput = React.createClass({
     }).change(this.onChange)
   },
   componentWillReceiveProps: function(newProps) {
-    console.log(newProps)
     var select = $(this.refs.container)
     select.val(newProps.round)
     select.trigger('chosen:updated')

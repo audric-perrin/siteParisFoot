@@ -1,6 +1,7 @@
 <?php
   require_once('../php/sql.php');
   require_once('../lib/general.php');
+
   function getUsersInfo() {
     $result = runQuery('SELECT * FROM user ORDER BY pseudo');
     foreach ($result as $row) {
@@ -11,6 +12,7 @@
     }
     return $users;
   }
+  
   function getUserInfo() {
     if (isset($_SESSION['id'])) {
       $result = runQuery('SELECT * FROM user WHERE id = ' . $_SESSION['id']);

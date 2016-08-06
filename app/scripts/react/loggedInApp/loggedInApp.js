@@ -3,6 +3,7 @@
 var Ajax = require('../../utils/ajax')
 var ButtonToolbar = require('./toolbar')
 var COLOR = require('../../utils/style')
+var UserInfo = require('../../utils/userInfo')
 var BlocBet = require('./blocBet')
 var BlocResult = require('./blocResult')
 var RankingManager = require('./rankingManager')

@@ -2,7 +2,6 @@
 
 var Ajax = require('../../utils/ajax')
 var COLOR = require('../../utils/style')
-var UserInfo = require('../../utils/UserInfo')
 var ColumnChart = require('../core/columnChart')
 var LineChart = require('../core/lineChart')
 var d = React.DOM
@@ -98,7 +97,7 @@ var StatsManager = React.createClass({
         for (var i = currentRound + 1; i < round; i++) {
           dataUserRoundPoints.push(0)
         }
-      } 
+      }
       currentRound = round
       dataUserRoundPoints.push(value.value)
     }

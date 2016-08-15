@@ -11,11 +11,11 @@ var noDropDown = ['general', 'personnel']
 var RankingManager = React.createClass({
   displayName: 'RankingManager',
   getInitialState: function() {
-    return {rankSelected: 'general', dropDownSelected: null, dropDown: false}
+    return {rankSelected: 'saison', dropDownSelected: null, dropDown: false}
   },
   componentWillMount: function() {
     this.metaDataRanking()
-    this.getRanking('general')
+    this.getRanking('saison')
   },
   getRanking: function(type, option) {
     this.setState({ranking: null})

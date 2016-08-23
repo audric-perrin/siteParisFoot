@@ -266,7 +266,7 @@ var MatchStats = React.createClass({
     var elements = []
     var match = this.state.data.match
     var matchs = type == 'domicile' ? this.state.data.matchsDomicileTeam : this.state.data.matchsExterieurTeam
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < matchs.length; i++) {
       var team = null
       if (type == 'domicile') {
         team = matchs[i].teamDomicile == match.teamDomicile ? 'domicile' : 'exterieur'
@@ -320,7 +320,7 @@ var MatchStats = React.createClass({
     var marginRight = type == 'domicile' ? '10px' : 0
     var elements = []
     elements.push(this.renderMatchHistoricalResult(type))
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < this.state.data.matchsDomicileTeam.length; i++) {
       var match = type == 'domicile' ? this.state.data.matchsDomicileTeam[i] : this.state.data.matchsExterieurTeam[i]
       elements.push(this.renderMatchHistorical(match, type))
     }

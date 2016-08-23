@@ -82,7 +82,7 @@
     AND scoreDomicile > -1
     OR teamExterieur = "' . $match['teamDomicile'] . '"
     AND scoreDomicile > -1
-    ORDER BY round DESC LIMIT 5'
+    ORDER BY date DESC LIMIT 5'
   );
   foreach ($result as $row) {
     $matchDomicileTeam = [
@@ -101,7 +101,7 @@
     AND scoreDomicile > -1
     OR teamDomicile = "' . $match['teamExterieur'] . '"
     AND scoreDomicile > -1
-    ORDER BY round DESC LIMIT 5'
+    ORDER BY date DESC LIMIT 5'
   );
   foreach ($result as $row) {
     $matchExterieurTeam = [
